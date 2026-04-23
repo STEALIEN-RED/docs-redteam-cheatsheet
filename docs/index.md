@@ -16,6 +16,7 @@ graph LR
     D --> E[권한 상승]
     E --> F[횡적 이동]
     F --> G[지속성 유지]
+    F --> H[데이터 유출]
     F --> C
     E --> C
 ```
@@ -29,6 +30,7 @@ graph LR
 | [권한 상승](lifecycle/privilege-escalation.md) | Windows/Linux 로컬 권한 상승, AD DACL Abuse |
 | [횡적 이동](lifecycle/lateral-movement.md) | PtH, PtT, WinRM, PSExec, DCOM |
 | [지속성 유지](lifecycle/persistence.md) | 레지스트리, Scheduled Task, Golden Ticket |
+| [데이터 유출](lifecycle/exfiltration.md) | HTTP/DNS/ICMP/클라우드 채널을 통한 유출 |
 
 ---
 
@@ -61,6 +63,9 @@ graph LR
 | 분류 | 설명 |
 |------|------|
 | [AD 환경 공격](ad/ad-environment.md) | 인증 프로토콜별 공격, Delegation, NTLM Relay, Trust |
+| [DACL Abuse](ad/dacl-abuse.md) | BloodHound 엔지 기반 권한 상승, DCSync |
+| [NTLM Coercion](ad/coercion.md) | PetitPotam, PrinterBug, DFSCoerce, ShadowCoerce, WebClient |
+| [SCCM/MECM](ad/sccm.md) | NAA 탈취, Client Push relay, Site takeover |
 | [ADCS](ad/adcs.md) | ESC1~ESC16 인증서 템플릿 공격 |
 | [Web 공격](web/index.md) | SQLi, XSS, SSRF, SSTI, JWT, Deserialization |
 | [Cloud 공격](cloud/index.md) | AWS, Azure 클라우드 환경 공격 |

@@ -49,6 +49,7 @@ nav:
     - 권한 상승: lifecycle/privilege-escalation.md
     - 횡적 이동: lifecycle/lateral-movement.md
     - 지속성 유지: lifecycle/persistence.md
+    - 데이터 유출: lifecycle/exfiltration.md
   - 프로토콜별 펜테스트:
     - 개요: protocols/index.md
     - SMB: protocols/smb.md
@@ -69,6 +70,8 @@ nav:
   - Active Directory:
     - AD 환경 공격: ad/ad-environment.md
     - DACL Abuse: ad/dacl-abuse.md
+    - NTLM Coercion: ad/coercion.md
+    - SCCM/MECM: ad/sccm.md
     - ADCS: ad/adcs.md
   - Web 공격: web/index.md
   - Cloud 공격: cloud/index.md
