@@ -1,9 +1,8 @@
-# 권한 상승
+# Privilege Escalation
 
-현재 권한보다 높은 권한을 획득하는 단계.
+호스트 안에서 SYSTEM / root 까지 올라가는 로컬 권한 상승과, 도메인 레벨에서 Domain Admin 까지 가는 AD 권한 상승이 한 박스에 담긴다.
 
-로컬 호스트 권한 상승(SYSTEM/root)과 네트워크 권한 상승(Domain Admin) 모두 포함한다.
-상황에 따라 로컬 권한 상승이 반드시 필요하지 않을 수 있다. 다른 호스트로 횡적 이동 후 AD 기반 공격으로 Domain Admin을 획득하는 경로도 존재한다.
+로컬 권한 상승이 항상 필요하진 않다. 실제로는 다른 호스트로 lateral movement 하면서 AD DACL 을 긁어 Domain Admin 으로 바로 뛰는 경로가 더 빠를 때도 많다.
 
 ---
 

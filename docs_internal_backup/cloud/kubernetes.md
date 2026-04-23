@@ -1,6 +1,6 @@
 # Container / Kubernetes
 
-Docker, containerd, Kubernetes 환경의 공격. 컨테이너 탈출(에스케이프) 과 클러스터 권한 상승을 다룬다.
+Docker, containerd, Kubernetes 환경의 공격. 크게 "컨테이너 밖으로 탈출하기" 와 "클러스터 권한 올리기" 두 마디 돌고 끝난다.
 
 > 클라우드 IAM 연계 (EKS / AKS / GKE 의 Workload Identity, IRSA) 는 [Cloud 공격](index.md) 참고.
 

@@ -1,8 +1,8 @@
-# 횡적 이동
+# Lateral Movement
 
-네트워크 내 다른 호스트로 이동하는 단계.
+확보한 credential — password, NT hash, Kerberos ticket 중 뭐든 — 을 들고 다른 호스트로 갈아타는 단계.
 
-획득한 credential(패스워드, 해시, 티켓 등)을 사용하여 다른 시스템에 접근한다.
+어떤 인증 수단이 있느냐에 따라 PtH / PtT / Overpass-the-Hash 등 쓸 수 있는 카드가 갈라진다.
 
 ---
 

@@ -1,7 +1,8 @@
 # AD DACL Abuse
 
-AD 객체의 DACL(Discretionary ACL)에 부여된 위임 권한을 악용한 도메인 권한 상승.
-보통 잘못 위임된 GenericAll / GenericWrite / WriteDACL / WriteOwner / ForceChangePassword / AddMember / AllExtendedRights 권한이 시작점이 된다.
+AD object 의 DACL 에 잘못 붙은 위임 권한을 흘린 다음 밀어붙이면서 도메인 권한을 올려가는 기법.
+
+진입 지점은 보통 생키는 형광들 — GenericAll / GenericWrite / WriteDACL / WriteOwner / ForceChangePassword / AddMember / AllExtendedRights. BloodHound 까지 돌리면 그래프가 기상천외로 나오는 이유가 대부분 여기다.
 
 > 권한 상승 흐름과 BloodHound 체인은 [권한 상승 - AD ACL 악용](../lifecycle/privilege-escalation.md#ACL-악용) 도 함께 참고.
 

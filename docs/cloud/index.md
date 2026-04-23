@@ -1,8 +1,8 @@
 # Cloud 공격
 
-클라우드 환경(AWS, Azure)에 대한 열거 및 공격 기법.
+AWS / Azure / GCP 환경에서의 열거 · 권한 상승 · 탈취 기법.
 
-온프레미스와 달리 클라우드 환경에서는 메타데이터, IAM, 스토리지 설정 오류가 주요 공격 벡터가 된다.
+온프레미스 AD 가 "사용자 → 그룹 → 권한" 구조라면, 클라우드는 "IAM principal → role → policy" 에서 대부분의 시나리오가 나온다. 메타데이터 · IAM · public bucket · 재사용된 credential 이 그 녔각.
 
 ---
 

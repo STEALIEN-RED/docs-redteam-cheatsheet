@@ -1,6 +1,8 @@
-# credential 탈취
+# Credential Access
 
-credential 확보를 위한 공격 기법. Kerberos 기반 공격, 메모리 덤프, credential 파일 탈취 등.
+레드팀 operation 의 연료. credential 이 넉넉해야 lateral movement 도, persistence 도, privilege escalation 도 편해진다.
+
+크게 세 갈래: Kerberos 프로토콜 자체의 약점을 파는 루트 (AS-REP Roast, Kerberoast, DCSync), 메모리·LSASS 덤프, 그리고 네트워크에서 hash 를 줍는 Poisoning / Relay.
 
 ---
 

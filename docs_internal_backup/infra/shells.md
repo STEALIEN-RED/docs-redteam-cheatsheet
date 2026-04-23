@@ -1,6 +1,6 @@
-# 리버스 쉘
+# Reverse Shell
 
-target에서 공격자 리스너로 연결하는 쉘 payload 모음.
+target 에서 공격자 listener 로 커넥션을 물어오게 만드는 payload 모음. 환경에 따라 쓸 수 있는 건지 다 다르니까 예비채 여러 개 써보고 굴러가는 걸 쓸 것.
 
 ---
 

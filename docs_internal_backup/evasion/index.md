@@ -1,12 +1,8 @@
-# 방어 우회
+# Defense Evasion
 
-AV/EDR 탐지를 회피하고 보안 통제를 우회하기 위한 기법.
+AV / EDR 을 피해 가면서 payload 를 돌리고, 기존의 보안 통제 (AppLocker, AMSI, Constrained Language Mode) 를 풀거나 우회하는 영역.
 
----
-
-## Endpoint 보안 정보 수집
-
-공격 전 현재 호스트에 어떤 보안 솔루션이 설치되어 있는지 반드시 확인한다.
+이에 앞서 반드시 현재 호스트에 어떤 보안 솔루션이 깔려 있는지 먼저 확인해야 한다. 모르고 들이밀었다가 EDR 이 바로 왜친다.
 
 ### AV/EDR 확인
 

