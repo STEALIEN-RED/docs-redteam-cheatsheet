@@ -65,13 +65,31 @@ docs-redteam-cheatsheet/
 
 ## 사용법
 
-### 1. 환경 준비
+### 1. 저장소 클론 & 환경 준비
+
+처음 저장소를 받은 뒤 아래 순서대로 의존성을 설치한다.
 
 ```bash
+git clone <this-repo-url> docs-redteam-cheatsheet
+cd docs-redteam-cheatsheet
+
+# 가상환경 생성 (권장)
 python3 -m venv .venv
-source .venv/bin/activate
-pip install mkdocs mkdocs-material pymdown-extensions
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+
+# 의존성 설치
+pip install -r requirements.txt
 ```
+
+#### 필수 패키지 ([requirements.txt](requirements.txt))
+
+| 패키지 | 용도 |
+|--------|------|
+| `mkdocs` | 정적 사이트 생성기 본체 (`mkdocs serve` / `build` 제공) |
+| `mkdocs-material` | `mkdocs.yml` 에서 사용하는 Material 테마 (`theme.name: material`) |
+| `pymdown-extensions` | `admonition`, `pymdownx.superfences`(mermaid), `pymdownx.tabbed`, `pymdownx.highlight` 등 마크다운 확장 제공 |
+
+> Python 3.9+ 권장. 시스템에 `graphviz` 등 추가 바이너리는 필요하지 않다 (Mermaid 는 브라우저에서 렌더링됨).
 
 ### 2. 버전 전환
 
