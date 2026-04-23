@@ -57,19 +57,19 @@ nav:
     - 개요: protocols/index.md
     - SMB: protocols/smb.md
     - LDAP: protocols/ldap.md
-    - HTTP: protocols/http.md
-    - WinRM: protocols/winrm.md
-    - SSH: protocols/ssh.md
-    - FTP: protocols/ftp.md
-    - RDP: protocols/rdp.md
-    - DNS: protocols/dns.md
     - Kerberos: protocols/kerberos.md
     - RPC: protocols/rpc.md
+    - WinRM: protocols/winrm.md
+    - SSH: protocols/ssh.md
+    - RDP: protocols/rdp.md
+    - FTP: protocols/ftp.md
+    - NFS: protocols/nfs.md
+    - HTTP: protocols/http.md
+    - SMTP: protocols/smtp.md
+    - DNS: protocols/dns.md
+    - SNMP: protocols/snmp.md
     - MSSQL: protocols/mssql.md
     - MySQL: protocols/mysql.md
-    - SNMP: protocols/snmp.md
-    - NFS: protocols/nfs.md
-    - SMTP: protocols/smtp.md
     - Redis / PostgreSQL / MongoDB / Elasticsearch: protocols/databases.md
   - Active Directory:
     - AD 환경 공격: ad/ad-environment.md
@@ -88,7 +88,8 @@ nav:
     - 파일 전송: infra/file-transfer.md
     - 피봇 / 터널링: infra/pivoting.md
     - C2 프레임워크: infra/c2.md
+  - 초기 침투 벡터 (보조):
+    - 무선 / WiFi: wireless/index.md
+    - 물리 침투 / KIOSK: physical/index.md
+    - 모바일: mobile/index.md
   - 도구 레퍼런스: tools/index.md
-  - 무선 / WiFi: wireless/index.md
-  - 물리 침투 / KIOSK: physical/index.md
-  - 모바일: mobile/index.md

@@ -234,6 +234,9 @@ impacket-psexec <domain>/<user>@<dc_fqdn> -k -no-pass
 
 NTLM 인증 요청을 중간에서 가로채 다른 서비스로 릴레이하는 공격.
 
+!!! info "관련 문서"
+    프로토콜 자체 설명(NetNTLMv1/v2, 해시 유형, 보안 통제 매트릭스, 탐지 관점)은 [NTLM](../lifecycle/ntlm.md) 문서 참고. 강제 인증(Coercion) 기법은 [NTLM Coercion](coercion.md) 참고.
+
 ```mermaid
 sequenceDiagram
     participant V as Victim
