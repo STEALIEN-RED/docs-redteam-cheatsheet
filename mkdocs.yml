@@ -43,9 +43,12 @@ nav:
   - 개요: index.md
   - 공격 라이프사이클:
     - 외부 정찰: lifecycle/reconnaissance.md
+    - OSINT / 외부 정찰 상세: lifecycle/osint.md
     - 초기 침투: lifecycle/initial-access.md
+    - Phishing / Vishing: lifecycle/phishing.md
     - 내부 정찰 및 열거: lifecycle/enumeration.md
     - 자격 증명 탈취: lifecycle/credential-access.md
+    - NTLM: lifecycle/ntlm.md
     - 권한 상승: lifecycle/privilege-escalation.md
     - 횡적 이동: lifecycle/lateral-movement.md
     - 지속성 유지: lifecycle/persistence.md
@@ -67,6 +70,7 @@ nav:
     - SNMP: protocols/snmp.md
     - NFS: protocols/nfs.md
     - SMTP: protocols/smtp.md
+    - Redis / PostgreSQL / MongoDB / Elasticsearch: protocols/databases.md
   - Active Directory:
     - AD 환경 공격: ad/ad-environment.md
     - DACL Abuse: ad/dacl-abuse.md
@@ -85,3 +89,6 @@ nav:
     - 피봇 / 터널링: infra/pivoting.md
     - C2 프레임워크: infra/c2.md
   - 도구 레퍼런스: tools/index.md
+  - 무선 / WiFi: wireless/index.md
+  - 물리 침투 / KIOSK: physical/index.md
+  - 모바일: mobile/index.md

@@ -236,3 +236,43 @@ ffuf -u <url>/login -X POST \
   -w users.txt:FUZZ -w passwords.txt:FUZ2Z \
   -fc 401,403
 ```
+
+---
+
+## Assumed Breach 시나리오
+
+!!! tip "왜 필요한가"
+    레드팀 서비스는 대부분 4~8주 일정. 초기 정찰/피싱/외부 공격이 2~3회 실패하면 **8주 내내 "초기 침투"만 평가**할 수는 없다. 따라서 일정 시점부터는 "이미 직원 한 명이 피싱에 당했다고 치고" 내부부터 시뮬레이션한다.
+
+### 구성 요건
+
+- 타겟 기관 CISO가 **엔드포인트 1대**를 레드팀에 제공 (물리/가상 모두 가능)
+- 제공 형태는 보통 다음 중 하나:
+    1. VDI/Citrix 세션 크리덴셜
+    2. 실제 도메인 가입 Windows 노트북 + 일반 직원 권한 계정
+    3. VPN 계정 + 내부 네트워크 접근권
+- EDR/AV/프록시/Proxy Auth/Conditional Access 등 **실제 직원과 동일한 보안 통제** 적용
+
+### 평가 범위
+
+| 단계 | 평가 포인트 |
+|---|---|
+| 거점 확보 | EDR 회피, Beacon 상시 유지, 방어자 Hunt 회피 |
+| 권한 상승 | 로컬 Admin 획득 가능한가, LAPS/AppLocker/WDAC 효과 |
+| 내부 정찰 | BloodHound/LDAP 정찰이 DLP/Honeytoken에 걸리는가 |
+| 횡적 이동 | Tier 0 자산(DC/ADCS) 까지 몇 홉 / 며칠 걸리는가 |
+| 지속성 | 블루팀이 격리 후에도 재진입 가능한가 |
+| 탐지 대응 | MTTD / MTTR (평균 탐지/대응 시간) 측정 |
+
+### 레드팀 OPSEC 체크리스트 (Assumed Breach)
+
+- [ ] 제공받은 엔드포인트에서 **첫 Beacon 전까지** 로컬 정찰 최소화 (Defender/EDR 초기 관찰 윈도우 회피)
+- [ ] C2 통신은 Jitter + Sleep 60~180s 이상, 업무시간 내 전송
+- [ ] LDAP 정찰은 `-LoopDetection` / `ServicePrincipalName` 등 **빈도 낮은 속성** 중심, 단일 세션에서 전체 도메인 덤프 지양
+- [ ] 티켓/해시 획득 후 24h 내 Tier 0 진입 시도는 대부분 탐지됨 → 며칠 간 정찰만 수행 후 이동
+- [ ] 최종 미션 수행 직전, 블루팀에게 사전 고지(High-Impact Only Card)
+
+### 참고
+
+- 라이프사이클 정의: [레드팀이란 (xn--hy1b43d247a.com)](https://www.xn--hy1b43d247a.com/what-even-is-redteam)
+- TIBER-EU Framework: <https://www.ecb.europa.eu/paym/cyber-resilience/tiber-eu/html/index.en.html>
