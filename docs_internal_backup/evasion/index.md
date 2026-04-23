@@ -78,13 +78,13 @@ $ExecutionContext.SessionState.LanguageMode
 # AppLocker 정책 확인
 Get-AppLockerPolicy -Effective | Select -ExpandProperty RuleCollections
 
-# 레지스트리에서 확인
+# Registry에서 확인
 Get-ChildItem -Path HKLM:\SOFTWARE\Policies\Microsoft\Windows\SrpV2\ -Recurse
 ```
 
 ### Credential Guard
 
-Credential Guard가 활성화되면 lsass 메모리에서 NTLM 해시를 덤프할 수 없다.
+Credential Guard가 활성화되면 lsass 메모리에서 NTLM hash를 dump할 수 없다.
 
 ```powershell
 (Get-ComputerInfo).DeviceGuardSecurityServicesConfigured
@@ -199,7 +199,7 @@ Get-AppLockerPolicy -Effective | Select -ExpandProperty RuleCollections
 # C:\Windows\Temp\
 # C:\Windows\Tracing\
 
-# MSBuild.exe (Microsoft 서명 바이너리)
+# MSBuild.exe (Microsoft 서명 binary)
 C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe payload.csproj
 
 # InstallUtil.exe
@@ -291,7 +291,7 @@ Classic DLL Injection    → OpenProcess → VirtualAllocEx → WriteProcessMemo
 Process Hollowing        → CreateProcess(SUSPENDED) → NtUnmapViewOfSection → WriteProcessMemory → ResumeThread
 APC Injection           → QueueUserAPC + alertable thread
 Early Bird Injection    → CreateProcess(SUSPENDED) → QueueUserAPC → ResumeThread
-Module Stomping         → 정상 DLL 로드 후 해당 메모리에 쉘코드 덮어쓰기
+Module Stomping         → 정상 DLL 로드 후 해당 메모리에 shellcode 덮어쓰기
 Syscall + Indirect Call → 직접 syscall + jmp [ntdll] 가젯
 ```
 
@@ -373,7 +373,7 @@ fltmc  # 미니필터 드라이버 확인
 # Sysmon 설정 확인 (무엇을 모니터링하는지)
 reg query "HKLM\SYSTEM\CurrentControlSet\Services\SysmonDrv\Parameters"
 
-# Sysmon 언로드 (관리자 + Sysmon 바이너리 접근 필요)
+# Sysmon 언로드 (관리자 + Sysmon binary 접근 필요)
 sysmon -u
 
 # 미니필터 언로드 (SYSTEM 권한)

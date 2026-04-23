@@ -72,7 +72,7 @@ aws s3 ls s3://<bucket>
 # 익명 접근 확인
 aws s3 ls s3://<bucket> --no-sign-request
 
-# 파일 다운로드/업로드
+# 파일 download/upload
 aws s3 cp s3://<bucket>/<key> ./
 aws s3 cp ./shell.php s3://<bucket>/
 
@@ -87,7 +87,7 @@ aws s3api get-bucket-acl --bucket <bucket>
 # Lambda 함수 목록
 aws lambda list-functions
 
-# 함수 코드 다운로드
+# 함수 코드 download
 aws lambda get-function --function-name <func>
 
 # 함수 환경변수 확인 (credential/API key 노출 가능)
@@ -121,7 +121,7 @@ aws iam create-policy-version --policy-arn <arn> \
 
 | 도구 | 용도 |
 |------|------|
-| [pacu](https://github.com/RhinoSecurityLabs/pacu) | AWS 공격 프레임워크 |
+| [pacu](https://github.com/RhinoSecurityLabs/pacu) | AWS 공격 framework |
 | [enumerate-iam](https://github.com/andresriancho/enumerate-iam) | IAM 권한 열거 |
 | [ScoutSuite](https://github.com/nccgroup/ScoutSuite) | 클라우드 보안 감사 |
 | [Prowler](https://github.com/prowler-cloud/prowler) | AWS 보안 점검 |
@@ -194,7 +194,7 @@ az storage account keys list --account-name <account>
 # Blob 컨테이너 목록
 az storage container list --account-name <account> --account-key <key> --output table
 
-# Blob 목록 / 다운로드
+# Blob 목록 / download
 az storage blob list --container-name <container> --account-name <account> --account-key <key> --output table
 az storage blob download --container-name <container> --name <blob> --file ./<output> \
   --account-name <account> --account-key <key>
@@ -304,7 +304,7 @@ gsutil iam get gs://BUCKET_NAME/
 # 공개 접근 확인
 curl https://storage.googleapis.com/BUCKET_NAME/
 
-# 파일 다운로드
+# 파일 download
 gsutil cp gs://BUCKET_NAME/secret.txt ./
 ```
 

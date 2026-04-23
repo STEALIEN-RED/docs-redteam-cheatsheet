@@ -1,8 +1,8 @@
 # NTLM Coercion
 
-DC 나 ADCS, 파일 서버 같은 고가치 호스트가 공격자 쪽 SMB / HTTP 리스너로 NTLM 인증을 스스로 보내게 유도하는 기법.
+DC 나 ADCS, 파일 서버 같은 고가치 호스트가 공격자 쪽 SMB / HTTP listener로 NTLM 인증을 스스로 보내게 유도하는 기법.
 
-넘어온 NetNTLMv1/v2 challenge 는 그대로 크래킹하던지, 아니면 LDAP / ADCS / SMB 로 NTLM Relay 해서 권한을 올린다. PetitPotam / PrinterBug / DFSCoerce 가 전통의 3대천왕.
+넘어온 NetNTLMv1/v2 challenge 는 그대로 cracking하던지, 아니면 LDAP / ADCS / SMB 로 NTLM Relay 해서 권한을 올린다. PetitPotam / PrinterBug / DFSCoerce 가 전통의 3대천왕.
 
 > 후속 처리는 [AD 환경 - NTLM Relay](ad-environment.md#NTLM-Relay), [ADCS - ESC8/ESC11](adcs.md), [DACL Abuse](dacl-abuse.md) 참고.
 
@@ -22,7 +22,7 @@ graph LR
 
 - 보통 **유효 도메인 credential**이 있어야 RPC/MSRPC 코어션을 호출할 수 있음 (PetitPotam 일부 변형은 미인증 가능)
 - target이 **SMB Signing 미강제** (Relay 시) 또는 **MS-EFSR/MS-RPRN/MS-DFSNM/MS-FSRVP 노출**
-- 공격자가 target에서 도달 가능한 SMB(445)/HTTP(80) 리스너 보유
+- 공격자가 target에서 도달 가능한 SMB(445)/HTTP(80) listener 보유
 
 ---
 
@@ -112,15 +112,15 @@ nxc smb 10.10.10.0/24 -u <user> -p '<pass>' -M webdav
 
 ---
 
-## 캡처 / Relay 시나리오
+## capture / Relay 시나리오
 
-### 1) 해시 캡처 → 크래킹
+### 1) hash capture → cracking
 
 ```bash
-# 리스너
+# listener
 sudo responder -I <iface> -wd
 
-# Coercion 발사 → Responder 에 NetNTLMv2 캡처
+# Coercion 발사 → Responder 에 NetNTLMv2 capture
 hashcat -m 5600 hash.txt rockyou.txt
 ```
 

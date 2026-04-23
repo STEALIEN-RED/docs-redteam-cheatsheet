@@ -6,7 +6,7 @@
 
 ---
 
-## 공격 라이프사이클
+## 공격 lifecycle
 
 ```mermaid
 graph LR
@@ -29,7 +29,7 @@ graph LR
 | [credential 탈취](lifecycle/credential-access.md) | Kerberoasting, AS-REP Roasting, DCSync, LLMNR Poisoning |
 | [권한 상승](lifecycle/privilege-escalation.md) | Windows/Linux 로컬 권한 상승, AD DACL Abuse |
 | [횡적 이동](lifecycle/lateral-movement.md) | PtH, PtT, WinRM, PSExec, DCOM |
-| [지속성 유지](lifecycle/persistence.md) | 레지스트리, Scheduled Task, Golden Ticket |
+| [지속성 유지](lifecycle/persistence.md) | Registry, Scheduled Task, Golden Ticket |
 | [데이터 유출](lifecycle/exfiltration.md) | HTTP/DNS/ICMP/클라우드 채널을 통한 유출 |
 
 ---
@@ -44,13 +44,13 @@ graph LR
 | [LDAP](protocols/ldap.md) | 389/636 | directory 서비스, AD 쿼리 |
 | [HTTP](protocols/http.md) | 80/443 | 웹 서비스, directory/parameter 열거 |
 | [WinRM](protocols/winrm.md) | 5985/5986 | PowerShell Remoting |
-| [SSH](protocols/ssh.md) | 22 | Linux/Unix 원격 접근, 터널링 |
+| [SSH](protocols/ssh.md) | 22 | Linux/Unix 원격 접근, tunneling |
 | [FTP](protocols/ftp.md) | 21 | 파일 전송, Anonymous 접근 |
 | [RDP](protocols/rdp.md) | 3389 | Windows 원격 데스크톱 |
 | [DNS](protocols/dns.md) | 53 | Zone Transfer, subdomain 열거 |
 | [Kerberos](protocols/kerberos.md) | 88 | 사용자 열거, AS-REP/Kerberoasting |
 | [RPC](protocols/rpc.md) | 135/111 | MSRPC 열거, rpcclient |
-| [MSSQL](protocols/mssql.md) | 1433 | xp_cmdshell, NTLM 캡처 |
+| [MSSQL](protocols/mssql.md) | 1433 | xp_cmdshell, NTLM capture |
 | [MySQL](protocols/mysql.md) | 3306 | UDF, 파일 읽기/쓰기 |
 | [SNMP](protocols/snmp.md) | 161 | Community String, 정보 수집 |
 | [NFS](protocols/nfs.md) | 2049 | 마운트, root squashing 우회 |
@@ -73,12 +73,12 @@ graph LR
 
 ---
 
-## 오퍼레이션 인프라
+## operation 인프라
 
 | 항목 | 설명 |
 |------|------|
-| [리버스 쉘](infra/shells.md) | 다양한 언어/환경별 쉘 payload |
-| [파일 전송](infra/file-transfer.md) | HTTP, SMB, SCP, Base64 인코딩 전송 |
-| [피봇 / 터널링](infra/pivoting.md) | Ligolo-ng, Chisel, SSH, sshuttle |
-| [C2 프레임워크](infra/c2.md) | Sliver, Havoc, Cobalt Strike |
+| [reverse shell](infra/shells.md) | 다양한 언어/환경별 shell payload |
+| [파일 전송](infra/file-transfer.md) | HTTP, SMB, SCP, Base64 encoding 전송 |
+| [피봇 / tunneling](infra/pivoting.md) | Ligolo-ng, Chisel, SSH, sshuttle |
+| [C2 framework](infra/c2.md) | Sliver, Havoc, Cobalt Strike |
 | [도구 레퍼런스](tools/index.md) | 주요 도구별 명령어 정리 |

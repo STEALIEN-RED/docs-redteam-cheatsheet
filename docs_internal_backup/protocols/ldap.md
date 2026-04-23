@@ -15,7 +15,7 @@ ldapsearch -x -H ldap://TARGET -b '' -s base namingContexts
 # Base DN 확인
 ldapsearch -x -H ldap://TARGET -b '' -s base defaultNamingContext
 
-# 전체 도메인 덤프 (anonymous bind 허용 시)
+# 전체 도메인 dump (anonymous bind 허용 시)
 ldapsearch -x -H ldap://TARGET -b 'DC=domain,DC=local'
 
 # nxc anonymous 확인

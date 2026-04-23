@@ -5,7 +5,7 @@
 OSINT 로 넓게 뿌리고 → 포트 스캔 / 서비스 식별 / directory·subdomain 열거로 좁혀 들어가는 순서.
 
 !!! info "문서 분담"
-    - **이 문서**: Active 스캔 중심 (Nmap, directory 퍼징, 서비스 식별 등 **패킷을 직접 target에 보내는** 작업)
+    - **이 문서**: Active 스캔 중심 (Nmap, directory fuzzing, 서비스 식별 등 **packet을 직접 target에 보내는** 작업)
     - [OSINT / 외부 정찰 상세](osint.md): Passive 정찰 중심 (CT 로그, Shodan, GitHub 시크릿, LinkedIn, Breach 데이터 등 **target에 직접 닿지 않고** 수집하는 작업)
     - 레드팀 OPSEC 관점에서는 Passive → Active 순으로 진행한다.
 
@@ -49,7 +49,7 @@ nmap -sV -sC -Pn -n --open -p 53,88,135,139,389,445,636,3268 \
 | `--open` | 열린 포트만 표시 |
 | `-p-` | 전체 포트 (1-65535) |
 | `-oA` | 모든 형식으로 출력 (nmap/xml/gnmap) |
-| `--min-rate` | 초당 최소 패킷 수 |
+| `--min-rate` | 초당 최소 packet 수 |
 | `-sU` | UDP 스캔 |
 
 ### NSE 스크립트
@@ -106,13 +106,13 @@ feroxbuster -u http://<target> -w <wordlist> -t 50 -d 2 -x php,asp,aspx
 ### ffuf
 
 ```bash
-# directory 퍼징
+# directory fuzzing
 ffuf -u http://<target>/FUZZ -w <wordlist> -mc 200,301,302,403
 
-# subdomain 퍼징
+# subdomain fuzzing
 ffuf -u http://<target> -H "Host: FUZZ.<domain>" -w <wordlist> -fs <filter_size>
 
-# POST parameter 퍼징
+# POST parameter fuzzing
 ffuf -u http://<target>/login -X POST -d "username=admin&password=FUZZ" -w <wordlist>
 ```
 
@@ -268,4 +268,4 @@ curl "https://api.hunter.io/v2/domain-search?domain=<domain>&api_key=KEY" | jq '
 | 3268/3269 | Global Catalog | AD 포리스트 질의 |
 | 3389 | RDP | 원격 데스크톱 |
 | 5985/5986 | WinRM | evil-winrm |
-| 8080 | HTTP Proxy | 웹 서버/프록시 |
+| 8080 | HTTP Proxy | 웹 서버/proxy |

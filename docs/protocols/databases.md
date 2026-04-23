@@ -90,8 +90,8 @@ POST /login
 ```
 
 - MongoDB 3.0 이전: 기본 인증 없음.
-- 3.0~3.6: 바인딩 기본 `0.0.0.0`.
-- 4.x+: 기본 localhost 만 바인딩.
+- 3.0~3.6: binding 기본 `0.0.0.0`.
+- 4.x+: 기본 localhost 만 binding.
 
 ---
 
@@ -104,7 +104,7 @@ curl -s http://<target>:9200/_cluster/health
 curl -s http://<target>:9200/_cat/indices?v
 curl -s "http://<target>:9200/_search?pretty&size=100"
 
-# 민감 index 전수 덤프
+# 민감 index 전수 dump
 for idx in $(curl -s http://<target>:9200/_cat/indices | awk '{print $3}'); do
     curl -s "http://<target>:9200/$idx/_search?size=10000" > "dump_$idx.json"
 done
@@ -142,5 +142,5 @@ nxc mssql <targets> -u user -p pass -q "SELECT @@version"
 
 ## 참고
 
-- 덤프 후 반출: [Data Exfiltration](../lifecycle/exfiltration.md)
+- dump 후 반출: [Data Exfiltration](../lifecycle/exfiltration.md)
 - Webapp SQLi: [Web - SQL Injection](../web/index.md#sql-injection)

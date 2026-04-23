@@ -45,7 +45,7 @@ ffuf -u http://TARGET -H "Host: FUZZ.domain.com" -w subdomains.txt -fs SIZE
 gobuster vhost -u http://TARGET -w subdomains.txt --append-domain
 ```
 
-## parameter 퍼징
+## parameter fuzzing
 
 ```bash
 # GET parameter 발견
@@ -80,7 +80,7 @@ ffuf -u http://TARGET/login -X POST -d "user=admin&pass=FUZZ" -w passwords.txt -
 ```text
 □ 기본 credential (admin 패널, 관리 콘솔)
 □ directory 열거 (숨겨진 페이지, 백업 파일)
-□ 기술 스택 식별 (CMS, 프레임워크, 버전)
+□ 기술 스택 식별 (CMS, framework, 버전)
 □ 소스 코드 내 주석, API 키, 비밀번호
 □ .git, .svn, .env, backup 파일 노출
 □ API endpoint 발견 및 문서화

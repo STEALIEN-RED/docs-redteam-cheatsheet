@@ -21,7 +21,7 @@ onesixtyone -c community.txt -i targets.txt
 ### snmpwalk
 
 ```bash
-# 전체 MIB 덤프
+# 전체 MIB dump
 snmpwalk -v2c -c public TARGET
 
 # SNMPv1

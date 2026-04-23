@@ -28,7 +28,7 @@
 | 5432 | PostgreSQL | PostgreSQL DB | - |
 | 5985/5986 | WinRM | Windows 원격 관리 | [WinRM](winrm.md) |
 | 6379 | Redis | Redis DB | - |
-| 8080/8443 | HTTP Proxy | 웹 프록시/관리 페이지 | [HTTP](http.md) |
+| 8080/8443 | HTTP Proxy | 웹 proxy/관리 페이지 | [HTTP](http.md) |
 | 27017 | MongoDB | MongoDB | - |
 
 ---

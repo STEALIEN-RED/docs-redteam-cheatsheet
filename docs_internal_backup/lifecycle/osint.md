@@ -4,7 +4,7 @@
 레드팀 lifecycle 상 "초기 정찰" 에 해당하고, 이후 phishing이나 외부망 취약점 공격, Assumed Breach 진입점 선정이 전부 여기서 나온 결과물 위에서 돌아간다.
 
 !!! info "reconnaissance.md 와의 분담"
-    - **이 문서**: Passive OSINT 중심. target에 직접 패킷을 쏘지 않고 3rd-party / public 데이터로 긁어오는 작업.
+    - **이 문서**: Passive OSINT 중심. target에 직접 packet을 쏘지 않고 3rd-party / public 데이터로 긁어오는 작업.
     - [외부 정찰 (Active)](reconnaissance.md): Nmap, directory fuzzing, subdomain bruteforce 처럼 target에 직접 붙는 Active scan.
     - 순서는 항상 **Passive → Active**. OPSEC 상 당연한 얘기.
 

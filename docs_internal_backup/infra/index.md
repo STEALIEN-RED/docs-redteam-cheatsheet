@@ -1,6 +1,6 @@
 # Operation Infrastructure
 
-작전을 돌리는 데 필요한 계수을 모아 둔 섹션. Shell 획득, 파일 전송, pivot / tunneling, C2 프레임워크.
+작전을 돌리는 데 필요한 계수을 모아 둔 섹션. Shell 획득, 파일 전송, pivot / tunneling, C2 framework.
 
 ---
 
@@ -8,10 +8,10 @@
 
 | 항목 | 설명 |
 |------|------|
-| [리버스 쉘](shells.md) | target에서 공격자로 연결하는 쉘 payload |
+| [reverse shell](shells.md) | target에서 공격자로 연결하는 shell payload |
 | [파일 전송](file-transfer.md) | 공격자 ↔ target 간 파일 전송 방법 |
-| [피봇 / 터널링](pivoting.md) | 내부 네트워크 접근을 위한 터널링 |
-| [C2 프레임워크](c2.md) | Command & Control 프레임워크 |
+| [피봇 / tunneling](pivoting.md) | 내부 네트워크 접근을 위한 tunneling |
+| [C2 framework](c2.md) | Command & Control framework |
 
 ---
 
@@ -23,8 +23,8 @@ graph LR
     B --> C[C2 서버]
     C --> D[payload 생성]
     D --> E[전달/실행]
-    E --> F[쉘/에이전트]
-    F --> G[피봇/터널링]
+    E --> F[shell/agent]
+    F --> G[피봇/tunneling]
 ```
 
 ---
@@ -40,12 +40,12 @@ graph LR
 - [ ] 4. 버전 취약점 탐색: PoC 검증 전 스코프/안전성 확인
 - [ ] 5. 서비스별 점검: 웹/DB/메시징/CI 등 → [프로토콜별](../protocols/index.md)
 - [ ] 6. 피싱/소셜: 인프라, 도메인, 템플릿 준비 → [초기 침투](../lifecycle/initial-access.md)
-- [ ] 7. 쉘 획득: 리버스 쉘/에이전트 → [리버스 쉘](../infra/shells.md), [C2](../infra/c2.md)
+- [ ] 7. shell 획득: reverse shell/agent → [reverse shell](../infra/shells.md), [C2](../infra/c2.md)
 - [ ] 8. 호스트 내부: 퀵 트리아지(계정/token/파일/키링) → OPSEC
 - [ ] 9. 데이터 유출/투입: 안전 채널 선정 → [데이터 유출](../lifecycle/exfiltration.md)
 - [ ] 10. 로컬/도메인 권한상승: 윈도우/리눅스/AD → [권한 상승](../lifecycle/privilege-escalation.md), [AD](../ad/ad-environment.md)
 - [ ] 11. POST: 루팅/시크릿 추가 수집, [지속성 유지](../lifecycle/persistence.md)
-- [ ] 12. 피봇/터널링: 새로운 세그먼트로 확장 → [피봇/터널링](../infra/pivoting.md)
+- [ ] 12. 피봇/tunneling: 새로운 세그먼트로 확장 → [피봇/tunneling](../infra/pivoting.md)
 
 !!! tip "증거 수집/기록"
     각 단계 산출물(nmap 결과, 스크린샷, 명령 로그, 타임스탬프)을 정리해 재현/보고서 작성과 탐지 매핑(ATT&CK) 기반 개선에 활용하세요.
@@ -64,9 +64,9 @@ graph LR
 
 ### payload
 
-- [ ] build 직후 사내 sandbox 또는 `AntiScan.me` / `KleenScan` 로 탐지율 확인 (VirusTotal 은 공유되므로 **업로드 금지**)
+- [ ] build 직후 사내 sandbox 또는 `AntiScan.me` / `KleenScan` 로 탐지율 확인 (VirusTotal 은 공유되므로 **upload 금지**)
 - [ ] 코드 서명 인증서 + 타임스탬프 + 리소스 정보(아이콘/버전) 삽입
-- [ ] 지연 실행(sleep jitter), Sandbox 탐지(VM 아티팩트 / 사용자 상호작용)
+- [ ] 지연 실행(sleep jitter), Sandbox 탐지(VM artifact / 사용자 상호작용)
 - [ ] 도메인 / 프로세스 / 사용자 / 시간 제약 조건으로 **target 환경에서만 동작**하도록 제한
 
 ### 트래픽

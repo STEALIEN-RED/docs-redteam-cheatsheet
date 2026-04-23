@@ -64,9 +64,9 @@ docker run -d -p 3333:3333 -p 80:80 -p 443:443 gophish/gophish
 
 # 구성 순서
 # 1. Sending Profile : SMTP Relay (Mailgun)
-# 2. Landing Page    : 캡처한 O365 / SSO 로그인 페이지
+# 2. Landing Page    : capture한 O365 / SSO 로그인 페이지
 # 3. Email Template  : {{.FirstName}} 변수로 개인화
-# 4. User Group      : OSINT 로 수집한 users.txt 업로드
+# 4. User Group      : OSINT 로 수집한 users.txt upload
 # 5. Campaign 시작 → 대시보드에서 click / credential 확인
 ```
 

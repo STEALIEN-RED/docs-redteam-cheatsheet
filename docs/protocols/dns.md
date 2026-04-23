@@ -56,7 +56,7 @@ dnsrecon -d domain.com -t brt -D /usr/share/seclists/Discovery/DNS/subdomains-to
 # gobuster
 gobuster dns -d domain.com -w subdomains.txt -t 50
 
-# ffuf (VHOST 퍼징)
+# ffuf (VHOST fuzzing)
 ffuf -u http://TARGET -H "Host: FUZZ.domain.com" -w subdomains.txt -fs SIZE
 
 # fierce
@@ -112,7 +112,7 @@ subfinder -d domain.com -all -silent -o subs.txt
 assetfinder --subs-only domain.com
 amass enum -passive -d domain.com
 
-# Active: 수집한 목록 + 브루트포스 + resolver 검증
+# Active: 수집한 목록 + bruteforce + resolver 검증
 puredns bruteforce subdomains.txt domain.com -r resolvers.txt -w brute.txt
 puredns resolve subs.txt -r resolvers.txt -w live.txt
 
@@ -123,7 +123,7 @@ curl -s "https://crt.sh/?q=%25.domain.com&output=json" | jq -r '.[].name_value' 
 ### 와일드카드 탐지
 
 ```bash
-# 와일드카드가 설정되어 있으면 FP 가 대량 발생 → 브루트포스 결과를 반드시 필터
+# 와일드카드가 설정되어 있으면 FP 가 대량 발생 → bruteforce 결과를 반드시 필터
 dig 'random-nonexistent-123456.domain.com'
 # → A 레코드가 응답되면 와일드카드. puredns 는 기본적으로 감지/제외
 ```

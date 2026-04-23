@@ -31,14 +31,14 @@ sequenceDiagram
 # NT hash (로컬에서 획득)
 aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
 
-# NetNTLMv2 (네트워크 캡처, Responder 출력)
+# NetNTLMv2 (네트워크 capture, Responder 출력)
 user::DOMAIN:1122334455667788:aaaaaaaa...:01010000...
 
 # NetNTLMv1 (downgrade 유도 시)
 user::DOMAIN:response:response:1122334455667788
 ```
 
-크래킹:
+cracking:
 
 ```bash
 # NT hash

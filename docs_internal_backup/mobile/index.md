@@ -83,7 +83,7 @@ git clone https://github.com/AloneMonkey/frida-ios-dump
 ./dump.py com.target.app
 
 # 정적 분석
-otool -L Payload/target.app/target     # 링크된 라이브러리
+otool -L Payload/target.app/target     # 링크된 library
 class-dump -H Payload/target.app/target -o headers/
 strings Payload/target.app/target | grep -E 'https?://|api'
 ```

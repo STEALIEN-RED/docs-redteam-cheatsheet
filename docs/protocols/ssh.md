@@ -73,13 +73,13 @@ cat /home/*/.ssh/authorized_keys
 cat /home/*/.ssh/known_hosts
 ```
 
-### SSH 키 크래킹
+### SSH 키 cracking
 
 ```bash
-# 암호화된 SSH 키에서 해시 추출
+# 암호화된 SSH 키에서 hash 추출
 ssh2john id_rsa > id_rsa.hash
 
-# John으로 크래킹
+# John으로 cracking
 john id_rsa.hash --wordlist=/usr/share/wordlists/rockyou.txt
 
 # Hashcat
@@ -116,7 +116,7 @@ ssh -i attacker_key user@TARGET
 
 ---
 
-## SSH 터널링
+## SSH tunneling
 
 ```bash
 # Local Port Forwarding (target 내부 포트를 로컬로)
@@ -127,7 +127,7 @@ ssh -L 8080:10.0.0.5:80 user@TARGET
 # Remote Port Forwarding (로컬 포트를 target으로)
 ssh -R REMOTE_PORT:LOCAL_TARGET:LOCAL_PORT user@TARGET
 
-# Dynamic Port Forwarding (SOCKS 프록시)
+# Dynamic Port Forwarding (SOCKS proxy)
 ssh -D 1080 user@TARGET
 # proxychains 설정: socks5 127.0.0.1 1080
 

