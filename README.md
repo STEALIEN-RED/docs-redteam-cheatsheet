@@ -93,25 +93,26 @@ pip install -r requirements.txt
 
 ### 2. 버전 전환
 
-현재 활성화된 버전(`mkdocs.yml` + `docs/`)을 원하는 쪽으로 교체해서 빌드/서빙한다.
-
-#### Internal 버전으로 전환
+[scripts/swap.sh](scripts/swap.sh) 로 internal / external 을 자동으로 교체한다.
 
 ```bash
-cp mkdocs_internal_backup.yml mkdocs.yml
-rm -rf docs
-cp -r docs_internal_backup docs
+./scripts/swap.sh status     # 현재 활성 mode 확인
+./scripts/swap.sh toggle     # 현재 mode 반대로 교체 (기본 동작)
+./scripts/swap.sh internal   # 내부 버전으로 강제 전환
+./scripts/swap.sh external   # 외부 버전으로 강제 전환
 ```
 
-#### External 버전으로 전환
+스크립트는 `docs/` · `mkdocs.yml` 이 둘 중 한 쪽 backup 과 **완전히 일치**할 때만 동작한다 (즉, 작업 중 dirty 상태에서 실수로 덮어쓰는 사고 방지). dirty 상태라면 먼저 해당 backup 디렉토리로 sync 하거나 commit 해야 한다.
+
+수동 전환이 필요하면:
 
 ```bash
-cp mkdocs_external_backup.yml mkdocs.yml
-rm -rf docs
-cp -r docs_external_backup docs
-```
+# Internal
+cp mkdocs_internal_backup.yml mkdocs.yml && rm -rf docs && cp -r docs_internal_backup docs
 
-> 작업 중 변경사항이 있다면 전환 전에 해당 `*_backup` 폴더/파일로 **먼저 복사해 보존**한 뒤 교체하는 것을 권장한다.
+# External
+cp mkdocs_external_backup.yml mkdocs.yml && rm -rf docs && cp -r docs_external_backup docs
+```
 
 ### 3. 로컬 서빙
 
