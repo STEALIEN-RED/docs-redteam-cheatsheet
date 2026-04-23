@@ -99,3 +99,62 @@ nmap --script=dns-brute -p 53 TARGET
 nmap --script=dns-cache-snoop -p 53 TARGET
 nmap --script=dns-zone-transfer --script-args dns-zone-transfer.domain=domain.com -p 53 TARGET
 ```
+
+---
+
+## 모던 서브도메인 수집
+
+Passive + Active 를 모두 조합해야 누락이 줄어든다.
+
+```bash
+# Passive: 공개 소스(CT logs, passive DNS) 에서 수집
+subfinder -d domain.com -all -silent -o subs.txt
+assetfinder --subs-only domain.com
+amass enum -passive -d domain.com
+
+# Active: 수집한 목록 + 브루트포스 + resolver 검증
+puredns bruteforce subdomains.txt domain.com -r resolvers.txt -w brute.txt
+puredns resolve subs.txt -r resolvers.txt -w live.txt
+
+# CT 로그 직접 조회
+curl -s "https://crt.sh/?q=%25.domain.com&output=json" | jq -r '.[].name_value' | sort -u
+```
+
+### 와일드카드 탐지
+
+```bash
+# 와일드카드가 설정되어 있으면 FP 가 대량 발생 → 브루트포스 결과를 반드시 필터
+dig 'random-nonexistent-123456.domain.com'
+# → A 레코드가 응답되면 와일드카드. puredns 는 기본적으로 감지/제외
+```
+
+---
+
+## 서브도메인 탈취 (Dangling DNS)
+
+CNAME 이 해제된 외부 서비스(S3, Azure, Heroku, GitHub Pages 등)를 가리키고 있으면 공격자가 해당 서비스를 재등록해 서브도메인을 탈취할 수 있다.
+
+```bash
+# 취약 CNAME 자동 탐지
+subjack -w subs.txt -t 50 -timeout 30 -ssl -c /opt/subjack/fingerprints.json -v
+nuclei -l subs.txt -t http/takeovers/
+
+# 대표 지문
+# "NoSuchBucket"       → AWS S3
+# "There isn't a GitHub Pages site here"
+# "Do you want to register *.azurewebsites.net?"
+# "The request could not be satisfied" → CloudFront
+```
+
+---
+
+## 기타
+
+```bash
+# DoH(DNS over HTTPS) 를 이용한 차단 우회 / 탐지 회피
+curl -s 'https://cloudflare-dns.com/dns-query?name=domain.com&type=A' -H 'accept: application/dns-json'
+
+# dnsx - 대량 해상도/레코드 타입 확인
+dnsx -l subs.txt -a -resp -silent
+dnsx -l subs.txt -cname -resp -silent | grep -iE 'cloudfront|s3|azure|github'
+```

