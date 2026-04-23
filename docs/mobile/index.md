@@ -1,136 +1,135 @@
-# 모바일 (Android / iOS)
+# Mobile (Android / iOS)
 
-!!! abstract "개요"
-    레드팀 시 모바일 앱은 **백엔드 API 키 / 인증 토큰 / 내부 URL** 이 하드코딩된 진입점이 되는 경우가 많다.  
-    본 페이지는 **정찰 및 시크릿 추출 관점**에 집중한다. 풀스택 모바일 앱 모의해킹은 MSTG/MASVS 참조.
+요즘 레드팀 scope 에 internal mobile app 도 포함되는 경우가 늘었다. 대부분 목적은 하드코딩된 credential / API endpoint / JWT secret 같은 backend infra 정보 추출.
 
 ---
 
-## 앱 수집
+## Android
+
+### APK 추출 / 정적 분석
 
 ```bash
-# Google Play (APK)
-# 1. apkcombo / apkpure / google play 공식 → gplay-api (non-root)
-# 2. adb pull
+# 기기에서 APK 뽑기 (root 없어도 가능)
 adb shell pm list packages | grep target
 adb shell pm path com.target.app
 adb pull /data/app/com.target.app-1/base.apk
 
-# App Store (IPA)
-# - jailbreak된 기기에서 frida-ios-dump
-frida-ios-dump -l           # 설치된 앱 목록
-frida-ios-dump com.target.app
-```
-
----
-
-## 정적 분석 (Android APK)
-
-```bash
-# 디컴파일
+# decompile
 apktool d base.apk -o out/
-jadx-gui base.apk          # Java 소스 뷰어 (추천)
+jadx-gui base.apk          # GUI
+jadx -d out_jadx base.apk  # CLI
 
-# 시크릿/엔드포인트 스캔
-grep -r -E 'https?://[^"]+' out/ | sort -u
-grep -r -E 'AKIA|aws_|api[_-]?key|bearer|secret' out/
+# 자동화 정적 분석
+mobsf      # docker run -it -p 8000:8000 opensecurity/mobile-security-framework-mobsf
 
-# mobsf (자동화)
-docker run -it --rm -p 8000:8000 opensecurity/mobile-security-framework-mobsf
-
-# Network Security Config 확인
-cat out/res/xml/network_security_config.xml
-# → cleartextTrafficPermitted / trust-anchors 체크
+# secret / endpoint 하드코딩 grep
+cd out/
+grep -rnE 'https?://|api[_-]?key|secret|token|Bearer' .
 ```
 
----
-
-## 런타임 조작 (Frida)
+### 동적 분석 (Frida)
 
 ```bash
-# Android
+# frida-server push
 adb push frida-server /data/local/tmp/
-adb shell /data/local/tmp/frida-server &
-frida -U -n com.target.app -l bypass.js
+adb shell "su -c chmod 755 /data/local/tmp/frida-server && /data/local/tmp/frida-server &"
 
-# SSL Pinning 우회
-frida -U -f com.target.app -l frida-ssl-bypass.js --no-pause
-# 스크립트: https://codeshare.frida.re/@akabe1/frida-multiple-unpinning/
+# process 리스팅
+frida-ps -U
 
-# Root / Jailbreak detection 우회
-frida -U -n com.target.app --codeshare dzonerzy/fridantiroot
+# SSL pinning bypass (universal)
+frida -U -f com.target.app -l frida-ssl-pin-bypass.js --no-pause
+
+# Root 탐지 우회 / 자주 쓰는 스크립트 묶음
+# https://codeshare.frida.re/
+frida --codeshare fdciabdul/android-ssl-pinning-bypass -U -f com.target.app
 ```
 
----
-
-## 인증서 피닝 / 프록시
+### BurpSuite 로 트래픽 intercept
 
 ```bash
-# BurpSuite CA → 시스템 trust store에 주입 (Android 7+ 제한)
-# 1. PEM → DER 변환
-openssl x509 -in burp.pem -outform DER -out burp.der
-# 2. 해시 이름
-HASH=$(openssl x509 -inform DER -subject_hash_old -in burp.der | head -1)
-mv burp.der ${HASH}.0
-# 3. 시스템 영역에 복사 (root 필요)
-adb push ${HASH}.0 /system/etc/security/cacerts/
-adb shell chmod 644 /system/etc/security/cacerts/${HASH}.0
+# 1. Burp CA 추출 → DER 변환 → system CA 로 push (Android 7+ 은 user CA 무시)
+openssl x509 -inform PEM -outform DER -in cacert.pem -out cacert.der
+hash=$(openssl x509 -inform DER -subject_hash_old -in cacert.der | head -1)
+adb root && adb remount
+adb push cacert.der /system/etc/security/cacerts/${hash}.0
+adb shell chmod 644 /system/etc/security/cacerts/${hash}.0
+adb reboot
+
+# 2. Network Security Config 무시 우회는 frida 또는 apktool 로 재패키징
 ```
+
+### 주요 점검 항목
+
+| 항목 | 확인 방법 |
+|---|---|
+| Hardcoded secret | `grep api_key / AccessKey / Bearer / password` |
+| Debuggable flag | `AndroidManifest.xml → android:debuggable="true"` |
+| Backup 허용 | `allowBackup="true"` → `adb backup` 으로 데이터 탈취 |
+| Exported Activity / Service | `exported="true"` → `am start` 로 직접 호출 |
+| WebView | `setJavaScriptEnabled(true)` + `addJavascriptInterface` → RCE |
+| Root / Frida detection | frida 로 무력화 가능 |
 
 ---
 
-## 시크릿 / API 키 하드코딩 체크리스트
+## iOS
 
-- [ ] AWS Access Key (`AKIA...`)
-- [ ] Firebase DB URL (`*.firebaseio.com`) - 읽기/쓰기 규칙 오픈 여부
-- [ ] Google Maps / Places API key
-- [ ] Backend 내부 URL (`https://dev-api.target.com`)
-- [ ] Hardcoded Bearer Token
-- [ ] 암호화 키 (AES 하드코딩)
-- [ ] 디버그 플래그 (`android:debuggable="true"`)
+### IPA 추출
 
 ```bash
-# Firebase 오픈 DB 체크
-curl https://<PROJECT_ID>.firebaseio.com/.json
+# 탈옥 기기 필요
+# frida-ios-dump
+git clone https://github.com/AloneMonkey/frida-ios-dump
+./dump.py com.target.app
 
-# Android 매니페스트 점검
-aapt dump badging base.apk | grep -E 'debuggable|launchable'
+# 정적 분석
+otool -L Payload/target.app/target     # 링크된 라이브러리
+class-dump -H Payload/target.app/target -o headers/
+strings Payload/target.app/target | grep -E 'https?://|api'
 ```
 
----
-
-## iOS 정적 분석
+### Frida (iOS)
 
 ```bash
-# .ipa → Payload/<App>.app
-unzip app.ipa -d ipa/
-cd ipa/Payload/<App>.app
+# 탈옥 기기에 frida-server 설치 (Cydia)
+frida-ps -U
 
-# Info.plist 
-plutil -convert xml1 Info.plist -o -
-# → NSAppTransportSecurity, URL Schemes, Entitlements 확인
-
-# 바이너리 분석
-otool -L <App>                           # 동적 라이브러리
-class-dump -H <App>                      # Objective-C 헤더 (Swift 는 제한적)
-rabin2 -z <App> | grep -Ei 'http|api|key'
+# SSL pinning bypass
+frida -U -f com.target.app -l ios-ssl-bypass.js
 ```
+
+### Info.plist 주요 항목
+
+| Key | 의미 |
+|---|---|
+| `NSAppTransportSecurity.NSAllowsArbitraryLoads` | HTTP 허용 여부 |
+| `URL Schemes` | deep link → IDOR / open redirect |
+| `NSFaceIDUsageDescription` | 생체 인증 우회 표적 |
 
 ---
 
-## 백엔드 API 공격 (레드팀 본론)
+## 공통 — API Backend 공격
 
-모바일 앱의 **API 엔드포인트**는 공식 웹에는 노출되지 않은 내부 기능을 제공하는 경우가 많음.
+모바일 앱을 뜯는 진짜 이유. 대부분 결국 backend API 가 본 target.
 
-1. 프록시로 API 호출 캡처 (`/login`, `/profile`, `/internal/admin`)
-2. IDOR / 권한 분기 / BFLA (Broken Function Level Authorization) 체크
-3. 하드코딩된 Admin JWT / Test 계정 발견 시 바로 에스컬레이션
-4. `/v1/` 만 공식, `/v2/internal/` 는 인증 누락 등 경로 혼합 취약점 확인
+```bash
+# 1. 정적 분석으로 endpoint 리스트 확보
+# 2. 해당 endpoint 를 외부에서 직접 호출 가능한지 검증 (IDOR / auth bypass)
+# 3. JWT 비밀키 하드코딩 확인 → 토큰 위조
+# 4. Firebase / S3 / GCS bucket URL 노출 여부 확인
+```
+
+Firebase 오픈 DB 체크:
+
+```bash
+curl https://<project>.firebaseio.com/.json
+```
+
+S3 / GCS 는 [Cloud](../cloud/index.md) 의 bucket 체크 흐름을 그대로 적용.
 
 ---
 
 ## 참고
 
-- [Web 공격](../web/index.md) (API 측면)
-- OWASP MASVS: <https://mas.owasp.org/MASVS/>
-- MobSF: <https://github.com/MobSF/Mobile-Security-Framework-MobSF>
+- [Cloud - bucket enumeration](../cloud/index.md)
+- [Web - API / JWT](../web/index.md)

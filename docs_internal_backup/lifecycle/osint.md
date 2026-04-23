@@ -1,35 +1,34 @@
-# OSINT / 외부 정찰
+# OSINT / External Recon
 
-!!! abstract "개요"
-    공격 시작 전, 타겟 기관의 외부 자산·인력·기술 스택을 수집하는 단계.  
-    **레드팀 라이프사이클상 "초기 정찰"** 에 해당하며, 이후의 피싱, 외부망 취약점 공격, Assumed Breach 진입점 선정의 근거가 된다.
+작전 시작 전에 target의 외부 자산, 인력, tech stack을 긁어모으는 단계.
+레드팀 lifecycle 상 "초기 정찰" 에 해당하고, 이후 phishing이나 외부망 취약점 공격, Assumed Breach 진입점 선정이 전부 여기서 나온 결과물 위에서 돌아간다.
 
-!!! info "문서 분담"
-    - **이 문서**: Passive OSINT 중심 (타겟에 직접 패킷을 보내지 않고 3rd-party/공개 데이터로 수집)
-    - [외부 정찰 (Active)](reconnaissance.md): Nmap/디렉토리 퍼징/서브도메인 브루트포스 등 **Active 스캔**
-    - 진행 순서: **Passive → Active** (OPSEC 우선)
-
----
-
-## 수집 범위 체크리스트
-
-- [ ] 루트 도메인 및 서브도메인 (서비스 표면)
-- [ ] 외부 IP 대역 (ASN / SPF / MX / WHOIS)
-- [ ] 클라우드 자산 (S3 / Azure Blob / GCS / Tenant ID)
-- [ ] 모바일 앱 (Play Store / App Store / APK / IPA)
-- [ ] 회사 조직도 / 임직원 (LinkedIn, 채용공고, 보도자료)
-- [ ] 이메일 주소 포맷 및 유효 계정
-- [ ] 과거 유출된 크리덴셜 (Breach Data)
-- [ ] 기술 스택 (HTTP 헤더, CDN, WAF, CMS, 프레임워크 버전)
-- [ ] Git / 공개 저장소 유출 (소스 / 시크릿)
-- [ ] VPN / 원격 근무 인프라 (Citrix, Pulse, FortiGate 등)
+!!! info "reconnaissance.md 와의 분담"
+    - **이 문서**: Passive OSINT 중심. target에 직접 패킷을 쏘지 않고 3rd-party / public 데이터로 긁어오는 작업.
+    - [외부 정찰 (Active)](reconnaissance.md): Nmap, directory fuzzing, subdomain bruteforce 처럼 target에 직접 붙는 Active scan.
+    - 순서는 항상 **Passive → Active**. OPSEC 상 당연한 얘기.
 
 ---
 
-## 도메인 / 서브도메인 열거
+## 수집 범위 checklist
+
+- [ ] root domain / subdomain (서비스 표면)
+- [ ] 외부 IP range (ASN / SPF / MX / WHOIS)
+- [ ] Cloud asset (S3 / Azure Blob / GCS / Tenant ID)
+- [ ] Mobile app (Play Store / App Store / APK / IPA)
+- [ ] 조직도 / 임직원 (LinkedIn, 채용공고, 보도자료)
+- [ ] email 주소 포맷 및 valid 계정
+- [ ] 과거 유출 credential (breach data)
+- [ ] Tech stack (HTTP header, CDN, WAF, CMS, framework 버전)
+- [ ] Git / public repo 유출 (source, secret)
+- [ ] VPN / remote access portal (Citrix, Pulse, FortiGate 등)
+
+---
+
+## Domain / Subdomain 열거
 
 ```bash
-# Passive (탐지 회피 최우선)
+# Passive (탐지 회피 우선)
 amass enum -passive -d target.com -o amass.txt
 subfinder -d target.com -silent -o subfinder.txt
 findomain -t target.com -q
@@ -37,97 +36,97 @@ findomain -t target.com -q
 # Certificate Transparency
 curl -s "https://crt.sh/?q=%25.target.com&output=json" | jq -r '.[].name_value' | sort -u
 
-# DNS Bruteforce (로그에 흔적 남음, 레드팀 OPSEC 주의)
+# DNS Bruteforce - 로그에 흔적 남기 때문에 passive로 먼저 다 긁고 마지막 보강용
 shuffledns -d target.com -w resolvers.txt -list subdomains.txt
 puredns bruteforce wordlist.txt target.com -r resolvers.txt
 
-# 서브도메인 테이크오버 점검
+# Subdomain takeover 점검
 subjack -w subs.txt -t 20 -o takeover.txt -ssl
 ```
 
 !!! tip "OPSEC"
-    Active DNS/포트 스캔은 반드시 **레드팀 인프라(점프박스 or VPS)**에서 수행. 공격자 IP가 타겟의 DNS 로그에 남지 않도록 `dnspython` 재귀 조회 대신 퍼블릭 리졸버 및 크롤링 기반 소스를 우선 사용한다.
+    Active DNS / port scan은 반드시 redirector나 VPS 같은 ops infra에서 돌린다. 공격자 IP가 target DNS log에 박히지 않게, recursive resolver는 public resolver (1.1.1.1, 8.8.8.8) 또는 crawling 기반 source 위주로 간다.
 
 ---
 
-## ASN / IP 대역 / CDN Bypass
+## ASN / IP range / CDN Bypass
 
 ```bash
-# ASN 조회 (clouflare/aws 우회 가능성 판단)
+# ASN 조회 - Cloudflare / AWS 뒤에 숨어있는지 확인용
 whois -h whois.cymru.com " -v target.com"
 
-# IP 이력 기반 origin server 노출 확인
-curl -s "https://securitytrails.com/domain/target.com/history/a"
-# (API: securitytrails)
+# 과거 IP 이력에서 origin 노출 확인
+curl -s "https://securitytrails.com/domain/target.com/history/a"   # SecurityTrails API
 
-# CDN 뒤 origin 추적
-cloudflair -d target.com  # ssl 인증서로 origin ip 검색
+# CDN 뒤 origin 추적 (SSL 인증서 기반)
+cloudflair -d target.com
 ```
 
 ---
 
-## 이메일 / 임직원 OSINT
+## Email / 임직원 OSINT
 
 ```bash
-# 이메일 수집
+# Email 수집
 theHarvester -d target.com -b all -l 500
 
-# LinkedIn 기반 이메일 추측 (회사 직원 → 이메일 포맷 + 이름)
+# LinkedIn → username 생성
 linkedin2username -c "Target Corp" -o users.txt
-# 이후 포맷 주입: first.last@target.com, f.last@target.com 등
+# 이후 first.last@target.com, f.last@target.com 등 포맷으로 변환
 
-# O365/Azure 계정 유효성 확인 (Validate Only)
+# O365 / Azure 계정 유효성 확인 (logon은 안 함, validate만)
 o365spray --validate -d target.com
 o365spray --enum --userlist users.txt -d target.com --legacy
-# --legacy: Basic Auth (EWS/Autodiscover), --adfs: 연동 도메인
+# --legacy : Basic Auth (EWS / Autodiscover)
+# --adfs   : 연동 domain
 
-# 이메일 유출 / Breach 조회
-holehe user@target.com                    # 서비스 가입 여부
-h8mail -t user@target.com -ch dehashed.txt # 유출 패스워드 검색
+# Breach data 조회
+holehe user@target.com                     # 어디에 가입되어 있는지
+h8mail -t user@target.com -ch dehashed.txt # leaked password 검색
 ```
 
 !!! warning "탐지"
-    `o365spray --enum` 은 Sign-in Log(`Event 4625 / UAL`)에 대량 로그인 시도로 기록될 수 있음.  
-    기업 환경에서는 `--timeout` 늘리고, `--sleep 30` 등으로 속도 조절. jitter 필수.
+    `o365spray --enum`은 Sign-in Log (Event 4625 / UAL) 에 대량 로그인 시도로 박힌다.
+    기업 환경에서는 `--timeout` 키우고 `--sleep 30`으로 간격 벌리는 편. jitter 필수.
 
 ---
 
-## 기술 스택 식별
+## Tech stack 식별
 
 ```bash
-# 웹 스택
+# Web stack
 whatweb -a 3 https://target.com
 wappalyzer https://target.com
 
-# HTTP 헤더 / 서버 / WAF
+# HTTP header / server / WAF
 curl -sI https://target.com
 wafw00f https://target.com
 
-# 파비콘 해시 기반 asset 검색 (Shodan / ZoomEye)
+# Favicon hash로 asset 검색 (Shodan, ZoomEye 에서 동일 hash 서버 찾기)
 python3 favup.py -u https://target.com
 # shodan: http.favicon.hash:<hash>
 ```
 
 ---
 
-## 공개 저장소 / 시크릿 유출
+## Public repo / secret 유출
 
 ```bash
 # GitHub dork
 github-search -q "target.com password"
 github-dorks -t $GITHUB_TOKEN -u TargetOrg
 
-# 조직/저장소 전수 스캔
+# Org / repo 전수 스캔
 trufflehog github --org=TargetOrg
 gitleaks detect --source=. --verbose
 
-# 유출된 .env / .git / dockerfile
+# 노출된 .env / .git / dockerfile
 nuclei -u https://target.com -t http/exposures/
 ```
 
 ---
 
-## Shodan / Censys 기반 자산 발견
+## Shodan / Censys 로 자산 발견
 
 ```bash
 # Shodan
@@ -139,44 +138,45 @@ shodan search 'http.favicon.hash:<hash>'
 censys search 'services.tls.certificates.leaf_data.subject.common_name:"target.com"'
 ```
 
-!!! tip "공격 포인트 후보 식별"
+!!! tip "공격 포인트 후보"
     - `port:3389` → 외부 노출 RDP
-    - `port:443 ssl.cert.subject.cn:"*.target.com"` → 내부용 포털의 외부 노출
-    - `http.title:"Citrix"` / `"Pulse Secure"` → VPN 컴포넌트 취약점 스캔 대상
+    - `port:443 ssl.cert.subject.cn:"*.target.com"` → 원래 내부용인데 외부로 새어나온 포털
+    - `http.title:"Citrix"` / `"Pulse Secure"` → VPN 컴포넌트 N-day 대상
 
 ---
 
-## 클라우드 자산 열거
+## Cloud asset 열거
 
 ```bash
-# S3 / Azure Blob / GCS 버킷 추측
+# S3 / Azure Blob / GCS bucket 추측
 cloud_enum -k target -k targetcorp
 s3scanner scan --bucket target-backup
 gcp_bucket_brute -k target
 
 # Azure AD / M365 Tenant 식별
 python3 AADInternals-Endpoints.py --tenant target.com
-# https://login.microsoftonline.com/<domain>/.well-known/openid-configuration
 curl -s "https://login.microsoftonline.com/target.com/.well-known/openid-configuration" | jq
 ```
 
 ---
 
-## 참고 체크리스트 (산출물)
+## 산출물 checklist
+
+recon 끝에 이런 파일들이 남아있으면 이후 단계로 넘어갈 준비 완료.
 
 | 산출물 | 용도 |
 |---|---|
 | `subdomains.txt` | 외부 서비스 공격 표면 |
 | `users.txt` / `emails.txt` | Phishing / Password Spray |
-| `tech-stack.md` | CVE 매핑 / 1-day 검색 |
+| `tech-stack.md` | CVE 매핑, 1-day 검색 |
 | `breach-creds.csv` | Credential Stuffing |
-| `cloud-assets.md` | 클라우드 공격 (S3 / Azure / GCP) |
-| `vpn-portals.md` | 외부망 초기 침투 시도 |
+| `cloud-assets.md` | Cloud 공격 (S3 / Azure / GCP) |
+| `vpn-portals.md` | 외부망 initial access 시도 |
 
 ---
 
 ## 관련 문서
 
-- [초기 접근](initial-access.md)
-- [Reconnaissance (내부 정찰)](reconnaissance.md)
+- [초기 침투](initial-access.md)
+- [외부 정찰 (Active)](reconnaissance.md)
 - [Phishing](phishing.md)

