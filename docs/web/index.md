@@ -840,6 +840,78 @@ POST /device/code → user_code 입력 페이지 URL 을 피싱 메일로 전달
 
 ---
 
+## Cache Poisoning / Cache Deception
+
+캐시 서빙 레이어(프록시/CDN)와 오리진 간 파싱 차이를 이용해 악성 응답을 캐시에 주입하거나 민감 응답을 캐시에 저장하게 만드는 기법.
+
+### 탐지/체크
+
+```bash
+# 공통: 헤더/경로 변조 후 응답 캐시 여부 확인
+curl -sI https://target.com/ | egrep -i 'age:|x-cache|via'
+
+# 파라미터 추가로 오리진 우회 (Vary 미설정)
+curl -sI 'https://target.com/profile?cb=1'
+
+# 캐시 키 분리 실패 확인
+curl -sI 'https://target.com/?X-Forwarded-Host=evil.com'
+
+# Content-Type 스니핑 유발(CP)
+curl -sI 'https://target.com/?callback=<script>alert(1)</script>'
+```
+
+### 방어 신호
+- `Cache-Control: private, no-store`, `Vary` 적절 설정
+- 경로 정규화/파라미터 화이트리스트
+
+---
+
+## Clickjacking
+
+`X-Frame-Options` 또는 `Content-Security-Policy: frame-ancestors` 미설정 시 UI 강제 클릭 유도.
+
+```html
+<iframe src="https://target.com/transfer" style="opacity:0.01;position:absolute;top:0;left:0;width:100%;height:100%"></iframe>
+```
+
+탐지: 응답 헤더에서 `X-Frame-Options` / `frame-ancestors` 확인.
+
+---
+
+## CSP Bypass Quickwins
+
+약한 정책(`unsafe-inline`, 넓은 `*.cdn.com`) 조합을 통한 우회.
+
+```text
+# JSONP, callback 파라미터, trusted CDN JSON→JS 전환
+# data:, blob:, filesystem: 스킴 허용 여부
+```
+
+도구: `csp-evaluator`, `csp-bypass` 컬렉션, nuclei `misconfiguration/csp-*`.
+
+---
+
+## XSSI / postMessage / XS-Leaks
+
+- XSSI: JSON 엔드포인트에 `)]}',` 프리픽스 유무, `Content-Type: application/json` 강제
+- postMessage: `event.origin` 검증 부재, 와일드카드 수신 여부
+- XS-Leaks: 타이밍/리다이렉트/리소스 크기 기반 정보 유출 가능성 점검
+
+레퍼런스: xsleaks.dev 패턴, nuclei `exposures/*`.
+
+---
+
+## 2FA/MFA/OTP Bypass 패턴
+
+- 세션 고정: 2FA 전·후 세션 토큰 불변 여부
+- OTP 재사용/동시성: one-time 사용 보장, 중복 제출 거부
+- 백업코드/이메일 링크: 토큰 만료, 매체 변경 시 재검증
+- 등록 흐름: 새 기기 등록에 비밀번호만 요구하는지 점검
+
+탐지 스크립트 예시(Burp/Turbo Intruder): 동일 요청을 토큰만 바꿔 동시 전송해 중복 사용 가능 여부 확인.
+
+---
+
 ## 유용한 도구
 
 | 도구 | 용도 |
