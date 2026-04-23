@@ -1,8 +1,8 @@
 # Credential Access
 
-레드팀 operation 의 연료. credential 이 넉넉해야 lateral movement 도, persistence 도, privilege escalation 도 편해진다.
+레드팀 operation 의 기반이 되는 단계다. credential 이 넘쳤하게 확보되어야 lateral movement, persistence, privilege escalation 이 모두 수월해진다.
 
-크게 세 갈래: Kerberos 프로토콜 자체의 약점을 파는 루트 (AS-REP Roast, Kerberoast, DCSync), 메모리·LSASS dump, 그리고 네트워크에서 hash 를 줍는 Poisoning / Relay.
+크게 세 갈래로 나누어진다. Kerberos 프로토콜 자체의 약점을 이용하는 방법 (AS-REP Roast, Kerberoast, DCSync), 메모리 · LSASS dump, 그리고 네트워크에서 hash 를 획득하는 Poisoning / Relay 다.
 
 ---
 

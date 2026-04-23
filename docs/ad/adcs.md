@@ -1,7 +1,7 @@
 # ADCS 공격
 
-Active Directory Certificate Services (ADCS) 는 Windows 환경에서 인증서를 발급 / 관리하는 서비스.
-템플릿 / 구성 실수 하나가 바로 권한 상승 · persistence · 도메인 장악으로 연결되는, 요즘 AD 공격 중에서 가장 ROI 높은 영역 중 하나.
+Active Directory Certificate Services (ADCS) 는 Windows 환경에서 인증서를 발급 / 관리하는 서비스다.
+템플릿 / 구성 실수 하나가 지점 권한 상승 · persistence · 도메인 장악까지 이어지기 때문에, AD 공격 중에서 비중 있게 다루어지는 영역이다.
 
 ---
 

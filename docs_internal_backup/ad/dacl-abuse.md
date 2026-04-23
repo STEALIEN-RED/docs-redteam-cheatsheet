@@ -2,7 +2,7 @@
 
 AD object 의 DACL 에 잘못 붙은 위임 권한을 흘린 다음 밀어붙이면서 도메인 권한을 올려가는 기법.
 
-진입 지점은 보통 눈에 띄는 위험 권한들 — GenericAll / GenericWrite / WriteDACL / WriteOwner / ForceChangePassword / AddMember / AllExtendedRights — 이다. BloodHound 를 돌렸을 때 그래프가 기상천외하게 연결되는 이유도 대부분 여기서 나온다.
+진입 지점은 보통 눈에 띄는 위험 권한들 — GenericAll / GenericWrite / WriteDACL / WriteOwner / ForceChangePassword / AddMember / AllExtendedRights — 이다. BloodHound 그래프에서 복잡한 경로가 나오는 원인도 대부분 여기에 몰려 있다.
 
 ---
 
@@ -280,7 +280,7 @@ certipy shadow auto -account <target> -clear ...
 
 1. **시간 분산**: 수정 → exploit → 복구 사이에 의도적 지연
 2. **권한 부여보다 일회성 사용**: 가능하면 ForceChangePassword 보다 Shadow Credentials, AddMember 보다 Targeted Kerberoasting 우선
-3. **non-DC 경유 작업 금지**: ACL 변경은 결국 DC 에 기록됨
+3. **non-DC 경유 작업 금지**: ACL 변경은 DC 에 기록됨
 
 ---
 

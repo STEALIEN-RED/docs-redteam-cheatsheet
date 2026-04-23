@@ -1,8 +1,8 @@
 # Persistence
 
-블루팀이 implant 하나 잡아도 다시 들어올 수 있는 두 번째, 세 번째 백도어를 심어 두는 단계.
+방어자가 implant 하나를 검지해도 다시 들어올 수 있도록 두 번째, 세 번째 백도어를 사전에 확보해 두는 단계다.
 
-실무에서는 "다양성" 이 핵심 — Registry Run 하나, Scheduled Task 하나, AD object 하나 이런 식으로 서로 다른 계층에 분산시켜 둔다.
+실무에서는 다양성이 가장 중요한 관점이다. Registry Run, Scheduled Task, AD object 처럼 서로 다른 계층에 백도어를 분산시켜 두는 것이 일반적이다.
 
 ---
 

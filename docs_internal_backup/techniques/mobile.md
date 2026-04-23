@@ -110,7 +110,7 @@ frida -U -f com.target.app -l ios-ssl-bypass.js
 
 ## 공통 — API Backend 공격
 
-모바일 앱을 뜯는 진짜 이유. 대부분 결국 backend API 가 본 target.
+모바일 앱을 분석하는 최종 목적은 대부분 backend API 이다.
 
 ```bash
 # 1. 정적 분석으로 endpoint 리스트 확보

