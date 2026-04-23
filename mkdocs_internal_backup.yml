@@ -1,0 +1,81 @@
+site_name: Red Team Cheat Sheet
+site_description: 사내 레드팀/펜테스팅 업무용 치트시트
+theme:
+  name: material
+  language: ko
+  palette:
+    - scheme: slate
+      primary: red
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+    - scheme: default
+      primary: red
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+
+nav:
+  - 개요: index.md
+  - 공격 라이프사이클:
+    - 외부 정찰: lifecycle/reconnaissance.md
+    - 초기 침투: lifecycle/initial-access.md
+    - 내부 정찰 및 열거: lifecycle/enumeration.md
+    - 자격 증명 탈취: lifecycle/credential-access.md
+    - 권한 상승: lifecycle/privilege-escalation.md
+    - 횡적 이동: lifecycle/lateral-movement.md
+    - 지속성 유지: lifecycle/persistence.md
+  - 프로토콜별 펜테스트:
+    - 개요: protocols/index.md
+    - SMB: protocols/smb.md
+    - LDAP: protocols/ldap.md
+    - HTTP: protocols/http.md
+    - WinRM: protocols/winrm.md
+    - SSH: protocols/ssh.md
+    - FTP: protocols/ftp.md
+    - RDP: protocols/rdp.md
+    - DNS: protocols/dns.md
+    - Kerberos: protocols/kerberos.md
+    - RPC: protocols/rpc.md
+    - MSSQL: protocols/mssql.md
+    - MySQL: protocols/mysql.md
+    - SNMP: protocols/snmp.md
+    - NFS: protocols/nfs.md
+    - SMTP: protocols/smtp.md
+  - Active Directory:
+    - AD 환경 공격: ad/ad-environment.md
+    - ADCS: ad/adcs.md
+  - Web 공격: web/index.md
+  - Cloud 공격: cloud/index.md
+  - 방어 우회: evasion/index.md
+  - 오퍼레이션 인프라:
+    - 개요: infra/index.md
+    - 리버스 쉘: infra/shells.md
+    - 파일 전송: infra/file-transfer.md
+    - 피봇 / 터널링: infra/pivoting.md
+    - C2 프레임워크: infra/c2.md
+  - 도구 레퍼런스: tools/index.md
