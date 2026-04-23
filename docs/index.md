@@ -32,8 +32,6 @@ graph LR
 | [지속성 유지](lifecycle/persistence.md) | Registry, Scheduled Task, Golden Ticket |
 | [데이터 유출](lifecycle/exfiltration.md) | HTTP/DNS/ICMP/클라우드 채널을 통한 유출 |
 
-> lifecycle 은 MITRE ATT&CK Enterprise tactics 기준. 특정 tactic 에 묶이지 않는 심화 기법 (OSINT, Phishing, Wireless, Physical, Mobile) 은 [Techniques](#techniques-심화) 섹션 참고.
-
 ---
 
 ## Techniques (심화)

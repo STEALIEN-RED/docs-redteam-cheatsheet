@@ -4,11 +4,6 @@
 
 OSINT 로 넓게 뿌리고 → 포트 스캔 / 서비스 식별 / directory·subdomain 열거로 좁혀 들어가는 순서.
 
-!!! info "문서 분담"
-    - **이 문서**: Active 스캔 중심 (Nmap, directory fuzzing, 서비스 식별 등 **packet을 직접 target에 보내는** 작업)
-    - [OSINT / 외부 정찰 상세](../techniques/osint.md): Passive 정찰 중심 (CT 로그, Shodan, GitHub 시크릿, LinkedIn, Breach 데이터 등 **target에 직접 닿지 않고** 수집하는 작업)
-    - 레드팀 OPSEC 관점에서는 Passive → Active 순으로 진행한다.
-
 ---
 
 ## Nmap

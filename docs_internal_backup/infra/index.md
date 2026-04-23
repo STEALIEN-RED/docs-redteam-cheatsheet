@@ -31,8 +31,6 @@ graph LR
 
 ## 펜테스트 방법론 체크리스트
 
-> HackTricks Pentesting Methodology를 사내 워크플로에 맞춰 축약 정리. 과업/스코프에 따라 항목을 선택적으로 수행한다.
-
 - [ ] 0. 물리적 접근: 스코프에 포함된 경우에만 수행 (키오스크/물리 공격)
 - [ ] 1. 자산 식별: 외부(도메인, ASN, CT 로그)/내부(ARP/Nmap) → [외부 정찰](../lifecycle/reconnaissance.md)
 - [ ] 2. 네트워크 관찰: 패시브/Active(MitM, LLMNR/NBT-NS) → [Responder](../tools/index.md#responder)

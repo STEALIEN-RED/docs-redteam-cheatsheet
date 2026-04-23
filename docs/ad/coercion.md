@@ -4,8 +4,6 @@ DC 나 ADCS, 파일 서버 같은 고가치 호스트가 공격자 쪽 SMB / HTT
 
 넘어온 NetNTLMv1/v2 challenge 는 그대로 cracking하던지, 아니면 LDAP / ADCS / SMB 로 NTLM Relay 해서 권한을 올린다. PetitPotam / PrinterBug / DFSCoerce 가 전통의 3대천왕.
 
-> 후속 처리는 [AD 환경 - NTLM Relay](ad-environment.md#NTLM-Relay), [ADCS - ESC8/ESC11](adcs.md), [DACL Abuse](dacl-abuse.md) 참고.
-
 ---
 
 ## 일반적 흐름
