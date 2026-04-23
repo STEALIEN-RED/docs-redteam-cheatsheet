@@ -1,6 +1,6 @@
 # Reverse Shell
 
-target 에서 공격자 listener 로 커넥션을 물어오게 만드는 payload 모음. 환경에 따라 쓸 수 있는 건지 다 다르니까 예비채 여러 개 써보고 굴러가는 걸 쓸 것.
+target 에서 공격자 listener 로 커넥션을 물어오게 만드는 payload 모음이다. 환경마다 동작하는 payload 가 달라지므로 여러 개를 미리 준비해 두고 실제로 붙는 것을 골라 쓰면 된다.
 
 ---
 

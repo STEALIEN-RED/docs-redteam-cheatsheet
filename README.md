@@ -1,8 +1,8 @@
 # Red Team Cheat Sheet
 
-레드팀 / 모의침투 업무에서 사용하는 명령어·기법·도구를 공격 라이프사이클 순서로 정리한 [MkDocs](https://www.mkdocs.org/) 기반 문서 사이트이다.
+레드팀 / 모의침투 현장에서 쓰는 명령어·기법·도구를 공격 라이프사이클 순서로 정리한 [MkDocs](https://www.mkdocs.org/) 기반 문서 사이트이다.
 
-실무에서 바로 복사해 쓸 수 있도록 **명령어 중심**으로 구성했으며, `Material for MkDocs` 테마를 사용한다.
+실무에서 바로 가져다 쓸 수 있도록 **명령어 중심**으로 구성했으며, `Material for MkDocs` 테마를 사용한다.
 
 ---
 
@@ -28,11 +28,11 @@ docs-redteam-cheatsheet/
 
 ## Internal vs External
 
-두 가지 배포 버전을 관리하고 있다. 같은 주제를 다루지만 **대상 독자**와 **상세도**가 다르다.
+두 가지 배포 버전을 관리한다. 같은 주제를 다루지만 **대상 독자**와 **상세도**가 다르다.
 
 ### Internal (사내용) — 기본값
 
-- **용도**: 사내 레드팀 / 펜테스터 본인 및 팀 내부 공유용 상세 치트시트.
+- **용도**: 사내 레드팀 / 펜테스터와 팀 내부 공유용 상세 치트시트.
 - **파일**: [mkdocs_internal_backup.yml](mkdocs_internal_backup.yml), [docs_internal_backup/](docs_internal_backup/)
 - **특징**
   - `공격 라이프사이클`, `프로토콜`, `AD`, `Web`, `Cloud`, `방어 우회`, `인프라`, `도구` 전 항목을 **카테고리별로 세분화**해서 페이지 단위로 나눔.
@@ -48,7 +48,7 @@ docs-redteam-cheatsheet/
 - **특징**
   - 카테고리별로 **단일 파일(`lifecycle.md`, `protocols.md`, `ad.md`, `web.md`, `cloud.md`, `infra.md`, `tools.md`)** 로 통합되어 전체적인 흐름만 빠르게 훑어볼 수 있도록 구성.
   - 네비게이션이 평탄화(tab만 사용, `sections` / `expand` 미사용)되어 있어 가볍게 공개하기 적합.
-  - 내부 전용 팁·민감 페이로드·사내 도구 레퍼런스는 제거되거나 요약됨.
+  - 내부 전용 팁·민감 페이로드·사내 도구 레퍼런스는 제거되거나 요약된다.
 
 ### 비교 요약
 

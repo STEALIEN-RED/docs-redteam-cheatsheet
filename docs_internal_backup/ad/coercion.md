@@ -1,8 +1,8 @@
 # NTLM Coercion
 
-DC 나 ADCS, 파일 서버 같은 고가치 호스트가 공격자 쪽 SMB / HTTP listener로 NTLM 인증을 스스로 보내게 유도하는 기법.
+DC 나 ADCS, 파일 서버 같은 고가치 호스트가 공격자 쪽 SMB / HTTP listener 로 NTLM 인증을 스스로 보내게 유도하는 기법이다.
 
-넘어온 NetNTLMv1/v2 challenge 는 그대로 cracking하던지, 아니면 LDAP / ADCS / SMB 로 NTLM Relay 해서 권한을 올린다. PetitPotam / PrinterBug / DFSCoerce 가 전통의 3대천왕.
+넘어온 NetNTLMv1/v2 challenge 는 그대로 cracking 하거나, LDAP / ADCS / SMB 로 NTLM Relay 해서 권한을 올린다. PetitPotam / PrinterBug / DFSCoerce 가 전통적으로 가장 많이 쓰이는 세 가지다.
 
 ---
 

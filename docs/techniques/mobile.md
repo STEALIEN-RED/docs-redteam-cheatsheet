@@ -1,6 +1,6 @@
 # Mobile (Android / iOS)
 
-요즘 레드팀 scope 에 internal mobile app 도 포함되는 경우가 늘었다. 대부분 목적은 하드코딩된 credential / API endpoint / JWT secret 같은 backend infra 정보 추출.
+최근 레드팀 scope 에 internal mobile app 이 포함되는 경우가 많다. 주 목적은 하드코딩된 credential / API endpoint / JWT secret 같은 backend infra 정보 추출이다.
 
 ---
 
@@ -40,7 +40,7 @@ frida-ps -U
 # SSL pinning bypass (universal)
 frida -U -f com.target.app -l frida-ssl-pin-bypass.js --no-pause
 
-# Root 탐지 우회 / 자주 쓰는 스크립트 묶음
+# Root 탐지 우회 / 자주 쓰는 스크립트 모음
 # https://codeshare.frida.re/
 frida --codeshare fdciabdul/android-ssl-pinning-bypass -U -f com.target.app
 ```

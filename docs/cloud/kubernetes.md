@@ -1,6 +1,6 @@
 # Container / Kubernetes
 
-Docker, containerd, Kubernetes 환경의 공격. 크게 "컨테이너 밖으로 탈출하기" 와 "클러스터 권한 올리기" 두 마디 돌고 끝난다.
+Docker, containerd, Kubernetes 환경의 공격은 크게 "컨테이너 밖으로 탈출하기" 와 "클러스터 권한 올리기" 두 축으로 정리된다.
 
 ---
 

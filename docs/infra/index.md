@@ -1,6 +1,6 @@
 # Operation Infrastructure
 
-작전을 돌리는 데 필요한 계수을 모아 둔 섹션. Shell 획득, 파일 전송, pivot / tunneling, C2 framework.
+작전을 돌리는 데 필요한 구성 요소를 모아 둔 섹션이다. Shell 획득, 파일 전송, pivot / tunneling, C2 framework 를 다룬다.
 
 ---
 

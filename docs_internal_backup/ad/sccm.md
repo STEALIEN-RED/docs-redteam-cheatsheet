@@ -1,8 +1,8 @@
 # SCCM / MECM 공격
 
-Microsoft Configuration Manager (구 SCCM, 현 MECM) 는 대규모 endpoint 관리 솔루션으로,
-대부분의 엔터프라이즈에 깔려 있고, 고권한 서비스 계정 (Network Access Account, Site System Installation Account, Client Push Account 등) 을 열심히 굴리고 다닌다.
-한 번 잡으면 도메인 안 거의 모든 워크스테이션 / 서버에 payload 를 푸시할 수 있어서 레드팀 입장에서는 사실상 1순위 target.
+Microsoft Configuration Manager (구 SCCM, 현 MECM) 는 대규모 endpoint 관리 솔루션이다.
+대부분의 엔터프라이즈에 배포되어 있고, Network Access Account, Site System Installation Account, Client Push Account 같은 고권한 서비스 계정을 광범위하게 사용한다.
+한 번 장악하면 도메인 안의 거의 모든 워크스테이션 / 서버에 payload 를 푸시할 수 있어 레드팀 입장에서는 사실상 1순위 target이다.
 
 ---
 

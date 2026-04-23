@@ -2,7 +2,7 @@
 
 AD object 의 DACL 에 잘못 붙은 위임 권한을 흘린 다음 밀어붙이면서 도메인 권한을 올려가는 기법.
 
-진입 지점은 보통 생키는 형광들 — GenericAll / GenericWrite / WriteDACL / WriteOwner / ForceChangePassword / AddMember / AllExtendedRights. BloodHound 까지 돌리면 그래프가 기상천외로 나오는 이유가 대부분 여기다.
+진입 지점은 보통 눈에 띄는 위험 권한들 — GenericAll / GenericWrite / WriteDACL / WriteOwner / ForceChangePassword / AddMember / AllExtendedRights — 이다. BloodHound 를 돌렸을 때 그래프가 기상천외하게 연결되는 이유도 대부분 여기서 나온다.
 
 ---
 
