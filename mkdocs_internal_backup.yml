@@ -53,7 +53,7 @@ nav:
     - 횡적 이동 (Lateral Movement): lifecycle/lateral-movement.md
     - 지속성 (Persistence): lifecycle/persistence.md
     - 데이터 유출 (Exfiltration): lifecycle/exfiltration.md
-  - Techniques (심화):
+  - Techniques:
     - OSINT / External Recon: techniques/osint.md
     - Phishing / Vishing: techniques/phishing.md
     - Wireless / WiFi: techniques/wireless.md

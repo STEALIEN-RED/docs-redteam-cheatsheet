@@ -34,7 +34,7 @@ graph LR
 
 ---
 
-## Techniques (심화)
+## Techniques
 
 Tactic 을 가로지르는 전용 기법. 각 문서는 OPSEC / 툴체인 / 실전 예시 중심.
 
