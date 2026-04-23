@@ -41,23 +41,27 @@ markdown_extensions:
 
 nav:
   - 개요: index.md
-  - 공격 라이프사이클:
-    - 외부 정찰: lifecycle/reconnaissance.md
-    - OSINT / 외부 정찰 상세: lifecycle/osint.md
-    - 초기 침투: lifecycle/initial-access.md
-    - Phishing / Vishing: lifecycle/phishing.md
-    - 내부 정찰 및 열거: lifecycle/enumeration.md
-    - 자격 증명 탈취: lifecycle/credential-access.md
-    - NTLM: lifecycle/ntlm.md
-    - 권한 상승: lifecycle/privilege-escalation.md
-    - 횡적 이동: lifecycle/lateral-movement.md
-    - 지속성 유지: lifecycle/persistence.md
-    - 데이터 유출: lifecycle/exfiltration.md
+  - 공격 lifecycle:
+    - 외부 정찰 (Reconnaissance): lifecycle/reconnaissance.md
+    - 초기 침투 (Initial Access): lifecycle/initial-access.md
+    - 내부 정찰 (Discovery): lifecycle/enumeration.md
+    - Credential Access: lifecycle/credential-access.md
+    - 권한 상승 (Privilege Escalation): lifecycle/privilege-escalation.md
+    - 횡적 이동 (Lateral Movement): lifecycle/lateral-movement.md
+    - 지속성 (Persistence): lifecycle/persistence.md
+    - 데이터 유출 (Exfiltration): lifecycle/exfiltration.md
+  - Techniques (심화):
+    - OSINT / External Recon: techniques/osint.md
+    - Phishing / Vishing: techniques/phishing.md
+    - Wireless / WiFi: techniques/wireless.md
+    - 물리 침투 / KIOSK: techniques/physical.md
+    - Mobile (Android / iOS): techniques/mobile.md
   - 프로토콜별 펜테스트:
     - 개요: protocols/index.md
     - SMB: protocols/smb.md
     - LDAP: protocols/ldap.md
     - Kerberos: protocols/kerberos.md
+    - NTLM: protocols/ntlm.md
     - RPC: protocols/rpc.md
     - WinRM: protocols/winrm.md
     - SSH: protocols/ssh.md
@@ -81,15 +85,11 @@ nav:
   - Cloud 공격:
     - 개요: cloud/index.md
     - Kubernetes / Container: cloud/kubernetes.md
-  - 방어 우회: evasion/index.md
-  - 오퍼레이션 인프라:
+  - Defense Evasion: evasion/index.md
+  - Operation Infrastructure:
     - 개요: infra/index.md
-    - 리버스 쉘: infra/shells.md
-    - 파일 전송: infra/file-transfer.md
-    - 피봇 / 터널링: infra/pivoting.md
-    - C2 프레임워크: infra/c2.md
-  - 초기 침투 벡터 (보조):
-    - 무선 / WiFi: wireless/index.md
-    - 물리 침투 / KIOSK: physical/index.md
-    - 모바일: mobile/index.md
-  - 도구 레퍼런스: tools/index.md
+    - Reverse Shell: infra/shells.md
+    - File Transfer: infra/file-transfer.md
+    - Pivoting / Tunneling: infra/pivoting.md
+    - C2 Framework: infra/c2.md
+  - Tool Reference: tools/index.md

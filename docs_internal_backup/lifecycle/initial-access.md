@@ -38,7 +38,7 @@ kerbrute passwordspray -d <domain> --dc <dc_ip> users.txt 'Password123!'
 레드팀 작전에서 초기 침투 시 가장 많이 사용되는 기법 중 하나.
 
 !!! tip "전용 문서"
-    피싱 인프라 구축, GoPhish/Evilginx2 (AiTM MFA 우회), Consent Phishing, MFA Fatigue, Vishing, HTML Smuggling 등 **상세 시나리오와 OPSEC** 은 [Phishing / Vishing 전용 문서](phishing.md) 를 참고. 이 섹션은 payload 포맷에 국한된 요약.
+    피싱 인프라 구축, GoPhish/Evilginx2 (AiTM MFA 우회), Consent Phishing, MFA Fatigue, Vishing, HTML Smuggling 등 **상세 시나리오와 OPSEC** 은 [Phishing / Vishing 전용 문서](../techniques/phishing.md) 를 참고. 이 섹션은 payload 포맷에 국한된 요약.
 
 ### payload 유형
 

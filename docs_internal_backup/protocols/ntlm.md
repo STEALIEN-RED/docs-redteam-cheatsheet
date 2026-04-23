@@ -68,7 +68,7 @@ responder -I eth0 -wrf
 responder -I eth0 -A           # analyze 모드. 탈취 안 하고 broadcast 만 관찰
 ```
 
-LLMNR / NBT-NS / mDNS poisoning 상세는 [LLMNR/NBT-NS Poisoning](credential-access.md#llmnrnbt-ns-poisoning) 참고.
+LLMNR / NBT-NS / mDNS poisoning 상세는 [LLMNR/NBT-NS Poisoning](../lifecycle/credential-access.md#llmnrnbt-ns-poisoning) 참고.
 
 ---
 
@@ -122,7 +122,7 @@ nxc smb <target> -u user -H <NT_HASH>
 evil-winrm -i <target> -u user -H <NT_HASH>
 ```
 
-관련: [Pass-the-Hash](credential-access.md#pass-the-hash-pth), [Overpass-the-Hash](lateral-movement.md#overpass-the-hash-pass-the-key)
+관련: [Pass-the-Hash](../lifecycle/credential-access.md#pass-the-hash-pth), [Overpass-the-Hash](../lifecycle/lateral-movement.md#overpass-the-hash-pass-the-key)
 
 ---
 
@@ -137,6 +137,6 @@ evil-winrm -i <target> -u user -H <NT_HASH>
 
 ## 참고
 
-- [LLMNR/NBT-NS Poisoning](credential-access.md#llmnrnbt-ns-poisoning)
+- [LLMNR/NBT-NS Poisoning](../lifecycle/credential-access.md#llmnrnbt-ns-poisoning)
 - [AD Coercion](../ad/coercion.md)
 - [ADCS ESC8](../ad/adcs.md#esc8-ntlm-relay-to-adcs-http-enrollment)

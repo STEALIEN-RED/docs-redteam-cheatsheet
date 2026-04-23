@@ -32,6 +32,22 @@ graph LR
 | [지속성 유지](lifecycle/persistence.md) | Registry, Scheduled Task, Golden Ticket |
 | [데이터 유출](lifecycle/exfiltration.md) | HTTP/DNS/ICMP/클라우드 채널을 통한 유출 |
 
+> lifecycle 은 MITRE ATT&CK Enterprise tactics 기준. 특정 tactic 에 묶이지 않는 심화 기법 (OSINT, Phishing, Wireless, Physical, Mobile) 은 [Techniques](#techniques-심화) 섹션 참고.
+
+---
+
+## Techniques (심화)
+
+Tactic 을 가로지르는 전용 기법. 각 문서는 OPSEC / 툴체인 / 실전 예시 중심.
+
+| 분류 | 설명 |
+|------|------|
+| [OSINT / External Recon](techniques/osint.md) | CT 로그, Shodan, GitHub secret, LinkedIn, Breach 데이터 |
+| [Phishing / Vishing](techniques/phishing.md) | GoPhish, Evilginx2 (AiTM), HTML Smuggling, MFA Fatigue |
+| [Wireless / WiFi](techniques/wireless.md) | WPA2 PSK/Enterprise, Evil Twin, WPS, 802.1X NAC bypass |
+| [물리 침투 / KIOSK](techniques/physical.md) | Tailgating, Proxmark3, Rubber Ducky, LAN Turtle, Drop Box |
+| [Mobile (Android/iOS)](techniques/mobile.md) | APK/IPA 분석, Frida SSL unpin, backend API 공격 |
+
 ---
 
 ## 프로토콜별 펜테스트
@@ -49,6 +65,7 @@ graph LR
 | [RDP](protocols/rdp.md) | 3389 | Windows 원격 데스크톱 |
 | [DNS](protocols/dns.md) | 53 | Zone Transfer, subdomain 열거 |
 | [Kerberos](protocols/kerberos.md) | 88 | 사용자 열거, AS-REP/Kerberoasting |
+| [NTLM](protocols/ntlm.md) | - | Hash types, Responder, ntlmrelayx, PtH |
 | [RPC](protocols/rpc.md) | 135/111 | MSRPC 열거, rpcclient |
 | [MSSQL](protocols/mssql.md) | 1433 | xp_cmdshell, NTLM capture |
 | [MySQL](protocols/mysql.md) | 3306 | UDF, 파일 읽기/쓰기 |
