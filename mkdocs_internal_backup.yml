@@ -68,6 +68,7 @@ nav:
     - SMTP: protocols/smtp.md
   - Active Directory:
     - AD 환경 공격: ad/ad-environment.md
+    - DACL Abuse: ad/dacl-abuse.md
     - ADCS: ad/adcs.md
   - Web 공격: web/index.md
   - Cloud 공격: cloud/index.md
