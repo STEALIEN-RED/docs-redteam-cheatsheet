@@ -1,6 +1,6 @@
 # DNS (53)
 
-Domain Name System. 도메인-IP 변환. Zone Transfer, 서브도메인 열거 등에 활용.
+Domain Name System. 도메인-IP 변환. Zone Transfer, subdomain 열거 등에 활용.
 
 ---
 
@@ -47,7 +47,7 @@ nmap --script=dns-zone-transfer --script-args dns-zone-transfer.domain=domain.co
 
 ---
 
-## 서브도메인 열거
+## subdomain 열거
 
 ```bash
 # DNSRecon

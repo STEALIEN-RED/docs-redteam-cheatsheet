@@ -1,6 +1,6 @@
 # LDAP (389/636)
 
-Lightweight Directory Access Protocol. AD 환경의 디렉토리 서비스 쿼리에 사용. 636은 LDAPS (SSL/TLS).
+Lightweight Directory Access Protocol. AD 환경의 directory 서비스 쿼리에 사용. 636은 LDAPS (SSL/TLS).
 
 ---
 

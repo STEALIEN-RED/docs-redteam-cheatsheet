@@ -1,6 +1,6 @@
 # DNS (53)
 
-Domain Name System. 도메인-IP 변환. Zone Transfer, 서브도메인 열거 등에 활용.
+Domain Name System. 도메인-IP 변환. Zone Transfer, subdomain 열거 등에 활용.
 
 ---
 
@@ -47,7 +47,7 @@ nmap --script=dns-zone-transfer --script-args dns-zone-transfer.domain=domain.co
 
 ---
 
-## 서브도메인 열거
+## subdomain 열거
 
 ```bash
 # DNSRecon
@@ -102,7 +102,7 @@ nmap --script=dns-zone-transfer --script-args dns-zone-transfer.domain=domain.co
 
 ---
 
-## 모던 서브도메인 수집
+## 모던 subdomain 수집
 
 Passive + Active 를 모두 조합해야 누락이 줄어든다.
 
@@ -130,9 +130,9 @@ dig 'random-nonexistent-123456.domain.com'
 
 ---
 
-## 서브도메인 탈취 (Dangling DNS)
+## subdomain 탈취 (Dangling DNS)
 
-CNAME 이 해제된 외부 서비스(S3, Azure, Heroku, GitHub Pages 등)를 가리키고 있으면 공격자가 해당 서비스를 재등록해 서브도메인을 탈취할 수 있다.
+CNAME 이 해제된 외부 서비스(S3, Azure, Heroku, GitHub Pages 등)를 가리키고 있으면 공격자가 해당 서비스를 재등록해 subdomain을 탈취할 수 있다.
 
 ```bash
 # 취약 CNAME 자동 탐지

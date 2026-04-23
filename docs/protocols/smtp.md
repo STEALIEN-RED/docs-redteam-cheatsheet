@@ -101,7 +101,7 @@ curl -s https://mail.target.com/owa/auth/logon.aspx | grep -oE "/owa/auth/[0-9.]
 curl -s https://autodiscover.target.com/autodiscover/autodiscover.xml
 ```
 
-### 사용자 / 자격 증명 공격
+### 사용자 / credential 공격
 
 ```bash
 # MailSniper - 사용자 열거, 패스워드 스프레이, 메일 검색
@@ -153,9 +153,9 @@ dig default._domainkey.target.com TXT
 
 ---
 
-## 메일 헤더 분석 (리컨)
+## 메일 header 분석 (리컨)
 
-수신된 메일의 헤더로 내부 구조 파악:
+수신된 메일의 header로 내부 구조 파악:
 
 ```text
 Received:  내부 메일 게이트웨이 / 허브 호스트명

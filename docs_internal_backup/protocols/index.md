@@ -19,7 +19,7 @@
 | 135 | MSRPC | Microsoft RPC | [RPC](rpc.md) |
 | 139/445 | SMB | 파일/프린터 공유 | [SMB](smb.md) |
 | 161/162 | SNMP | 네트워크 관리 | [SNMP](snmp.md) |
-| 389/636 | LDAP/LDAPS | 디렉토리 서비스 | [LDAP](ldap.md) |
+| 389/636 | LDAP/LDAPS | directory 서비스 | [LDAP](ldap.md) |
 | 1433 | MSSQL | Microsoft SQL Server | [MSSQL](mssql.md) |
 | 1521 | Oracle | Oracle DB | - |
 | 2049 | NFS | 네트워크 파일 시스템 | [NFS](nfs.md) |

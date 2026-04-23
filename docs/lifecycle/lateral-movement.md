@@ -97,7 +97,7 @@ reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestric
 WinRM(5985/5986)을 통한 PowerShell 원격 실행. `Remote Management Users` 또는 로컬 관리자 권한 필요.
 
 ```powershell
-# 대화형 세션
+# 대화형 session
 $cred = Get-Credential
 Enter-PSSession -ComputerName TARGET -Credential $cred
 
@@ -232,6 +232,6 @@ SCShell.exe TARGET XblAuthManager "C:\Windows\System32\cmd.exe /c whoami > C:\te
 ---
 
 !!! info "관련 페이지"
-    - Pass-the-Hash/Ticket → [자격 증명 획득](../lifecycle/credential-access.md)
+    - Pass-the-Hash/Ticket → [credential 획득](../lifecycle/credential-access.md)
     - 각 프로토콜 상세 → [SMB](../protocols/smb.md), [WinRM](../protocols/winrm.md), [RDP](../protocols/rdp.md), [MSSQL](../protocols/mssql.md)
     - 횡적 이동 도구 → [도구 레퍼런스](../tools/index.md) (Impacket, Evil-WinRM)

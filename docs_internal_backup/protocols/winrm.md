@@ -48,7 +48,7 @@ evil-winrm -i TARGET -r DOMAIN.LOCAL
 upload /local/file C:\remote\path
 download C:\remote\file /local/path
 
-# PowerShell 스크립트 디렉토리 로드
+# PowerShell 스크립트 directory 로드
 evil-winrm -i TARGET -u user -p pass -s /opt/scripts/
 menu  # 사용 가능한 함수 확인
 
@@ -100,7 +100,7 @@ nxc winrm TARGET -u users.txt -p 'Password1!' --continue-on-success
 ## 유의사항
 
 !!! warning "로깅"
-    WinRM/PowerShell Remoting 세션은 **PowerShell ScriptBlock Logging**, **Module Logging**, **Transcription**이 활성화되면 모든 명령이 기록된다. `4104` (ScriptBlock), `4103` (Module) 이벤트 로그 확인.
+    WinRM/PowerShell Remoting session은 **PowerShell ScriptBlock Logging**, **Module Logging**, **Transcription**이 활성화되면 모든 명령이 기록된다. `4104` (ScriptBlock), `4103` (Module) 이벤트 로그 확인.
 
 !!! tip "JEA (Just Enough Administration)"
-    JEA가 설정된 엔드포인트는 사용 가능한 명령이 제한된다. `Get-Command`으로 허용된 명령 확인.
+    JEA가 설정된 endpoint는 사용 가능한 명령이 제한된다. `Get-Command`으로 허용된 명령 확인.

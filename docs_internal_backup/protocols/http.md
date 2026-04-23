@@ -20,7 +20,7 @@ curl http://TARGET/robots.txt
 curl http://TARGET/sitemap.xml
 ```
 
-## 디렉토리 / 파일 열거
+## directory / 파일 열거
 
 ```bash
 # gobuster
@@ -34,24 +34,24 @@ feroxbuster -u http://TARGET -w wordlist.txt --depth 3
 ffuf -u http://TARGET/FUZZ -w wordlist.txt -mc 200,301,302,403 -t 50
 ```
 
-## 서브도메인 열거
+## subdomain 열거
 
 ```bash
 # DNS 기반
 gobuster dns -d domain.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -t 50
 
-# VHOST 기반 (Host 헤더)
+# VHOST 기반 (Host header)
 ffuf -u http://TARGET -H "Host: FUZZ.domain.com" -w subdomains.txt -fs SIZE
 gobuster vhost -u http://TARGET -w subdomains.txt --append-domain
 ```
 
-## 파라미터 퍼징
+## parameter 퍼징
 
 ```bash
-# GET 파라미터 발견
+# GET parameter 발견
 ffuf -u "http://TARGET/page?FUZZ=test" -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -fs SIZE
 
-# POST 파라미터 발견
+# POST parameter 발견
 ffuf -u http://TARGET/page -X POST -d "FUZZ=test" -w params.txt -fs SIZE
 ```
 
@@ -60,7 +60,7 @@ ffuf -u http://TARGET/page -X POST -d "FUZZ=test" -w params.txt -fs SIZE
 ## 인증 공격
 
 ```bash
-# 기본 자격 증명 시도
+# 기본 credential 시도
 # admin:admin, admin:password, root:root, etc.
 
 # HTTP Basic Auth Brute Force
@@ -78,14 +78,14 @@ ffuf -u http://TARGET/login -X POST -d "user=admin&pass=FUZZ" -w passwords.txt -
 ## 주요 확인사항
 
 ```text
-□ 기본 자격 증명 (admin 패널, 관리 콘솔)
-□ 디렉토리 열거 (숨겨진 페이지, 백업 파일)
+□ 기본 credential (admin 패널, 관리 콘솔)
+□ directory 열거 (숨겨진 페이지, 백업 파일)
 □ 기술 스택 식별 (CMS, 프레임워크, 버전)
 □ 소스 코드 내 주석, API 키, 비밀번호
 □ .git, .svn, .env, backup 파일 노출
-□ API 엔드포인트 발견 및 문서화
+□ API endpoint 발견 및 문서화
 □ Cookie, JWT, Session 관리 방식
-□ CORS 설정, CSP 헤더
+□ CORS 설정, CSP header
 □ HTTP 메서드 (PUT, DELETE, TRACE 등)
 □ 에러 페이지 정보 노출
 ```

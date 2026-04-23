@@ -1,12 +1,12 @@
 # 외부 정찰
 
-초기 정찰 단계. 타겟의 외부 자산, 네트워크, 서비스, 호스트 정보를 파악한다.
+초기 정찰 단계. target의 외부 자산, 네트워크, 서비스, 호스트 정보를 파악한다.
 
-OSINT, 포트 스캔, 서비스 식별, 디렉토리/서브도메인 열거를 통해 공격 표면을 정의한다.
+OSINT, 포트 스캔, 서비스 식별, directory/subdomain 열거를 통해 공격 표면을 정의한다.
 
 !!! info "문서 분담"
-    - **이 문서**: Active 스캔 중심 (Nmap, 디렉토리 퍼징, 서비스 식별 등 **패킷을 직접 타겟에 보내는** 작업)
-    - [OSINT / 외부 정찰 상세](osint.md): Passive 정찰 중심 (CT 로그, Shodan, GitHub 시크릿, LinkedIn, Breach 데이터 등 **타겟에 직접 닿지 않고** 수집하는 작업)
+    - **이 문서**: Active 스캔 중심 (Nmap, directory 퍼징, 서비스 식별 등 **패킷을 직접 target에 보내는** 작업)
+    - [OSINT / 외부 정찰 상세](osint.md): Passive 정찰 중심 (CT 로그, Shodan, GitHub 시크릿, LinkedIn, Breach 데이터 등 **target에 직접 닿지 않고** 수집하는 작업)
     - 레드팀 OPSEC 관점에서는 Passive → Active 순으로 진행한다.
 
 ---
@@ -73,7 +73,7 @@ nmap --script ms-sql-info -p 1433 <target>
 # Zone Transfer 시도
 dig axfr @<dns_server> <domain>
 
-# 서브도메인 열거
+# subdomain 열거
 dig any <domain> @<dns_server>
 
 # reverse lookup
@@ -87,7 +87,7 @@ nmap -sL <subnet> | grep "(" | cut -d"(" -f2 | cut -d")" -f1
 ### Gobuster
 
 ```bash
-# 디렉토리 스캔
+# directory 스캔
 gobuster dir -u http://<target> -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
 
 # 확장자 포함
@@ -106,13 +106,13 @@ feroxbuster -u http://<target> -w <wordlist> -t 50 -d 2 -x php,asp,aspx
 ### ffuf
 
 ```bash
-# 디렉토리 퍼징
+# directory 퍼징
 ffuf -u http://<target>/FUZZ -w <wordlist> -mc 200,301,302,403
 
-# 서브도메인 퍼징
+# subdomain 퍼징
 ffuf -u http://<target> -H "Host: FUZZ.<domain>" -w <wordlist> -fs <filter_size>
 
-# POST 파라미터 퍼징
+# POST parameter 퍼징
 ffuf -u http://<target>/login -X POST -d "username=admin&password=FUZZ" -w <wordlist>
 ```
 
@@ -126,10 +126,10 @@ ffuf -u http://<target>/login -X POST -d "username=admin&password=FUZZ" -w <word
 # whois
 whois <domain>
 
-# theHarvester - 이메일, 서브도메인 수집
+# theHarvester - 이메일, subdomain 수집
 theHarvester -d <domain> -b google,bing,linkedin
 
-# Amass - 서브도메인 열거
+# Amass - subdomain 열거
 amass enum -d <domain> -passive
 amass enum -d <domain> -active  # DNS 해석 포함
 ```
@@ -145,7 +145,7 @@ site:<domain> filetype:env | filetype:cfg | filetype:conf
 # 로그인 페이지
 site:<domain> inurl:login | inurl:admin | inurl:portal
 
-# 디렉토리 리스팅
+# directory 리스팅
 site:<domain> intitle:"index of"
 
 # 에러 메시지 (정보 유출)
@@ -161,7 +161,7 @@ site:<domain> "password" | "passwd" | "credentials" filetype:txt
 ### 인증서 투명성 (Certificate Transparency)
 
 ```bash
-# crt.sh - 인증서에 등록된 서브도메인 검색
+# crt.sh - 인증서에 등록된 subdomain 검색
 curl -s "https://crt.sh/?q=%25.<domain>&output=json" | jq -r '.[].name_value' | sort -u
 
 # certspotter

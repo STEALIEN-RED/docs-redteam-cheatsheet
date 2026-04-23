@@ -289,4 +289,4 @@ certipy shadow auto -account <target> -clear ...
 
 - [BloodHound 엣지 정리](https://bloodhound.specterops.io/resources/edges)
 - [PowerView 함수 인덱스](https://powersploit.readthedocs.io/en/latest/Recon/)
-- 관련 페이지: [AD 환경 공격](ad-environment.md), [ADCS](adcs.md), [권한 상승](../lifecycle/privilege-escalation.md), [자격 증명 탈취](../lifecycle/credential-access.md)
+- 관련 페이지: [AD 환경 공격](ad-environment.md), [ADCS](adcs.md), [권한 상승](../lifecycle/privilege-escalation.md), [credential 탈취](../lifecycle/credential-access.md)

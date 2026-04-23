@@ -55,7 +55,7 @@ export AWS_ACCESS_KEY_ID=<key>
 export AWS_SECRET_ACCESS_KEY=<secret>
 export AWS_SESSION_TOKEN=<token>
 
-# IMDSv2 (토큰 필요)
+# IMDSv2 (token 필요)
 TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" \
   -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
 curl -H "X-aws-ec2-metadata-token: $TOKEN" \
@@ -226,7 +226,7 @@ az role assignment list --role "Owner" --output table
 az role assignment create --assignee <user_id> --role "Contributor" \
   --scope "/subscriptions/<sub_id>"
 
-# VM에 관리 ID 할당 후 토큰 획득
+# VM에 관리 ID 할당 후 token 획득
 # VM 내부에서:
 curl -H "Metadata: true" \
   "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
@@ -278,7 +278,7 @@ gcloud compute instances list
 curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/
 curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/project/
 
-# 서비스 계정 토큰 획득 (인스턴스 내부)
+# 서비스 계정 token 획득 (인스턴스 내부)
 curl -H "Metadata-Flavor: Google" \
   "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
 

