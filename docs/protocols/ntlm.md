@@ -122,7 +122,7 @@ nxc smb <target> -u user -H <NT_HASH>
 evil-winrm -i <target> -u user -H <NT_HASH>
 ```
 
-관련: [Pass-the-Hash](../lifecycle/credential-access.md#pass-the-hash-pth), [Overpass-the-Hash](../lifecycle/lateral-movement.md#overpass-the-hash-pass-the-key)
+관련: [Pass-the-Hash](../lifecycle/lateral-movement.md#pass-the-hash-pth), [Pass-the-Ticket](../lifecycle/lateral-movement.md#pass-the-ticket-ptt)
 
 ---
 
