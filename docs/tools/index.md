@@ -620,3 +620,65 @@ echo "BASE64_DATA" | base64 -d > /tmp/file
 | `CrackStation` | 온라인 해시 룩업 | [crackstation.net](https://crackstation.net) |
 | `PayloadsAllTheThings` | 페이로드 치트시트 모음 | [GitHub](https://github.com/swisskyrepo/PayloadsAllTheThings) |
 | `SecLists` | 워드리스트 모음 | [GitHub](https://github.com/danielmiessler/SecLists) |
+
+---
+
+## 모던 도구 모음
+
+최신 공격/방어 트렌드에 맞춘 도구들을 한곳에 정리. 운영환경 영향이 큰 도구는 사전 허가와 제한 범위에서만 사용.
+
+!!! warning "OPSEC"
+  대규모 스캔/에뮬레이션은 탐지 신호가 큽니다. 사전 승인을 받고, 스코프/레이트리밋을 줄이고, 실험 환경에서 먼저 재현하세요.
+
+### ProjectDiscovery 스위트
+
+| 도구 | 용도 | 예시 |
+|------|------|------|
+| `subfinder` | 서브도메인 수집 | `subfinder -d example.com -all -o subs.txt` |
+| `dnsx` | 대량 DNS 확인 | `dnsx -l subs.txt -resp-only -o alive.txt` |
+| `httpx` | 대량 HTTP 핑거프린팅 | `httpx -l alive.txt -status-code -title -tech-detect -o web.txt` |
+| `naabu` | 대량 포트 스캔 | `naabu -list alive.txt -top-ports 1000 -o ports.txt` |
+| `nuclei` | 취약점 템플릿 스캔 | `nuclei -l web.txt -severity medium,high,critical -o vulns.txt` |
+| `katana` | 고속 크롤러 | `katana -u https://target -js-crawl -o urls.txt` |
+
+설치: `go install -v github.com/projectdiscovery/{subfinder,dnsx,httpx,naabu,nuclei,katana}/cmd/...@latest`
+
+### 클라우드 / 컨테이너
+
+| 도구 | 용도 | 예시 |
+|------|------|------|
+| `Stratus Red Team` | AWS/Azure/GCP 공격 기법 에뮬레이션 | `stratus run aws.credential-access.secretsmanager` |
+| `Prowler` | AWS 보안 점검 (CIS/머티리얼) | `prowler aws -M csv,json -S` |
+| `ScoutSuite` | 멀티클라우드 구성 감사 | `scout aws --report-dir reports/` |
+| `Pacu` | AWS 공격 프레임워크 | `pacu` → 세션 생성 후 모듈 실행 |
+| `CloudFox` | 멀티클라우드 권한/경로 탐색 | `cloudfox enum --aws --profile prof` |
+| `kubescape` | K8s 보안 스캔 | `kubescape scan framework nsa` |
+| `kube-hunter` | K8s 공격 표면 탐색 | `kube-hunter --remote some.cluster.local` |
+| `trivy` | 컨테이너/코드/이미지 취약점 | `trivy image registry/repo:tag` |
+
+### eBPF 가시성/탐지
+
+| 도구 | 용도 | 예시 |
+|------|------|------|
+| `Tetragon` | 런타임 정책/이벤트 관찰 (Cilium) | Helm 배포 후 `tetra get events` |
+| `Falco` | 커널 이상행위 탐지 (CNCF) | `falco` (드라이버/eBPF 모드) |
+| `Tracee` | 런타임 이벤트 트레이싱 (Aqua) | `tracee --security-alerts` |
+
+참고: 실환경에서는 탐지/차단 정책이 에이전트로 강제될 수 있습니다. PoC는 격리된 테스트 클러스터에서 수행하세요.
+
+### C2 / 에뮬레이션
+
+| 도구 | 용도 | 빠른 시작 |
+|------|------|---------|
+| `Mythic` | 확장형 C2 프레임워크 | `git clone https://github.com/its-a-feature/Mythic && cd Mythic && ./mythic-cli start` |
+| `Caldera` | 공격 시뮬레이션 (MITRE ATT&CK) | `git clone https://github.com/mitre/caldera && pip install -r requirements.txt && python server.py --insecure` |
+| `Sliver` | Go 기반 C2 (이미 위 표 참고) | `sliver-server` → Implant 생성/리스너 구성 |
+
+### 자산/콘텐츠 수집 보조
+
+| 도구 | 용도 | 예시 |
+|------|------|------|
+| `cariddi` | URL 파라미터/엔드포인트 수집 | `cat urls.txt | cariddi -plugins all -o found.txt` |
+| `gau` | 과거 아카이브 URL 수집 | `echo target.com | gau --providers wayback,commoncrawl` |
+| `waybackurls` | Wayback 기반 URL 수집 | `cat domains.txt | waybackurls > urls.txt` |
+

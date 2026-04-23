@@ -74,7 +74,9 @@ nav:
     - SCCM/MECM: ad/sccm.md
     - ADCS: ad/adcs.md
   - Web 공격: web/index.md
-  - Cloud 공격: cloud/index.md
+  - Cloud 공격:
+    - 개요: cloud/index.md
+    - Kubernetes / Container: cloud/kubernetes.md
   - 방어 우회: evasion/index.md
   - 오퍼레이션 인프라:
     - 개요: infra/index.md
