@@ -29,6 +29,29 @@ graph LR
 
 ---
 
+## 펜테스트 방법론 체크리스트
+
+> HackTricks Pentesting Methodology를 사내 워크플로에 맞춰 축약 정리. 과업/스코프에 따라 항목을 선택적으로 수행한다.
+
+- [ ] 0. 물리적 접근: 스코프에 포함된 경우에만 수행 (키오스크/물리 공격)
+- [ ] 1. 자산 식별: 외부(도메인, ASN, CT 로그)/내부(ARP/Nmap) → [외부 정찰](../lifecycle/reconnaissance.md)
+- [ ] 2. 네트워크 관찰: 패시브/Active(MitM, LLMNR/NBT-NS) → [Responder](../tools/index.md#responder)
+- [ ] 3. 포트/서비스 스캔: 빠른 전체 → 정밀 스캔 → 결과 태깅
+- [ ] 4. 버전 취약점 탐색: PoC 검증 전 스코프/안전성 확인
+- [ ] 5. 서비스별 점검: 웹/DB/메시징/CI 등 → [프로토콜별](../protocols/index.md)
+- [ ] 6. 피싱/소셜: 인프라, 도메인, 템플릿 준비 → [초기 침투](../lifecycle/initial-access.md)
+- [ ] 7. 쉘 획득: 리버스 쉘/에이전트 → [리버스 쉘](../infra/shells.md), [C2](../infra/c2.md)
+- [ ] 8. 호스트 내부: 퀵 트리아지(계정/토큰/파일/키링) → OPSEC
+- [ ] 9. 데이터 유출/투입: 안전 채널 선정 → [데이터 유출](../lifecycle/exfiltration.md)
+- [ ] 10. 로컬/도메인 권한상승: 윈도우/리눅스/AD → [권한 상승](../lifecycle/privilege-escalation.md), [AD](../ad/ad-environment.md)
+- [ ] 11. POST: 루팅/시크릿 추가 수집, [지속성 유지](../lifecycle/persistence.md)
+- [ ] 12. 피봇/터널링: 새로운 세그먼트로 확장 → [피봇/터널링](../infra/pivoting.md)
+
+!!! tip "증거 수집/기록"
+    각 단계 산출물(nmap 결과, 스크린샷, 명령 로그, 타임스탬프)을 정리해 재현/보고서 작성과 탐지 매핑(ATT&CK) 기반 개선에 활용하세요.
+
+---
+
 ## OPSEC 체크리스트
 
 ### 외부 인프라

