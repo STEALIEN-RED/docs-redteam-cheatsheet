@@ -296,15 +296,15 @@ MATCH (u:User {dontreqpreauth:true}) RETURN u.name
 ## Ligolo-ng 참고
 
 ```bash
-# 리스너 추가 (피봇 호스트에서 리버스 쉘 받기)
+# 리스너 추가 (Pivot 호스트에서 리버스 쉘 받기)
 >> listener_add --addr 0.0.0.0:4444 --to 127.0.0.1:4444 --tcp
 
-# 다중 피벗 (Agent 체이닝)
+# 다중 Pivot (Agent 체이닝)
 >> session                                     # 첫 번째 세션
 >> start --tun ligolo
-# 두 번째 에이전트를 첫 번째 피봇을 통해 연결
+# 두 번째 에이전트를 첫 번째 Pivot을 통해 연결
 >> listener_add --addr 0.0.0.0:11601 --to 0.0.0.0:11601 --tcp
-# 두 번째 에이전트 → 피봇1:11601 → 공격자
+# 두 번째 에이전트 → Pivot1:11601 → 공격자
 sudo ip route add 172.16.0.0/24 dev ligolo
 ```
 

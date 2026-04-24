@@ -62,7 +62,7 @@ certipy find -vulnerable -u <user> -p '<pass>' -dc-ip <dc_ip>
 
 ### NTLM Hash 인증 (Pass-the-Hash)
 
-NTLM 인증이 허용된 환경에서만 동작한다. `LmCompatibilityLevel`이 NTLM을 거부하도록 설정된 경우 PtH는 실패한다.
+NTLM 인증이 허용된 환경에서만 동작한다. `LmCompatibilityLevel`이 NTLM을 거부하도록 설정된 경우 PTH는 실패한다.
 
 ```bash
 # Impacket (-hashes LM:NT 형식, LM은 빈 값 가능)
@@ -183,7 +183,7 @@ bloodhound-python -u <user> -d <domain> -dc <dc_fqdn> -c all \
 
 ### SMB Signing
 
-| 설정 | NTLM Relay | PtH (SMB) | PSExec |
+| 설정 | NTLM Relay | PTH (SMB) | PSExec |
 |------|------------|-----------|--------|
 | Signing 강제 (Required) | X | O | O |
 | Signing 비강제 (Not Required) | O | O | O |
@@ -386,14 +386,14 @@ Get-ADTrust -Filter * | Select-Object Name, Direction, TrustType
 |------|-----------|-----------|
 | SMB Signing | `nxc smb <ip>` | Relay 가능 여부 |
 | LDAP Signing | `nxc ldap <ip> -M ldap-checker` | LDAP Relay 가능 여부 |
-| NTLM 허용 여부 | `LmCompatibilityLevel` Registry | PtH 가능 여부 |
+| NTLM 허용 여부 | `LmCompatibilityLevel` Registry | PTH 가능 여부 |
 | Kerberos AES 지원 | Domain Functional Level 확인 | OPSEC (AES vs RC4) |
 | MachineAccountQuota | `nxc ldap <ip> -M maq` | RBCD 가능 여부 |
 | ADCS 존재 | `nxc ldap <ip> -M adcs` | ESC1~ESC16 |
 | Credential Guard | `DeviceGuardSecurityServicesConfigured` | lsass dump 불가 |
 | LAPS | `nxc ldap <ip> -M laps` | 로컬 admin PW 관리 여부 |
 | gMSA | `nxc ldap <ip> -M gmsa` | 서비스 계정 PW 읽기 |
-| Protected Users | `net group "Protected Users" /domain` | PtH/위임 공격 불가 |
+| Protected Users | `net group "Protected Users" /domain` | PTH/위임 공격 불가 |
 | AdminSDHolder | SDProp으로 ACL 복원됨 | ACL 공격 지속성 제한 |
 | Print Spooler | `ls \\<target>\pipe\spoolss` | PrinterBug/강제 인증 |
 | WebDAV | `nxc smb <ip> -M webdav` | WebDAV NTLM Relay |
@@ -416,7 +416,7 @@ net group "Protected Users" /domain
 Get-ADGroupMember "Protected Users"
 ```
 
-이 그룹에 속한 계정은 PtH, 위임 공격 등이 불가능하므로 다른 경로를 찾아야 한다.
+이 그룹에 속한 계정은 PTH, 위임 공격 등이 불가능하므로 다른 경로를 찾아야 한다.
 
 ---
 

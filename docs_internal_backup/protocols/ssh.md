@@ -131,7 +131,7 @@ ssh -R REMOTE_PORT:LOCAL_TARGET:LOCAL_PORT user@TARGET
 ssh -D 1080 user@TARGET
 # proxychains 설정: socks5 127.0.0.1 1080
 
-# SSH over SSH (피봇)
+# SSH over SSH (Pivot)
 ssh -J user@PIVOT user@INTERNAL_TARGET
 ```
 

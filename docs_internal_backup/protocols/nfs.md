@@ -131,7 +131,7 @@ mount -t nfs -o vers=3,sec=sys TARGET:/share /tmp/nfs
 /share        *(rw,no_root_squash)        # 가장 치명적 - root 로 읽기/쓰기
 /home         *(rw,no_root_squash,insecure)
 /backup       *(rw,all_squash,anonuid=0)  # 익명이 root 로 매핑됨
-/data         192.168.0.0/16(rw)          # 내부 전체 허용 - 피봇 후 접근 가능
+/data         192.168.0.0/16(rw)          # 내부 전체 허용 - Pivot 후 접근 가능
 ```
 
 ### no_root_squash 권한 상승 (전체 흐름)

@@ -2,11 +2,11 @@
 
 확보한 credential — password, NT hash, Kerberos ticket 중 뭐든 — 을 들고 다른 호스트로 갈아타는 단계.
 
-어떤 인증 수단이 있느냐에 따라 PtH / PtT / Overpass-the-Hash 등 쓸 수 있는 카드가 갈라진다.
+어떤 인증 수단이 있느냐에 따라 PTH / PTT / Overpass-the-Hash 등 쓸 수 있는 카드가 갈라진다.
 
 ---
 
-## Pass-the-Hash (PtH)
+## Pass-the-Hash (PTH)
 
 NTLM hash를 사용하여 인증하는 기법. password를 모르더라도 hash만으로 접근 가능하다.
 
@@ -25,15 +25,15 @@ nxc smb <ip> -u <user> -H <ntlm_hash>
 nxc winrm <ip> -u <user> -H <ntlm_hash>
 ```
 
-!!! note "PtH 제한사항"
-    - RDP는 기본적으로 PtH 불가 (Restricted Admin 모드 활성화 시 가능)  
+!!! note "PTH 제한사항"
+    - RDP는 기본적으로 PTH 불가 (Restricted Admin 모드 활성화 시 가능)  
     - WinRM은 Remote Management Users 그룹 소속이거나 관리자여야 함  
     - PSExec은 Local Admin 권한 필요  
-    - UAC RemoteAccountTokenFilterPolicy 설정에 따라 내장 Administrator 외 계정은 PtH 불가할 수 있음
+    - UAC RemoteAccountTokenFilterPolicy 설정에 따라 내장 Administrator 외 계정은 PTH 불가할 수 있음
 
 ---
 
-## Pass-the-Ticket (PtT)
+## Pass-the-Ticket (PTT)
 
 Kerberos 티켓(TGT/TGS)을 사용하여 인증하는 기법.
 

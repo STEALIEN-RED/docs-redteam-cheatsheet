@@ -1,7 +1,7 @@
 # NTLM
 
 Windows 의 legacy 인증 프로토콜. 현업에서는 Kerberos 가 주 인증이지만 SMB / HTTP / LDAP 등의 fallback 경로에서는 여전히 NTLM 이 돈다.
-레드팀 입장에서 보면 NTLM 관련 공격은 크게 세 축으로 정리된다: **credential 탈취 (Responder), relay (ntlmrelayx), hash 재사용 (PtH)**.
+레드팀 입장에서 보면 NTLM 관련 공격은 크게 세 축으로 정리된다: **credential 탈취 (Responder), relay (ntlmrelayx), hash 재사용 (PTH)**.
 
 ---
 
@@ -113,7 +113,7 @@ impacket-ntlmrelayx -t http://adcs.corp.local/certsrv/certfnsh.asp \
 
 ---
 
-## Pass-the-Hash (PtH)
+## Pass-the-Hash (PTH)
 
 ```bash
 # NT hash 만으로 인증 (password 없이)

@@ -604,7 +604,7 @@ echo "BASE64_DATA" | base64 -d > /tmp/file
 
 | 도구 | 용도 | 설치/링크 |
 |------|------|----------|
-| `ligolo-ng` | tunneling/피봇 (사용 편의성 최고) | [GitHub](https://github.com/nicocha30/ligolo-ng) |
+| `ligolo-ng` | tunneling/Pivot (사용 편의성 최고) | [GitHub](https://github.com/nicocha30/ligolo-ng) |
 | `chisel` | TCP/UDP tunneling | [GitHub](https://github.com/jpillora/chisel) |
 | `kerbrute` | Kerberos 기반 사용자 열거/Password Spray | [GitHub](https://github.com/ropnop/kerbrute) |
 | `enum4linux-ng` | SMB/RPC/LDAP 열거 (Python 재작성) | [GitHub](https://github.com/cddmp/enum4linux-ng) |

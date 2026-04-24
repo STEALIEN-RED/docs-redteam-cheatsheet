@@ -10,7 +10,7 @@
 |------|------|
 | [reverse shell](shells.md) | target에서 공격자로 연결하는 shell payload |
 | [파일 전송](file-transfer.md) | 공격자 ↔ target 간 파일 전송 방법 |
-| [피봇 / tunneling](pivoting.md) | 내부 네트워크 접근을 위한 tunneling |
+| [Pivot / tunneling](pivoting.md) | 내부 네트워크 접근을 위한 tunneling |
 | [C2 framework](c2.md) | Command & Control framework |
 
 ---
@@ -24,7 +24,7 @@ graph LR
     C --> D[payload 생성]
     D --> E[전달/실행]
     E --> F[shell/agent]
-    F --> G[피봇/tunneling]
+    F --> G[Pivot/tunneling]
 ```
 
 ---
@@ -43,7 +43,7 @@ graph LR
 - [ ] 9. 데이터 유출/투입: 안전 채널 선정 → [데이터 유출](../lifecycle/exfiltration.md)
 - [ ] 10. 로컬/도메인 권한상승: 윈도우/리눅스/AD → [권한 상승](../lifecycle/privilege-escalation.md), [AD](../ad/ad-environment.md)
 - [ ] 11. POST: 루팅/시크릿 추가 수집, [지속성 유지](../lifecycle/persistence.md)
-- [ ] 12. 피봇/tunneling: 새로운 세그먼트로 확장 → [피봇/tunneling](../infra/pivoting.md)
+- [ ] 12. Pivot/tunneling: 새로운 세그먼트로 확장 → [Pivot/tunneling](../infra/pivoting.md)
 
 !!! tip "증거 수집/기록"
     각 단계 산출물(nmap 결과, 스크린샷, 명령 로그, 타임스탬프)을 정리해 재현/보고서 작성과 탐지 매핑(ATT&CK) 기반 개선에 활용하세요.

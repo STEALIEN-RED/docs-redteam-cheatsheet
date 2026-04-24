@@ -45,7 +45,7 @@ sudo ip route add 10.0.0.0/24 dev ligolo
 # ligolo session에서 listener 추가
 >> listener_add --addr 0.0.0.0:4444 --to 127.0.0.1:4444 --tcp
 
-# 내부 호스트에서 피봇 호스트의 4444로 연결하면
+# 내부 호스트에서 Pivot 호스트의 4444로 연결하면
 # 공격자의 4444로 forward 됨
 ```
 
@@ -162,7 +162,7 @@ meterpreter> portfwd add -l 8080 -p 80 -r INTERNAL_TARGET
 
 ---
 
-## 더블 피봇
+## 더블 Pivot
 
 ```text
 공격자 → PIVOT1 (DMZ) → PIVOT2 (내부) → TARGET

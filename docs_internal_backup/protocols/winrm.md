@@ -156,7 +156,7 @@ ADCS ESC 공격(예: ESC1) 으로 발급받은 인증서를 WinRM 에 직접 쓸
 
 ## 내부 port forwarding으로 접근
 
-WinRM 포트가 외부에서 막혀 있을 때 피봇 호스트를 경유.
+WinRM 포트가 외부에서 막혀 있을 때 Pivot 호스트를 경유.
 
 ```bash
 # Ligolo-ng / chisel 로 5985/5986 forwarding 후

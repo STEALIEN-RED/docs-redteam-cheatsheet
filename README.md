@@ -138,7 +138,7 @@ mkdocs build
 - **Web 공격**: SQLi, XSS, SSRF, SSTI, JWT, Deserialization 등
 - **Cloud 공격**: AWS / Azure 환경
 - **방어 우회**: AV/EDR 우회, AMSI / AppLocker bypass
-- **오퍼레이션 인프라**: 리버스 쉘, 파일 전송, 피봇·터널링, C2 프레임워크
+- **오퍼레이션 인프라**: 리버스 쉘, 파일 전송, Pivot·터널링, C2 프레임워크
 - **도구 레퍼런스**: 주요 도구 명령어 모음
 
 자세한 인덱스는 [docs/index.md](docs/index.md) 참고.

